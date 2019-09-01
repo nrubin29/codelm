@@ -1,0 +1,66 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <span>Settings</span>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+    <form #form="ngForm" [formGroup]="formGroup" (submit)="submit(form)" class="flex column">
+        <mat-form-field>
+            <mat-select placeholder="State" formControlName="state" required>
+                <mat-option *ngFor="let state of states" [value]="state">{{state}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-checkbox formControlName="preliminaries">Preliminaries</mat-checkbox>
+        <br>
+        <mat-form-field color="accent">
+          <input matInput type="text" formControlName="endSurveyLink" placeholder="End Survey Link">
+        </mat-form-field>
+        <!-- TODO: Make the datetime input nicer. -->
+        <div class="flex horizontal" style="margin: 1em 0">
+            <h3 mat-dialog-title style="margin: 0">Schedule</h3>
+            <span class="spacer"></span>
+          <button type="button" mat-button (click)="addSchedule()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <!-- TODO: Convert to a mat-table -->
+        <table>
+            <thead>
+            <tr>
+                <th>New State</th>
+                <th>When</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody formArrayName="schedule">
+            <tr *ngFor="let _ of schedule.controls; index as i" [formGroupName]="i">
+                <td>
+                    <mat-form-field>
+                        <mat-select formControlName="newState" required>
+                            <mat-option *ngFor="let state of states" [value]="state">{{state}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field color="accent">
+                        <input matInput type="datetime-local" formControlName="when">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <button mat-button (click)="deleteSchedule(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!--<dp-day-time-calendar theme="dp-material" formControlName="end"></dp-day-time-calendar>-->
+        <!--<mat-form-field>-->
+            <!--<input matInput formControlName="end" placeholder="End Datetime" dpDayPicker [dpDayPicker]="{}" mode="daytime" theme="dp-material" attachTo=".mat-input-wrapper">-->
+        <!--</mat-form-field>-->
+        <br>
+        <button mat-raised-button color="accent" type="submit">Save</button>
+        <br>
+        <button mat-raised-button color="warn" type="button" (click)="reset()">Reset</button>
+    </form>
+</div>

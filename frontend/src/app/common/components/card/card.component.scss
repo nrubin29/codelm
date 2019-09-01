@@ -1,0 +1,27 @@
+:host ::ng-deep {
+  .mat-card-header-text {
+    margin: 0 0 0 8px;
+  }
+}
+
+mat-card {
+  padding: 0 !important;
+  margin-bottom: 1em;
+}
+
+mat-card-header {
+  background: #eee;
+  padding: 12px 12px 0;
+}
+
+mat-card-content {
+  word-wrap: break-word;
+
+  &.pad-card {
+    padding: 20px !important;
+  }
+
+  &:not(.pad-card) {
+    padding: 0 20px 20px;
+  }
+}

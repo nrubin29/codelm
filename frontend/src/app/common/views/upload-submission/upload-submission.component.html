@@ -1,0 +1,27 @@
+<div class="flex display-side container">
+  <div class="fix-size">
+    <app-card title="Results">
+      <ng-container *ngIf="submission.points !== undefined">
+        <mat-chip-list>
+          <mat-chip color="accent" selected="true">{{submission.points}}
+            {{'WaveCoin'|pluralize:submission.points}}
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+      <ng-container *ngIf="submission.points === undefined">
+        <p>Your submission has been recorded.</p>
+      </ng-container>
+    </app-card>
+    <app-card title="Admin" *ngIf="admin">
+      <div class="form-inline">
+        <mat-form-field color="accent">
+          <input matInput type="number" placeholder="Score" [(ngModel)]="score">
+        </mat-form-field>
+        <button mat-raised-button color="accent" (click)="setScore()">Set Score</button>
+      </div>
+      <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
+      <button mat-raised-button color="accent" (click)="replay()">Replay Submission</button>
+    </app-card>
+  </div>
+  <app-code-mirror [config]="{ lineNumbers: true, lineWrapping: true, mode: mode, readOnly: true }"></app-code-mirror>
+</div>

@@ -1,0 +1,23 @@
+<app-card>
+  <img src="assets/logo.png">
+  <form #registerForm="ngForm" [formGroup]="formGroup" (submit)="register(registerForm)" onsubmit="return false">
+    <mat-form-field color="accent">
+      <input matInput name="username" formControlName="username" type="text" placeholder="Username">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput name="password" formControlName="password" type="password" placeholder="Password">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput name="name" formControlName="members" type="text" placeholder="Name">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <mat-select placeholder="Division" formControlName="division">
+        <mat-option *ngFor="let division of divisions" [value]="division._id">{{division.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="flex display-side">
+      <button mat-raised-button color="accent" type="submit">Register</button>
+      <button mat-raised-button color="accent" type="button" (click)="login()">Back to Login</button>
+    </div>
+  </form>
+</app-card>

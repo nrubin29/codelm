@@ -1,0 +1,24 @@
+<table *ngIf="sockets">
+  <thead>
+    <th>ID</th>
+    <th>Kick</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let socket of sockets['team']">
+      <td>{{socket}}</td>
+      <td><button mat-raised-button color="accent" (click)="kick(socket)">Kick</button></td>
+    </tr>
+  </tbody>
+</table>
+<table *ngIf="sockets">
+  <thead>
+  <th>ID</th>
+  <th>Kick</th>
+  </thead>
+  <tbody>
+  <tr *ngFor="let socket of sockets['admin']">
+    <td>{{socket}}</td>
+    <td><button mat-raised-button color="accent" (click)="kick(socket)">Kick</button></td>
+  </tr>
+  </tbody>
+</table>

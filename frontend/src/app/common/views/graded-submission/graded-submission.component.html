@@ -1,0 +1,69 @@
+<div class="flex display-side container">
+    <div class="fix-size">
+        <app-card title="Result">
+            <div class="flex display-side horizontal">
+                <h2>{{submission.result}}</h2>
+                <mat-chip-list>
+                    <mat-chip color="accent" selected="true" *ngIf="submission.test">
+                      Test
+                    </mat-chip>
+                    <mat-chip color="accent" selected="true" *ngIf="!submission.test">
+                      {{submission.points}} {{'WaveCoin'|pluralize:submission.points}}
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+        </app-card>
+        <app-card title="IO" [pad]="false" *ngIf="submission.testCases.length > 0">
+            <mat-table #table [dataSource]="submission.testCases">
+                <ng-container matColumnDef="input">
+                    <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
+                    <mat-cell *matCellDef="let element"><code>{{element.input}}</code></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="correctOutput">
+                    <mat-header-cell *matHeaderCellDef>Correct Output</mat-header-cell>
+                    <mat-cell *matCellDef="let element"><code>{{element.correctOutput}}</code></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="yourOutput">
+                    <mat-header-cell *matHeaderCellDef>Your Output</mat-header-cell>
+                    <mat-cell *matCellDef="let element"><code>{{element.output}}</code></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-icon>{{element.correct ? 'check_circle' : 'highlight_off'}}</mat-icon>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="['input', 'correctOutput', 'yourOutput', 'status']"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: ['input', 'correctOutput', 'yourOutput', 'status'];"></mat-row>
+            </mat-table>
+        </app-card>
+        <app-card title="Error" *ngIf="submission.error">
+            <code [innerHTML]="submissionError"></code>
+        </app-card>
+        <app-card title="Dispute"
+                  *ngIf="submission.dispute || ((submission.test || submission.points === 0) && !admin)">
+            <ng-container *ngIf="submission.dispute">
+                <h3>{{admin ? 'The' : 'Your'}} dispute {{submission.dispute.open ? 'is currently open' : 'has been resolved'}}.</h3>
+                <p>{{submission.dispute.message}}</p>
+                <ng-container *ngIf="admin && submission.dispute.open">
+                    <br>
+                    <button mat-raised-button color="accent" (click)="resolveDispute()">Resolve Dispute</button>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!submission.dispute">
+                <p>If you believe that your code is correct and that there is an issue with the website or problem, use
+                    the form below to dispute this submission.</p>
+                <br>
+                <mat-form-field>
+                    <textarea matInput color="accent" placeholder="Message" [(ngModel)]="disputeMessage"></textarea>
+                </mat-form-field>
+                <button mat-raised-button color="accent" (click)="sendDispute()">Send Dispute</button>
+            </ng-container>
+        </app-card>
+        <app-card title="Admin" *ngIf="admin">
+            <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
+            <button mat-raised-button color="accent" (click)="overrideCorrect()">Toggle override correct</button>
+        </app-card>
+    </div>
+    <app-code-mirror [config]="{ lineNumbers: true, lineWrapping: true, mode: mode, readOnly: true }"></app-code-mirror>
+</div>

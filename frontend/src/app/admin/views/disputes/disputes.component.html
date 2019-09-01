@@ -1,0 +1,23 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Disputes</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <mat-table [dataSource]="submissions">
+    <ng-container matColumnDef="team">
+      <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
+      <mat-cell *matCellDef="let element"><a [routerLink]="['/admin', 'team', element.team._id]">{{element.team.username}}</a></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="problem">
+      <mat-header-cell *matHeaderCellDef>Problem</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.problem.title}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="submission">
+      <mat-header-cell *matHeaderCellDef>Submission</mat-header-cell>
+      <mat-cell *matCellDef="let element"><a [routerLink]="['/admin', 'submission', element._id]">{{element.result}}</a></mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="['team', 'problem', 'submission']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['team', 'problem', 'submission'];"></mat-row>
+  </mat-table>
+</div>

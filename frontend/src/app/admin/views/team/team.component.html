@@ -1,0 +1,69 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>{{team.username}}</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <app-card title="Team Info">
+    <div class="container">
+      <mat-table #table [dataSource]="[team]">
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element._id}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="username">
+          <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.username}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="members">
+          <mat-header-cell *matHeaderCellDef>Members</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.members}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="division">
+          <mat-header-cell *matHeaderCellDef>Division</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.division.name}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="score">
+          <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.score}}</mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['id', 'username', 'members', 'division', 'score']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['id', 'username', 'members', 'division', 'score'];"></mat-row>
+      </mat-table>
+    </div>
+  </app-card>
+  <!-- TODO: Maybe use the same view as the standings page? -->
+  <app-card title="Submissions">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let problem of problems; let i = index">
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{problem.title}}</mat-panel-title>
+          <mat-panel-description>{{problemSubmissions[problem._id].length}}
+            {{'submission'|pluralize:problemSubmissions[problem._id].length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <!-- TODO: Don't have result column if problem is upload-style. -->
+        <mat-table *ngIf="problemSubmissions[problem._id].length > 0" [dataSource]="problemSubmissions[problem._id]">
+          <ng-container matColumnDef="result">
+            <mat-header-cell *matHeaderCellDef>Result</mat-header-cell>
+            <mat-cell *matCellDef="let element"><a [routerLink]="['/admin', 'submission', element._id]">{{element.result}}</a></mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="test">
+            <mat-header-cell *matHeaderCellDef>Test</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.test ? 'Yes' : 'No'}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="points">
+            <mat-header-cell *matHeaderCellDef>Points</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.points}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="datetime">
+            <mat-header-cell *matHeaderCellDef>Datetime</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{asMoment(element.datetime)}}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="['result', 'test', 'points', 'datetime']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['result', 'test', 'points', 'datetime'];"></mat-row>
+        </mat-table>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </app-card>
+</div>

@@ -1,0 +1,49 @@
+<ng-container [formGroup]="mainFormGroup">
+    <div class="flex horizontal" style="margin: 1em 0">
+        <h3 mat-dialog-title style="margin: 0">Test Cases</h3>
+        <span class="spacer"></span>
+        <button mat-button (click)="addTestCase()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <mat-form-field color="accent">
+        <mat-select formControlName="testCaseOutputMode" placeholder="Test Case Output Mode">
+            <mat-option *ngFor="let testCaseOutputMode of testCaseOutputModes" [value]="testCaseOutputMode">
+                {{testCaseOutputMode}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <!-- TODO: Convert to a mat-table -->
+    <table>
+        <thead>
+        <tr>
+            <th>Input</th>
+            <th>Output</th>
+            <th>Hidden</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody formArrayName="testCases">
+        <tr *ngFor="let _ of testCases.controls; index as i" [formGroupName]="i">
+            <td>
+                <mat-form-field color="accent">
+                    <textarea matInput formControlName="input"></textarea>
+                </mat-form-field>
+            </td>
+            <td>
+                <mat-form-field color="accent">
+                    <textarea matInput formControlName="output"></textarea>
+                </mat-form-field>
+            </td>
+            <td>
+                <mat-checkbox formControlName="hidden"></mat-checkbox>
+            </td>
+            <td>
+                <button mat-button (click)="deleteTestCase(i)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</ng-container>

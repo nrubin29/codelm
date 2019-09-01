@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>{{problem.title ? problem.title : 'New Problem'}}</h2>
+<form #problemForm="ngForm" [formGroup]="formGroup">
+    <mat-dialog-content>
+        <h3 mat-dialog-title>Data</h3>
+        <mat-form-field color="accent">
+            <input matInput readonly="readonly" formControlName="_id" type="text" placeholder="_id">
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <input matInput formControlName="title" type="text" placeholder="Title">
+        </mat-form-field>
+        <angular-editor formControlName="description"></angular-editor>
+        <br>
+        <div class="flex horizontal" style="margin: 1em 0">
+            <h3 mat-dialog-title style="margin: 0">Divisions</h3>
+            <span class="spacer"></span>
+            <button mat-button (click)="addDivision()"><mat-icon>add</mat-icon></button>
+        </div>
+        <!-- TODO: Convert to a mat-table -->
+        <table>
+            <thead>
+            <tr>
+                <th>Division</th>
+                <th>Problem Number</th>
+                <th>Points</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody formArrayName="divisions">
+            <tr *ngFor="let _ of divisions.controls; index as i" [formGroupName]="i">
+                <td>
+                    <mat-form-field color="accent">
+                        <mat-select formControlName="division">
+                            <mat-option *ngFor="let division of divisionModels" [value]="division._id">{{division.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field color="accent">
+                        <input matInput formControlName="problemNumber" type="number">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field color="accent">
+                        <input matInput formControlName="points" type="number">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <button mat-button (click)="deleteDivision(i)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <mat-form-field color="accent">
+            <mat-select formControlName="type" placeholder="Type">
+                <mat-option *ngFor="let type of problemTypes" [value]="type">{{type}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <app-edit-graded-problem *ngIf="isGradedProblem" [mainFormGroup]="formGroup"
+                                 [gradedProblem]="problem"></app-edit-graded-problem>
+        <app-edit-open-ended-problem *ngIf="isUploadProblem" [mainFormGroup]="formGroup"
+                                     [openEndedProblem]="problem"></app-edit-open-ended-problem>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button color="accent" type="button" [mat-dialog-close]="['save', formValue]">Save</button>
+        <button mat-button color="warn" type="button" [mat-dialog-close]="['delete', formValue]" *ngIf="problem._id">Delete</button>
+        <button mat-button type="button" [mat-dialog-close]="['close', formValue]">Cancel</button>
+    </mat-dialog-actions>
+</form>

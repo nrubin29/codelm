@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Divisions</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="edit(null)"><mat-icon>add</mat-icon></button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <mat-table [dataSource]="divisions">
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-cell *matCellDef="let element"><a (click)="edit(element)" href="javascript:void(0)">{{element.name}}</a></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="type">
+      <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.type}}</mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="['name', 'type']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['name', 'type'];"></mat-row>
+  </mat-table>
+</div>

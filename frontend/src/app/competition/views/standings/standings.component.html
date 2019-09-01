@@ -1,0 +1,37 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Dashboard</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="main container">
+    <app-card title="Team Info" [pad]="false">
+        <div class="container">
+            <mat-table #table [dataSource]="[team]">
+                <ng-container matColumnDef="username">
+                    <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.username}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="members">
+                    <mat-header-cell *matHeaderCellDef>Members</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.members}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="division">
+                    <mat-header-cell *matHeaderCellDef>Division</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.division.name}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="score">
+                    <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.score}}</mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="['username', 'members', 'division', 'score']"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: ['username', 'members', 'division', 'score'];"></mat-row>
+            </mat-table>
+        </div>
+    </app-card>
+    <app-card title="Starter Code" *ngIf="link">
+        <a mat-raised-button color="accent" [href]="link" target="_blank">Download Starter Code</a>
+    </app-card>
+    <!--<app-card title="Activity Feed">-->
+        <!--<app-feed></app-feed>-->
+    <!--</app-card>-->
+</div>

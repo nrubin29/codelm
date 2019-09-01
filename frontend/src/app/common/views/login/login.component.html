@@ -1,0 +1,17 @@
+<app-card>
+  <img src="assets/logo.png">
+  <form #loginForm="ngForm" [formGroup]="formGroup" (submit)="login(loginForm)" onsubmit="return false">
+    <mat-form-field color="accent">
+      <input matInput name="username" formControlName="username" type="text" placeholder="Username">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput name="password" formControlName="password" type="password" placeholder="Password">
+    </mat-form-field>
+    <div class="flex display-side">
+      <button mat-raised-button color="accent" type="submit">Log In</button>
+      <button mat-raised-button color="accent" type="button" (click)="register()" *ngIf="settings.preliminaries">Register for Preliminaries</button>
+    </div>
+  </form>
+  <br>
+  <p class="right">Build: {{version}}</p>
+</app-card>

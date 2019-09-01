@@ -1,0 +1,33 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <!-- <a [routerLink]="['/dashboard', 'problem', submission.problem._id]" *ngIf="!admin && submission.points === 0"
+           class="back">
+            <mat-icon>arrow_back</mat-icon>
+        </a> -->
+        <span>High-Low Game</span>
+        <span class="spacer"></span>
+        <h3 style="font-variant: normal" *ngIf="_id">ID: <span class="mono">{{_id}}</span></h3>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="flex display-side container">
+    <div class="fix-size">
+        <app-card title="Status">
+          <code *ngIf="error">{{error}}</code>
+          <p *ngIf="!error">{{status === 'Finished' ? 'Guesses: ' + score : status}}</p>
+        </app-card>
+    </div>
+    <div class="fix-size" #htmlLog>
+        <table mat-table [dataSource]="log">
+            <ng-container matColumnDef="guess">
+                <th mat-header-cell *matHeaderCellDef>Guess</th>
+                <td mat-cell *matCellDef="let element">{{element.output}}</td>
+            </ng-container>
+            <ng-container matColumnDef="result">
+                <th mat-header-cell *matHeaderCellDef>Result</th>
+                <td mat-cell *matCellDef="let element">{{element.input}}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['guess', 'result']; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['guess', 'result'];"></tr>
+        </table>
+    </div>
+</div>

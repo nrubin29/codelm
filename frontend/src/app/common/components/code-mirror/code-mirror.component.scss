@@ -1,0 +1,14 @@
+:host ::ng-deep {
+  & .CodeMirror {
+    border: thin solid #ddd;
+  }
+
+  & .CodeMirror * {
+    font-family: 'Roboto Mono', monospace;
+    cursor: text;
+  }
+
+  & .CodeMirror-gutter {
+    cursor: default;
+  }
+}

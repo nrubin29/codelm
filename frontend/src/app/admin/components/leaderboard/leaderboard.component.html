@@ -1,0 +1,29 @@
+<mat-table *ngIf="groupedSubmissions" [dataSource]="tableData">
+  <ng-container matColumnDef="team">
+    <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
+    <mat-cell *matCellDef="let element"><a [routerLink]="['team', element.team._id]">{{element.team.username}}</a></mat-cell>
+  </ng-container>
+<!--  <ng-container matColumnDef="members">-->
+<!--    <mat-header-cell *matHeaderCellDef>Members</mat-header-cell>-->
+<!--    <mat-cell *matCellDef="let element">{{element.team.members}}</mat-cell>-->
+<!--  </ng-container>-->
+  <ng-container matColumnDef="score">
+    <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.team.score}}</mat-cell>
+  </ng-container>
+  <ng-container [matColumnDef]="problem._id" *ngFor="let problem of problems">
+    <mat-header-cell *matHeaderCellDef>{{problem.title}}</mat-header-cell>
+    <mat-cell *matCellDef="let element" class="cell" [ngStyle]="style(element[problem._id])" (click)="onCellClick(problem, element[problem._id])">
+      <ng-container *ngIf="(element[problem._id] || []).length > 0">
+        <ng-container [ngSwitch]="status(element[problem._id])">
+          <mat-icon *ngSwitchCase="'complete'">check</mat-icon>
+          <mat-icon *ngSwitchCase="'error'">close</mat-icon>
+          <mat-icon *ngSwitchCase="'none'">more_horiz</mat-icon>
+        </ng-container>
+        <p>{{element[problem._id].length}}</p>
+      </ng-container>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="columns; sticky: true"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+</mat-table>

@@ -1,0 +1,28 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>{{team.username ? 'Edit ' + team.username : 'Add Team'}}</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <form #teamForm="ngForm" [formGroup]="formGroup" (submit)="submit(teamForm)">
+    <mat-form-field color="accent">
+      <input matInput type="text" placeholder="_id" formControlName="_id" disabled>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput type="text" placeholder="Username" formControlName="username">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput type="text" placeholder="Password" formControlName="password">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput type="text" placeholder="Members" formControlName="members">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Division" formControlName="division" required>
+        <mat-option *ngFor="let division of divisions" [value]="division._id">{{division.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="accent">Submit</button>
+    <button type="button" mat-raised-button (click)="delete()" *ngIf="team._id">Delete</button>
+  </form>
+</div>

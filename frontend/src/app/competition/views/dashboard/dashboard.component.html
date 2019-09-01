@@ -1,0 +1,27 @@
+<mat-sidenav-container>
+  <mat-sidenav mode="side" [opened]="true" [disableClose]="true" [fixedInViewport]="true">
+    <a [routerLink]="['..', 'dashboard']" class="logo"><img src="assets/logo-portrait.png"></a>
+    <br><br>
+    <ng-container *ngIf="team">
+      <h2>{{team.username}}</h2>
+      <h3>WaveCoins: {{team.score}}</h3>
+      <app-countdown></app-countdown>
+    </ng-container>
+    <br><br>
+    <mat-divider></mat-divider>
+    <br>
+    <mat-nav-list>
+      <mat-list-item>
+        <mat-icon mat-list-icon>dashboard</mat-icon>
+        <a mat-line [routerLink]="['/dashboard']">Dashboard</a>
+      </mat-list-item>
+      <mat-list-item *ngFor="let problem of problems">
+        <mat-icon mat-list-icon>{{didSolve(problem) ? 'check_circle' : 'label'}}</mat-icon>
+        <a mat-line [routerLink]="['problem', problem._id]">{{problem.title}}</a>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

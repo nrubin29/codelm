@@ -1,0 +1,16 @@
+{
+  "name": "codelm-tester",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --config webpack.tester.js"
+  },
+  "devDependencies": {
+    "@types/webpack": "^4.39.1",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
+  }
+}

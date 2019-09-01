@@ -1,0 +1,25 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Problems</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="edit(null)"><mat-icon>add</mat-icon></button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-tab-group>
+  <mat-tab *ngFor="let division of divisions" [label]="division.name">
+    <div class="container">
+      <mat-table [dataSource]="division.problems">
+        <ng-container matColumnDef="number">
+          <mat-header-cell *matHeaderCellDef>Number</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{getProblemNumber(element, division)}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="title">
+          <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>
+          <mat-cell *matCellDef="let element"><a (click)="edit(element)" href="javascript:void(0)">{{element.title}}</a></mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['number', 'title']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['number', 'title'];"></mat-row>
+      </mat-table>
+    </div>
+  </mat-tab>
+</mat-tab-group>

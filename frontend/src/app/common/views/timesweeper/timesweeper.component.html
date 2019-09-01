@@ -1,0 +1,45 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <!-- <a [routerLink]="['/dashboard', 'problem', submission.problem._id]" *ngIf="!admin && submission.points === 0"
+       class="back">
+        <mat-icon>arrow_back</mat-icon>
+    </a> -->
+    <span>Timesweeper</span>
+    <span class="spacer"></span>
+    <h3 style="font-variant: normal" *ngIf="_id">ID: <span class="mono">{{_id}}</span></h3>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="flex display-side container">
+  <div class="fix-size">
+    <app-card title="Status">
+      <code *ngIf="error">{{error}}</code>
+      <p *ngIf="!error">{{status === 'Finished' ? 'Guesses: ' + score : status}}</p>
+    </app-card>
+    <app-card title="Board">
+      <canvas #board width="320" height="320"></canvas>
+    </app-card>
+  </div>
+  <div class="fix-size" #htmlLog>
+    <table mat-table [dataSource]="log">
+      <ng-container matColumnDef="guess">
+        <th mat-header-cell *matHeaderCellDef>Guess</th>
+        <td mat-cell *matCellDef="let element">{{element.output}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="['guess']; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['guess'];"></tr>
+    </table>
+  </div>
+</div>
+<div hidden>
+  <img src="assets/timesweeper/sqt0.gif" #img>
+  <img src="assets/timesweeper/sq0.gif" #img>
+  <img src="assets/timesweeper/sq1.gif" #img>
+  <img src="assets/timesweeper/sq2.gif" #img>
+  <img src="assets/timesweeper/sq3.gif" #img>
+  <img src="assets/timesweeper/sq4.gif" #img>
+  <img src="assets/timesweeper/sq5.gif" #img>
+  <img src="assets/timesweeper/sq6.gif" #img>
+  <img src="assets/timesweeper/sq7.gif" #img>
+  <img src="assets/timesweeper/sq8.gif" #img>
+  <img src="assets/timesweeper/sqt1.gif" #img>
+</div>

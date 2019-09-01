@@ -1,0 +1,13 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <a [routerLink]="['/dashboard', 'problem', submission.problem._id]" *ngIf="!admin && submission.points === 0"
+         class="back">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+        <span>{{problemNumber}}. {{submission.problem.title}}</span>
+        <span class="spacer"></span>
+        <h3 style="font-variant: normal">ID: <span class="mono">{{submission._id}}</span></h3>
+    </mat-toolbar-row>
+</mat-toolbar>
+<app-graded-submission *ngIf="isGradedSubmission" [submission]="submission"></app-graded-submission>
+<app-upload-submission *ngIf="!isGradedSubmission" [submission]="submission"></app-upload-submission>

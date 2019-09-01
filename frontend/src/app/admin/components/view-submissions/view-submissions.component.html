@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Submissions from {{data.team.username}} for {{data.problem.title}}</h2>
+<mat-dialog-content>
+  <mat-table [dataSource]="data.submissions">
+    <ng-container matColumnDef="result">
+      <mat-header-cell *matHeaderCellDef>Result</mat-header-cell>
+      <mat-cell *matCellDef="let element"><a [routerLink]="['/admin', 'submission', element._id]" (click)="close()">{{element.result}}</a></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="test">
+      <mat-header-cell *matHeaderCellDef>Test</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.test ? 'Yes' : 'No'}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="points">
+      <mat-header-cell *matHeaderCellDef>Points</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.points}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="datetime">
+      <mat-header-cell *matHeaderCellDef>Datetime</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{asMoment(element.datetime)}}</mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="['result', 'test', 'points', 'datetime']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['result', 'test', 'points', 'datetime'];"></mat-row>
+  </mat-table>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button type="button" mat-dialog-close>Close</button>
+</mat-dialog-actions>

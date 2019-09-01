@@ -1,0 +1,11 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Standings</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-tab-group *ngIf="groupedSubmissions">
+  <mat-tab *ngFor="let division of divisions" [label]="division.name">
+    <app-leaderboard [division]="division" [groupedSubmissions]="groupedSubmissions[division._id]"></app-leaderboard>
+  </mat-tab>
+</mat-tab-group>
+<p *ngIf="!groupedSubmissions">Loading...</p>

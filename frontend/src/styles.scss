@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  text-decoration: none;
+  font-family: Roboto, serif;
+}
+
+.mono {
+  font-family: 'Roboto Mono', monospace;
+}
+
+code {
+  @extend .mono;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.container {
+  margin: 1em;
+}
+
+.container-padding {
+  padding: 1em;
+}
+
+router-outlet {
+  display: none;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+app-dashboard, app-admin {
+  display: flex;
+  flex: 1;
+
+  overflow-y: scroll;
+}
+
+.flex {
+  display: flex;
+
+  &.display-side {
+    & > app-card {
+      display: flex;
+    }
+
+    & > *, & > app-card > mat-card {
+      flex: 1;
+    }
+
+    & > :not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  &.horizontal {
+    align-items: center;
+
+    & > :not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  &.right {
+    justify-content: flex-end;
+    align-items: center;
+
+    & > :not(:last-child) {
+      margin-right: 1em;
+    }
+
+    // This fixes the button alignment in problem.component, but it might not be wanted elsewhere.
+    & > a[mat-raised-button] {
+      margin-bottom: 1em;
+    }
+  }
+
+  &.column {
+    flex-direction: column;
+  }
+}
+
+mat-sidenav-container {
+  flex: 1;
+}
+
+mat-sidenav-content {
+  height: 100vh;
+}
+
+.mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
+  flex-basis: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar-row .mat-button:not(:last-child), mat-toolbar-row .mat-raised-button:not(:last-child) {
+  margin-right: 1em !important;
+}
+
+mat-row:last-child {
+  border: none;
+}
+
+.mat-form-field {
+  display: block !important;
+}

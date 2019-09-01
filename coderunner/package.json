@@ -1,0 +1,31 @@
+{
+  "name": "codelm-coderunner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --config webpack.coderunner.js && cd ../dist/coderunner && docker build -t coderunner .",
+    "prod": "webpack --config webpack.coderunner.js"
+  },
+  "dependencies": {
+    "fs-extra": "^8.1.0",
+    "rxjs": "^6.5.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.0",
+    "@types/chai-as-promised": "^7.1.2",
+    "@types/copy-webpack-plugin": "^5.0.0",
+    "@types/fs-extra": "^8.0.0",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.7.2",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "copy-webpack-plugin": "^5.0.4",
+    "mocha": "^6.2.0",
+    "ts-loader": "^6.0.4",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
+  }
+}

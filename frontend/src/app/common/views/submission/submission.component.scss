@@ -1,0 +1,22 @@
+:host {
+  flex: 1;
+
+  & ::ng-deep {
+    & .CodeMirror {
+      height: 100% !important;
+    }
+
+    & app-card:last-child > mat-card {
+      margin-bottom: 0;
+    }
+
+    & .mat-chip-list-wrapper {
+      justify-content: flex-end;
+    }
+  }
+}
+
+.back {
+  color: white;
+  padding: 0.25em 0.25em 0 0;
+}

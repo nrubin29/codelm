@@ -1,0 +1,11 @@
+:host {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  & ::ng-deep {
+    .mat-tab-body-wrapper {
+      margin: 1em;
+    }
+  }
+}

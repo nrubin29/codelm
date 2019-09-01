@@ -1,0 +1,21 @@
+:host ::ng-deep {
+  .mat-chip-list-wrapper {
+    justify-content: normal;
+  }
+
+  .form-inline .mat-form-field {
+    display: inline-block !important;
+  }
+}
+
+.fix-size {
+  max-width: 50%;
+}
+
+.form-inline mat-form-field {
+  margin-right: 5em;
+}
+
+button:not(:last-child) {
+  margin-right: 0.5em;
+}

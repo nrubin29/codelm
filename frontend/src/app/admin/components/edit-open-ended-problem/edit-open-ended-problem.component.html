@@ -1,0 +1,9 @@
+<ng-container [formGroup]="mainFormGroup">
+  <mat-form-field color="accent">
+    <mat-select formControlName="game" placeholder="Game">
+      <mat-option *ngFor="let game of games" [value]="game">
+        {{game}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>

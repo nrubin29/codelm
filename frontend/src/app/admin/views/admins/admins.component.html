@@ -1,0 +1,25 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Admins</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="edit(null)"><mat-icon>add</mat-icon></button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <mat-table [dataSource]="admins">
+    <ng-container matColumnDef="username">
+      <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
+      <mat-cell *matCellDef="let element"><a (click)="edit(element)" href="javascript:void(0)">{{element.username}}</a></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="superUser">
+      <mat-header-cell *matHeaderCellDef>Superuser</mat-header-cell>
+      <mat-cell *matCellDef="let element"><mat-checkbox color="accent" [checked]="element.superUser" disabled></mat-checkbox></mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="['username', 'name', 'superUser']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['username', 'name', 'superUser'];"></mat-row>
+  </mat-table>
+</div>
