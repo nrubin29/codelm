@@ -3,6 +3,7 @@ import crypto = require('crypto');
 import { TeamModel } from '../../../common/src/models/team.model';
 import { LoginResponse } from '../../../common/src/packets/login.response.packet';
 import { SubmissionDao } from './submission.dao';
+import {DEBUG} from "../server";
 
 type TeamType = TeamModel & mongoose.Document;
 
@@ -67,13 +68,21 @@ export class TeamDao {
 
     const inputHash = crypto.pbkdf2Sync(password, new Buffer(team.salt), 1000, 64, 'sha512').toString('hex');
 
-    if (inputHash === team.password) {
+    if (DEBUG || inputHash === team.password) {
       return await TeamDao.addScore(team);
     }
 
     else {
       throw LoginResponse.IncorrectPassword;
     }
+  }
+
+  static async deleteTeams(teamUsernames: string[]) {
+    await Team.deleteMany({username: {$in: teamUsernames}});
+  }
+
+  static async createTeams(teams: Omit<TeamModel, '_id'>[]) {
+    await Team.create(...teams);
   }
 
   static async addOrUpdateTeam(team: any): Promise<TeamModel> {

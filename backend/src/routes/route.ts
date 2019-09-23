@@ -7,6 +7,7 @@ import teamRoute from './team.route';
 import adminRoute from './admin.route';
 import submissionRoute from './submission.route';
 import socketsRoute from './sockets.route';
+import debugRoute from './debug.route';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/teams', teamRoute);
 router.use('/admins', adminRoute);
 router.use('/submissions', submissionRoute);
 router.use('/sockets', socketsRoute);
+router.use('/debug', debugRoute);
 
 export default router;

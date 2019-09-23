@@ -5,6 +5,7 @@ import {TeamModel} from '../../common/src/models/team.model';
 import {SettingsDao} from './daos/settings.dao';
 import {SettingsState} from '../../common/src/models/settings.model';
 import {DivisionType} from '../../common/src/models/division.model';
+import {DEBUG} from "./server";
 
 export class PermissionsUtil {
   static async canRegister(): Promise<boolean> {
@@ -138,6 +139,16 @@ export class PermissionsUtil {
           next(new Error('No authentication.'));
         }
       });
+    }
+  }
+
+  static requireDebugMode(req: Request, res: Response, next: NextFunction) {
+    if (DEBUG) {
+      next();
+    }
+
+    else {
+      next(new Error('Debug mode is disabled.'));
     }
   }
 }

@@ -99,6 +99,7 @@ export class SocketManager {
         }
 
         else {
+          // TODO: Maybe collect all of the ids to be deleted and then delete them afterwards.
           this.teamSockets.delete(id);
         }
       });

@@ -22,6 +22,10 @@ export class DivisionDao {
     return Division.findById(id).exec();
   }
 
+  static getDivisionByName(name: string): Promise<DivisionModel> {
+    return Division.findOne({name}).exec();
+  }
+
   static getDivisions(): Promise<DivisionModel[]> {
     return Division.find().exec();
   }
