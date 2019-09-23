@@ -10,6 +10,8 @@ import { VERSION } from '../../common/version';
 import './daos/dao';
 import apiRoutes from './routes/route';
 
+export const DEBUG = process.argv.includes('--debug');
+
 process.on('uncaughtException', (e: Error) => {
   console.error(e);
 });
@@ -30,7 +32,7 @@ app.use(fileUpload());
 app.use(express.static(path.join('.', 'dist', 'frontend')));
 app.use('/api', apiRoutes);
 
-console.log(`Starting CodeLM server build ${VERSION}`);
+console.log(`Starting CodeLM server build ${VERSION}${DEBUG ? ' in debug mode' : ''}`);
 
 mongoose.connect('mongodb://localhost/codelm', {useNewUrlParser: true}).then(() => {
   console.log('Connected to MongoDB');
