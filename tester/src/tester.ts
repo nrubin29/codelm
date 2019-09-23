@@ -5,7 +5,8 @@ import {VERSION} from "../../common/version";
 import {LoginResponse, LoginResponsePacket} from "../../common/src/packets/login.response.packet";
 
 // TODO: Encapsulate all of the socket-related code (on, once, emit, etc.) into a common SocketWrapper class and share
-//  it with the frontend's SocketManager.
+//  it with the frontend's SocketManager. Perhaps both classes could inherit from SocketWrapper (in which case, give it
+//  a different name, maybe SocketManager) so that the socket methods can be accessed directly and without wrappers.
 export class Tester {
     private socket: WebSocket;
     private readonly events: Map<string, ((Packet) => void)[]>;
