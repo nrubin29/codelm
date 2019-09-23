@@ -28,7 +28,12 @@ export class PermissionsUtil {
   }
 
   static async requireTeam(req: Request, res: Response, next: NextFunction) {
-    req.params.team = await TeamDao.getTeam(req.header('Authorization').split(' ')[1]);
+    if (!req.headers.authorization) {
+      next(new Error('No Authorization header.'));
+      return;
+    }
+
+    req.params.team = await TeamDao.getTeam(req.headers.authorization.split(' ')[1]);
 
     if (req.params.team) {
       next();
@@ -56,7 +61,12 @@ export class PermissionsUtil {
   }
 
   static async requireAdmin(req: Request, res: Response, next: NextFunction) {
-    req.params.admin = await AdminDao.getAdmin(req.header('Authorization').split(' ')[1]);
+    if (!req.headers.authorization) {
+      next(new Error('No Authorization header.'));
+      return;
+    }
+
+    req.params.admin = await AdminDao.getAdmin(req.headers.authorization.split(' ')[1]);
 
     if (req.params.admin) {
       next();
@@ -68,7 +78,12 @@ export class PermissionsUtil {
   }
 
   static async requestAdmin(req: Request, res: Response, next: NextFunction) {
-    const id = req.header('Authorization').split(' ')[1];
+    if (!req.headers.authorization) {
+      next(new Error('No Authorization header.'));
+      return;
+    }
+
+    const id = req.headers.authorization.split(' ')[1];
 
     if (id === 'undefined') {
       next();
@@ -101,7 +116,12 @@ export class PermissionsUtil {
   }
 
   static async requireAuth(req: Request, res: Response, next: NextFunction) {
-    const team = await TeamDao.getTeam(req.header('Authorization').split(' ')[1]);
+    if (!req.headers.authorization) {
+      next(new Error('No Authorization header.'));
+      return;
+    }
+
+    const team = await TeamDao.getTeam(req.headers.authorization.split(' ')[1]);
 
     if (team) {
       req.params.team = team;
