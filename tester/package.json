@@ -7,11 +7,13 @@
     "build": "webpack --config webpack.tester.js"
   },
   "dependencies": {
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "ws": "^7.1.2"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.2",
     "@types/webpack": "^4.39.1",
+    "@types/ws": "^6.0.3",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
     "webpack": "^4.39.3",
