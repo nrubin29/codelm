@@ -1,66 +1,27 @@
 import * as WebSocket from 'ws';
-import {Packet} from "../../common/src/packets/packet";
 import {LoginPacket} from "../../common/src/packets/login.packet";
 import {VERSION} from "../../common/version";
 import {LoginResponse, LoginResponsePacket} from "../../common/src/packets/login.response.packet";
+import {SocketManager} from "../../common/src/socket-manager";
 
-// TODO: Encapsulate all of the socket-related code (on, once, emit, etc.) into a common SocketWrapper class and share
-//  it with the frontend's SocketManager. Perhaps both classes could inherit from SocketWrapper (in which case, give it
-//  a different name, maybe SocketManager) so that the socket methods can be accessed directly and without wrappers.
-export class Tester {
-    private socket: WebSocket;
-    private readonly events: Map<string, ((Packet) => void)[]>;
-    private readonly eventsOnce: Map<string, ((Packet) => void)[]>;
-
+export class Tester extends SocketManager {
     constructor(private username: string) {
-        this.events = new Map<string, ((Packet) => void)[]>();
-        this.eventsOnce = new Map<string, ((Packet) => void)[]>();
-    }
-
-    on<T extends Packet>(event: string, fn: (packet: T) => void) {
-        this.events[event] = this.events.has(event) ? this.events[event].concat([fn]) : [fn];
-    }
-
-    once<T extends Packet>(event: string, fn: (packet: T) => void) {
-        this.eventsOnce[event] = this.eventsOnce.has(event) ? this.eventsOnce[event].concat([fn]) : [fn];
-    }
-
-    isConnected(): boolean {
-        return this.socket && this.socket.readyState === WebSocket.OPEN;
-    }
-
-    emit(packet: Packet) {
-        if (!this.isConnected()) {
-            throw new Error('Socket is not connected!');
-        }
-
-        this.socket.send(JSON.stringify(packet));
+        super('ws://localhost:8080');
     }
 
     connect(): Promise<void> {
-        this.socket = new WebSocket('ws://localhost:8080');
+        return super.connect().then(() => new Promise<void>((resolve, reject) => {
+            this.once<LoginResponsePacket>('loginResponse', packet => {
+                if (packet.response === LoginResponse.SuccessTeam) {
+                    resolve();
+                }
 
-        this.socket.onmessage = (data) => {
-            const packet: Packet = JSON.parse(<string>data.data);
-            (this.events[packet.name] || []).map(fn => fn(packet));
-            (this.eventsOnce[packet.name] || []).map(fn => fn(packet));
-            this.eventsOnce[packet.name] = [];
-        };
+                else {
+                    reject(packet.response);
+                }
+            });
 
-        return new Promise<void>((resolve, reject) => {
-            this.socket.onopen = () => {
-                this.once<LoginResponsePacket>('loginResponse', packet => {
-                    if (packet.response === LoginResponse.SuccessTeam) {
-                        resolve();
-                    }
-
-                    else {
-                        reject(packet.response);
-                    }
-                });
-
-                this.emit(new LoginPacket(this.username, 'password', VERSION));
-            };
-        });
+            this.emit(new LoginPacket(this.username, 'password', VERSION));
+        }));
     }
 }

@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
   login(form: NgForm) {
     if (!form.value.username || !form.value.password) {
       alert('Please enter a username and password');
+      return;
     }
 
     this.authService.login(form.value.username, form.value.password).then((response: LoginResponse) => {

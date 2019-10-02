@@ -17,9 +17,9 @@ fetchHttp.default('http://localhost:8080/api/debug/init').then(resp => resp.json
     }
 
     else {
-        console.log('Initialization failed. Is the server running?');
+        console.log('Initialization failed.');
     }
-});
+}).catch(e => { console.error('Initialization failed. Is the server running?', e); });
 
 function exitHandler() {
     fetchHttp.default('http://localhost:8080/api/debug/deinit').then(resp => resp.json()).then(resp => {
