@@ -3,7 +3,8 @@ import {TeamDao} from "../daos/team.dao";
 import {DivisionDao} from "../daos/division.dao";
 import {DivisionType} from "../../../common/src/models/division.model";
 import {PermissionsUtil} from "../permissions.util";
-import {debugTeamUsernames} from "../../../common/src/debug";
+
+const debugTeamUsernames = Object.freeze(Array.from({length: 20}, (_, i) => `debug${i}`));
 
 const router = Router();
 
@@ -26,7 +27,7 @@ router.get('/init', async (req: Request, res: Response) => {
     }
 
     await TeamDao.deleteTeams(debugTeamUsernames);
-    await TeamDao.createTeams(debugTeamUsernames.map(username => ({
+    const teams = await TeamDao.createTeams(debugTeamUsernames.map(username => ({
         members: '$DEBUG$',
         division,
         username,
@@ -34,7 +35,7 @@ router.get('/init', async (req: Request, res: Response) => {
         salt: ''
     })));
 
-    res.send({success: true});
+    res.send(teams);
 });
 
 router.get('/deinit', async (req: Request, res: Response) => {

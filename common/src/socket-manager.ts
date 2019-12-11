@@ -1,15 +1,23 @@
-import * as WebSocket from 'ws';
 import {Packet} from "./packets/packet";
-import {fromEvent, Observable} from "rxjs";
-import {mapTo, tap} from "rxjs/operators";
+import {Observable} from "rxjs";
+import {tap} from "rxjs/operators";
 
-export abstract class SocketManager {
-    private socket: WebSocket;
+interface WebSocketLike {
+    OPEN: number;
+    onclose: ((ev: any) => any) | null;
+    onmessage: ((ev: any) => any) | null;
+    onopen: ((ev: any) => any) | null;
+    readyState: number;
+    send(string);
+}
+
+export abstract class SocketManager<T extends WebSocketLike> {
+    private socket: T;
 
     private readonly events: Map<string, ((Packet) => void)[]>;
     private readonly eventsOnce: Map<string, ((Packet) => void)[]>;
 
-    constructor(private url: string) {
+    constructor(private websocketFactory: () => T) {
         this.events = new Map<string, ((Packet) => void)[]>();
         this.eventsOnce = new Map<string, ((Packet) => void)[]>();
     }
@@ -47,7 +55,8 @@ export abstract class SocketManager {
     }
 
     isConnected(): boolean {
-        return this.socket && this.socket.readyState === WebSocket.OPEN;
+        return this.socket && this.socket.readyState === this.socket.OPEN;
+        // Should be WebSocket.OPEN, but the type of WebSocket depends on T.
     }
 
     emit(packet: Packet) {
@@ -59,7 +68,7 @@ export abstract class SocketManager {
     }
 
     connect(): Promise<void> {
-        this.socket = new WebSocket(this.url);
+        this.socket = this.websocketFactory();
 
         this.socket.onmessage = (data) => {
             const packet: Packet = JSON.parse(<string>data.data);

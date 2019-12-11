@@ -77,12 +77,12 @@ export class TeamDao {
     }
   }
 
-  static async deleteTeams(teamUsernames: string[]) {
+  static async deleteTeams(teamUsernames: readonly string[]) {
     await Team.deleteMany({username: {$in: teamUsernames}});
   }
 
   static async createTeams(teams: Omit<TeamModel, '_id'>[]) {
-    await Team.create(...teams);
+    return await Team.create(teams);
   }
 
   static async addOrUpdateTeam(team: any): Promise<TeamModel> {

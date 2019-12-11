@@ -8,11 +8,11 @@ import {Observable} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class SocketService extends SocketManager {
+export class SocketService extends SocketManager<WebSocket> {
   listening = false;
 
   constructor(private router: Router) {
-    super(environment.wsProtocol + '://' + location.hostname + environment.socketSuffix);
+    super(() => new WebSocket(environment.wsProtocol + '://' + location.hostname + environment.socketSuffix));
   }
 
   /**

@@ -3,10 +3,15 @@ import {LoginPacket} from "../../common/src/packets/login.packet";
 import {VERSION} from "../../common/version";
 import {LoginResponse, LoginResponsePacket} from "../../common/src/packets/login.response.packet";
 import {SocketManager} from "../../common/src/socket-manager";
+import {SubmissionStatusPacket} from "../../common/src/packets/submission.status.packet";
+import {SubmissionCompletedPacket} from "../../common/src/packets/submission.completed.packet";
+import {SubmissionPacket} from "../../common/src/packets/submission.packet";
+import {PROBLEM_SUBMISSIONS} from "./data";
+import {TeamModel} from "../../common/src/models/team.model";
 
-export class Tester extends SocketManager {
-    constructor(private username: string) {
-        super('ws://localhost:8080');
+export class Tester extends SocketManager<WebSocket> {
+    constructor(private team: TeamModel) {
+        super(() => new WebSocket('ws://localhost:8080'));
     }
 
     connect(): Promise<void> {
@@ -21,7 +26,22 @@ export class Tester extends SocketManager {
                 }
             });
 
-            this.emit(new LoginPacket(this.username, 'password', VERSION));
+            this.emit(new LoginPacket(this.team.username, 'password', VERSION));
         }));
+    }
+
+    run() {
+        const problemSubmission = PROBLEM_SUBMISSIONS.basketball.python;
+
+        this.on<SubmissionStatusPacket>('submissionStatus', packet => {
+            console.log(packet.status);
+        });
+
+        this.once<SubmissionCompletedPacket>('submissionCompleted', packet => {
+            this.off('submissionStatus');
+            console.log("Submission finished! id =", packet._id);
+        });
+
+        this.emit(new SubmissionPacket(problemSubmission, this.team, VERSION));
     }
 }

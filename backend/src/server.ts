@@ -13,11 +13,11 @@ import apiRoutes from './routes/route';
 export const DEBUG = process.argv.includes('--debug');
 
 process.on('uncaughtException', (e: Error) => {
-  console.error(e);
+  console.error('uncaughtException:', e);
 });
 
 process.on('unhandledRejection', (reason: object) => {
-  console.error(reason);
+  console.error('unhandledRejection:', reason);
 });
 
 const app = express();
