@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import { SubmissionModel } from '../../../../common/src/models/submission.model';
+import {SubmissionModel, GroupedSubmissions} from '../../../../common/src/models/submission.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class SubmissionService {
     return this.restService.get<SubmissionModel[]>(this.endpoint);
   }
 
-  getSubmissionsGrouped(): Promise<SubmissionModel[]> {
+  getSubmissionsGrouped(): Promise<GroupedSubmissions> {
     return this.restService.get<any>(`${this.endpoint}/grouped`);
   }
 

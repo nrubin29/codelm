@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DivisionModel } from '../../../../../../common/src/models/division.model';
 import { DivisionService } from '../../../services/division.service';
 import {SubmissionService} from "../../../services/submission.service";
+import {GroupedSubmissions} from "../../../../../../common/src/models/submission.model";
 
 // TODO: Use a resolve.
 
@@ -12,7 +13,7 @@ import {SubmissionService} from "../../../services/submission.service";
 })
 export class AdminHomeComponent implements OnInit {
   divisions: DivisionModel[] = [];
-  groupedSubmissions: object;
+  groupedSubmissions: GroupedSubmissions;
 
   // TODO: Add an "overall" tab (for easy filtering)
   // TODO: Show loading indicator while data is being loaded

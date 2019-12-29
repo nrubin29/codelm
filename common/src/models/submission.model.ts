@@ -51,3 +51,11 @@ export interface UploadSubmissionModel extends SubmissionModel {
 export function isUploadSubmission(submission: SubmissionModel): submission is UploadSubmissionModel {
   return submission.type === 'upload';
 }
+
+export interface GroupedSubmissions {
+  [divisionId: string]: {
+    [teamId: string]: {
+      [problemId: string]: SubmissionModel[];
+    }
+  }
+}

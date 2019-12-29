@@ -5,7 +5,7 @@ import { TeamService } from '../../../services/team.service';
 import {SubmissionService} from "../../../services/submission.service";
 import {ProblemModel, ProblemType} from "../../../../../../common/src/models/problem.model";
 import {ProblemService} from "../../../services/problem.service";
-import {SubmissionModel} from "../../../../../../common/src/models/submission.model";
+import {GroupedSubmissions, SubmissionModel} from "../../../../../../common/src/models/submission.model";
 import {MatDialog} from "@angular/material";
 import {ViewSubmissionsComponent} from "../view-submissions/view-submissions.component";
 
@@ -16,7 +16,7 @@ import {ViewSubmissionsComponent} from "../view-submissions/view-submissions.com
 })
 export class LeaderboardComponent implements OnInit {
   @Input() division: DivisionModel;
-  @Input() groupedSubmissions: object;
+  @Input() groupedSubmissions: GroupedSubmissions;
 
   teams: TeamModel[] = [];
   problems: ProblemModel[] = [];
