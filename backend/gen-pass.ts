@@ -7,4 +7,5 @@ process.stdin.once('data', data => {
 
   console.log(`Salt: ${salt}`);
   console.log(`Hash: ${hash}`);
+  process.exit();
 });

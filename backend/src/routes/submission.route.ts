@@ -10,10 +10,34 @@ router.get('/', PermissionsUtil.requireTeam, async (req: Request, res: Response)
   res.json(submissions.map(submission => sanitizeSubmission(submission)));
 });
 
-router.get('/grouped', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
-  const submissions = await SubmissionDao.getSubmissionsGrouped();
-  res.json(submissions);
+router.get('/all', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
+  let first = true;
+  res.write('[');
+
+  SubmissionDao.getAllSubmissions()
+      .on('data', data => {
+        console.log('going to write ', data);
+
+        if (first) {
+          first = false;
+        }
+
+        else {
+          res.write(',');
+        }
+
+        res.write(JSON.stringify(data.toObject()));
+      })
+      .on('end', () => {
+        res.write(']');
+        res.end();
+      });
 });
+
+// router.get('/grouped', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
+//   const submissions = await SubmissionDao.getSubmissionsGrouped();
+//   res.json(submissions);
+// });
 
 router.get('/team/:id', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
   res.json(await SubmissionDao.getSubmissionsForTeam(req.params.id));

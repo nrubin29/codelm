@@ -18,9 +18,13 @@ export class SubmissionService {
     return this.restService.get<SubmissionModel[]>(this.endpoint);
   }
 
-  getSubmissionsGrouped(): Promise<GroupedSubmissions> {
-    return this.restService.get<any>(`${this.endpoint}/grouped`);
+  getAllSubmissions(): Promise<SubmissionModel[]> {
+    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/all`);
   }
+
+  // getSubmissionsGrouped(): Promise<GroupedSubmissions> {
+  //   return this.restService.get<GroupedSubmissions>(`${this.endpoint}/grouped`);
+  // }
 
   getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
     return this.restService.get<SubmissionModel[]>(`${this.endpoint}/team/${teamId}`)

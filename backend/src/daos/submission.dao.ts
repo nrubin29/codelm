@@ -1,11 +1,11 @@
 import mongoose = require('mongoose');
 import {
   isGradedSubmission,
-  SubmissionModel,
+  SubmissionModel, GroupedSubmissions,
   TestCaseSubmissionModel
 } from '../../../common/src/models/submission.model';
 import {GradedProblemModel, ProblemType, TestCaseOutputMode} from '../../../common/src/models/problem.model';
-import {ModelPopulateOptions} from 'mongoose';
+import {ModelPopulateOptions, QueryCursor} from 'mongoose';
 import {SocketManager} from '../socket.manager';
 import {UpdateTeamPacket} from '../../../common/src/packets/update.team.packet';
 import {ProblemUtil} from '../../../common/src/utils/problem.util';
@@ -154,56 +154,66 @@ export class SubmissionDao {
     return (await Submission.findById(id).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec()).toObject();
   }
 
+  static getAllSubmissions(): QueryCursor<SubmissionType> {
+    return Submission.find().populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).cursor();
+  }
+
   static async getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
     const submissions = await Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
     return submissions.map(submission => submission.toObject());
   }
 
-  static async getSubmissionsGrouped(): Promise<any> { // {'team.division': {_id: divisionId}}
-    const result = {};
-    const teams: TeamModel[] = (await TeamDao.getTeams()).map(submission => submission.toObject());
-
-    for (let team of teams) {
-      if (!team.division) {
-        console.error('Bad/stale team: ' + team._id);
-        continue;
-      }
-
-      const divisionId = team.division._id;
-      const teamId = team._id;
-
-      if (!(divisionId in result)) {
-        result[divisionId] = {[teamId]: {}};
-      }
-
-      else {
-        result[divisionId][teamId] = {};
-      }
-    }
-
-    const submissions: SubmissionModel[] = (await Submission.find().populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec()).map(submission => submission.toObject());
-
-    for (let submission of submissions) {
-      if (!submission.team || !submission.problem) {
-        console.error('Bad/stale submission: ' + submission._id);
-        continue;
-      }
-
-      const divisionId = submission.team.division._id;
-      const teamId = submission.team._id;
-      const problemId = submission.problem._id;
-
-      if (!(problemId in result[divisionId][teamId])) {
-        result[divisionId][teamId][problemId] = [submission];
-      }
-
-      else {
-        result[divisionId][teamId][problemId].push(submission);
-      }
-    }
-
-    return result;
-  }
+  // static async getSubmissionsGrouped(): Promise<GroupedSubmissions> { // {'team.division': {_id: divisionId}}
+  //   const result: GroupedSubmissions = {};
+  //   const teams: TeamModel[] = (await TeamDao.getTeams()).map(team => team.toObject());
+  //
+  //   console.log(`Got ${teams.length} teams!`);
+  //
+  //   for (let team of teams) {
+  //     if (!team.division) {
+  //       console.error('Bad/stale team: ' + team._id);
+  //       continue;
+  //     }
+  //
+  //     const divisionId = team.division._id;
+  //     const teamId = team._id;
+  //
+  //     if (!(divisionId in result)) {
+  //       result[divisionId] = {[teamId]: {}};
+  //     }
+  //
+  //     else {
+  //       result[divisionId][teamId] = {};
+  //     }
+  //   }
+  //
+  //   const submissions: SubmissionModel[] = await SubmissionDao.getAllSubmissions();
+  //
+  //   console.log(`Got ${submissions.length} submissions!`);
+  //
+  //   for (let submission of submissions) {
+  //     if (!submission.team || !submission.problem) {
+  //       console.error('Bad/stale submission: ' + submission._id);
+  //       continue;
+  //     }
+  //
+  //     console.log(`Trying submission ${submission._id}`);
+  //
+  //     const divisionId = submission.team.division._id;
+  //     const teamId = submission.team._id;
+  //     const problemId = submission.problem._id;
+  //
+  //     if (!(problemId in result[divisionId][teamId])) {
+  //       result[divisionId][teamId][problemId] = [submission];
+  //     }
+  //
+  //     else {
+  //       result[divisionId][teamId][problemId].push(submission);
+  //     }
+  //   }
+  //
+  //   return result;
+  // }
 
   // static async getSubmissionsGrouped(division: string): Promise<any> {
   //   let submissions = await Submission.aggregate([{$match: {division}}, {$group: {_id: {team: "$team", problem: "$problem"}, submissions: {$push: "$$ROOT"}}}]).exec();
