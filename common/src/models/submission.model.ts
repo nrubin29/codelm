@@ -52,10 +52,22 @@ export function isUploadSubmission(submission: SubmissionModel): submission is U
   return submission.type === 'upload';
 }
 
-export interface GroupedSubmissions {
-  [divisionId: string]: {
-    [teamId: string]: {
-      [problemId: string]: SubmissionModel[];
-    }
-  }
+export enum SubmissionOverviewStatus {
+  Complete = 'Complete',
+  Error = 'Error',
+  None = 'None'
+}
+
+export type SubmissionOverview = SubmissionOverviewElement[];
+
+export interface SubmissionOverviewElement {
+  team: TeamModel;
+  problems: SubmissionOverviewProblems;
+}
+
+export interface SubmissionOverviewProblems {
+  [problemId: string]: {
+    numSubmissions: number;
+    status: SubmissionOverviewStatus;
+  };
 }

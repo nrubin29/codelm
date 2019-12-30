@@ -52,7 +52,7 @@ export class TeamDao {
   }
 
   static async getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
-    return await TeamDao.addScores(await Team.find({division: {_id: divisionId}}).populate('division').exec());
+    return (await TeamDao.addScores(await Team.find({division: {_id: divisionId}}).populate('division').exec())).map(team => team.toObject());
   }
 
   static async login(username: string, password: string): Promise<TeamModel> {

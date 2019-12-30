@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import {SubmissionModel, GroupedSubmissions} from '../../../../common/src/models/submission.model';
+import {SubmissionModel, SubmissionOverview} from '../../../../common/src/models/submission.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +18,16 @@ export class SubmissionService {
     return this.restService.get<SubmissionModel[]>(this.endpoint);
   }
 
-  getAllSubmissions(): Promise<SubmissionModel[]> {
-    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/all`);
+  getSubmissionOverview(divisionId: string): Promise<SubmissionOverview> {
+    return this.restService.get<SubmissionOverview>(`${this.endpoint}/overview/${divisionId}`);
   }
 
-  // getSubmissionsGrouped(): Promise<GroupedSubmissions> {
-  //   return this.restService.get<GroupedSubmissions>(`${this.endpoint}/grouped`);
-  // }
-
   getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
-    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/team/${teamId}`)
+    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/team/${teamId}`);
+  }
+
+  getSubmissionsForTeamAndProblem(teamId: string, problemId: string): Promise<SubmissionModel[]> {
+    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/problem/${problemId}/team/${teamId}`);
   }
 
   getDisputedSubmissions(): Promise<SubmissionModel[]> {

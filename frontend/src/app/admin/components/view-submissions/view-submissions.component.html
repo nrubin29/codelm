@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>Submissions from {{data.team.username}} for {{data.problem.title}}</h2>
 <mat-dialog-content>
-  <mat-table [dataSource]="data.submissions">
+  <mat-table [dataSource]="submissions">
     <ng-container matColumnDef="result">
       <mat-header-cell *matHeaderCellDef>Result</mat-header-cell>
       <mat-cell *matCellDef="let element"><a [routerLink]="['/admin', 'submission', element._id]" (click)="close()">{{element.result}}</a></mat-cell>

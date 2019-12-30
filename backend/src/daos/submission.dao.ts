@@ -1,16 +1,18 @@
 import mongoose = require('mongoose');
 import {
   isGradedSubmission,
-  SubmissionModel, GroupedSubmissions,
+  SubmissionModel,
+  SubmissionOverview, SubmissionOverviewProblems,
+  SubmissionOverviewStatus,
   TestCaseSubmissionModel
 } from '../../../common/src/models/submission.model';
 import {GradedProblemModel, ProblemType, TestCaseOutputMode} from '../../../common/src/models/problem.model';
-import {ModelPopulateOptions, QueryCursor} from 'mongoose';
+import {ModelPopulateOptions} from 'mongoose';
 import {SocketManager} from '../socket.manager';
 import {UpdateTeamPacket} from '../../../common/src/packets/update.team.packet';
 import {ProblemUtil} from '../../../common/src/utils/problem.util';
-import {TeamModel} from "../../../common/src/models/team.model";
 import {TeamDao} from "./team.dao";
+import {ProblemDao} from "./problem.dao";
 
 type SubmissionType = SubmissionModel & mongoose.Document;
 
@@ -154,88 +156,76 @@ export class SubmissionDao {
     return (await Submission.findById(id).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec()).toObject();
   }
 
-  static getAllSubmissions(): QueryCursor<SubmissionType> {
-    return Submission.find().populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).cursor();
-  }
-
   static async getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
     const submissions = await Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
     return submissions.map(submission => submission.toObject());
   }
 
-  // static async getSubmissionsGrouped(): Promise<GroupedSubmissions> { // {'team.division': {_id: divisionId}}
-  //   const result: GroupedSubmissions = {};
-  //   const teams: TeamModel[] = (await TeamDao.getTeams()).map(team => team.toObject());
-  //
-  //   console.log(`Got ${teams.length} teams!`);
-  //
-  //   for (let team of teams) {
-  //     if (!team.division) {
-  //       console.error('Bad/stale team: ' + team._id);
-  //       continue;
-  //     }
-  //
-  //     const divisionId = team.division._id;
-  //     const teamId = team._id;
-  //
-  //     if (!(divisionId in result)) {
-  //       result[divisionId] = {[teamId]: {}};
-  //     }
-  //
-  //     else {
-  //       result[divisionId][teamId] = {};
-  //     }
-  //   }
-  //
-  //   const submissions: SubmissionModel[] = await SubmissionDao.getAllSubmissions();
-  //
-  //   console.log(`Got ${submissions.length} submissions!`);
-  //
-  //   for (let submission of submissions) {
-  //     if (!submission.team || !submission.problem) {
-  //       console.error('Bad/stale submission: ' + submission._id);
-  //       continue;
-  //     }
-  //
-  //     console.log(`Trying submission ${submission._id}`);
-  //
-  //     const divisionId = submission.team.division._id;
-  //     const teamId = submission.team._id;
-  //     const problemId = submission.problem._id;
-  //
-  //     if (!(problemId in result[divisionId][teamId])) {
-  //       result[divisionId][teamId][problemId] = [submission];
-  //     }
-  //
-  //     else {
-  //       result[divisionId][teamId][problemId].push(submission);
-  //     }
-  //   }
-  //
-  //   return result;
-  // }
+  static async getSubmissionsForTeamAndProblem(teamId: string, problemId: string): Promise<SubmissionModel[]> {
+    const submissions = await Submission.find({team: teamId, problem: problemId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
+    return submissions.map(submission => submission.toObject());
+  }
 
-  // static async getSubmissionsGrouped(division: string): Promise<any> {
-  //   let submissions = await Submission.aggregate([{$match: {division}}, {$group: {_id: {team: "$team", problem: "$problem"}, submissions: {$push: "$$ROOT"}}}]).exec();
-  //   submissions = await Submission.populate(submissions, SubmissionDao.problemPopulationPath);
-  //   submissions = await Submission.populate(submissions, SubmissionDao.teamPopulationPath);
-  //   console.log(submissions);
-  //   // submissions = submissions.map(submission => submission.toObject());
-  //
-  //   const result = {};
-  //
-  //   submissions.forEach(submission => {
-  //     if (result[submission._id.team]) {
-  //       result[submission._id.team][submission._id.problem] = submission.submissions;
-  //     }
-  //
-  //     else {
-  //       result[submission._id.team] = {[submission._id.problem]: submission.submissions};
-  //     }
-  //   });
-  //
-  //   return result;
-  // }
+  static async getSubmissionOverview(divisionId: string): Promise<SubmissionOverview> {
+    const result: SubmissionOverview = [];
+    const teams = (await TeamDao.getTeamsForDivision(divisionId)).sort((a, b) => b.score - a.score);;
+    const problems = await ProblemDao.getProblemsForDivision(divisionId);
+
+    for (const team of teams) {
+      console.log(team.username, team.score);
+
+      const data: SubmissionOverviewProblems = {};
+      const submissions = await SubmissionDao.getSubmissionsForTeam(team._id);
+
+      for (const problem of problems) {
+        // TODO: This number seems to be wrong sometimes. This could also affect status.
+        let numSubmissions = 0;
+
+        // Begin: determine status
+        let status: SubmissionOverviewStatus;
+        let error = false;
+
+        for (let submission of submissions) {
+          if (submission.problem._id.toString() !== problem._id.toString()) {
+            continue;
+          }
+
+          numSubmissions++;
+
+          if (submission.points > 0) {
+            status = SubmissionOverviewStatus.Complete;
+            break;
+          }
+
+          else if (submission.problem.type === ProblemType.OpenEnded && !submission.test) {
+            status = SubmissionOverviewStatus.Complete;
+            break;
+          }
+
+          else if (!submission.test) {
+            error = true;
+          }
+        }
+
+        if (!status) {
+          status = error ? SubmissionOverviewStatus.Error : SubmissionOverviewStatus.None;
+        }
+        // End: determine status
+
+        data[problem._id] = {
+          numSubmissions,
+          status
+        }
+      }
+
+      result.push({
+        team,
+        problems: data
+      });
+    }
+
+    return result;
+  }
 
   static getDisputedSubmissions(): Promise<SubmissionModel[]> {
     return Submission.find({'dispute.open': true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
