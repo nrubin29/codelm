@@ -1,4 +1,5 @@
 import express = require('express');
+import {Router} from 'express';
 import morgan = require('morgan');
 import bodyParser = require('body-parser');
 import path = require('path');
@@ -29,8 +30,15 @@ app.use(bodyParser.urlencoded({extended: true, limit: '5mb'})); // parse applica
 app.use(bodyParser.json({limit: '5mb'})); // parse application/json
 app.use(bodyParser.json({type: 'application/vnd.api+json', limit: '5mb'})); // Parse application/vnd.api+json as json
 app.use(fileUpload());
-app.use(express.static(path.join('.', 'dist', 'frontend')));
 app.use('/api', apiRoutes);
+
+if (process.env.NODE_ENV == 'development') {
+  app.use(express.static(path.join('.', 'dist', 'frontend')));
+}
+
+else {
+  app.use('/', Router().get('/', (req, res) => res.redirect('/index.html')));
+}
 
 console.log(`Starting CodeLM server build ${VERSION}${DEBUG ? ' in debug mode' : ''}`);
 

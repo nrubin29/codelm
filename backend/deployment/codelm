@@ -9,8 +9,8 @@ server {
     root /home/codelm/dist/frontend;
 
     ssl on;
-    ssl_certificate /home/certs/newwavecomputers.com.pem;
-    ssl_certificate_key /home/certs/newwavecomputers.com.key;
+    ssl_certificate /root/certs/newwavecomputers.com.pem;
+    ssl_certificate_key /root/certs/newwavecomputers.com.key;
 
     # location = /favicon.ico { access_log off; log_not_found off; }
 
