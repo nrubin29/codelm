@@ -19,3 +19,9 @@
 button:not(:last-child) {
   margin-right: 0.5em;
 }
+
+.rubric-table {
+  & .mat-cell:not(:first-of-type), & .mat-header-cell:not(:first-of-type) {
+    justify-content: center;
+  }
+}

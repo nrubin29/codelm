@@ -22,3 +22,8 @@ export class SubmissionUtil {
     return null;
   }
 }
+
+// TODO: Replace with Object#fromEntries once IT becomes available.
+export function objectFromEntries<T>(map: Map<string, T>): {[key: string]: T} {
+  return Object.assign({}, ...Array.from(map.entries()).map(([key, value]) => ({[key]: value})));
+}

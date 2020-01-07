@@ -8,6 +8,7 @@ import mongoose = require('mongoose');
 import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
 import { VERSION } from '../../common/version';
+import {objectFromEntries} from "../../common/src/utils/submission.util";
 import './daos/dao';
 import apiRoutes from './routes/route';
 
@@ -23,6 +24,17 @@ process.on('unhandledRejection', (reason: object) => {
 
 const app = express();
 app.set('trust proxy', true);
+app.set('json replacer', (key: string, value: any) => {
+  // TODO: Ensure that this doesn't slow down `res#json` in the general case.
+  if (key === 'rubric') {
+    // `rubric` is stored as a Map in the database, but it must be converted to an Object for JSON.
+    const rubric = value as Map<string, number>;
+    return objectFromEntries(rubric);
+  }
+
+  return value;
+});
+
 const expressWs = require('express-ws')(app);
 
 app.use(morgan('[:date[clf]] :method :url :status :response-time ms :remote-addr'));
@@ -42,6 +54,7 @@ else {
 
 console.log(`Starting CodeLM server build ${VERSION}${DEBUG ? ' in debug mode' : ''}`);
 
+mongoose.set('useFindAndModify', false);
 mongoose.connect('mongodb://localhost/codelm', {useNewUrlParser: true}).then(() => {
   console.log('Connected to MongoDB');
 

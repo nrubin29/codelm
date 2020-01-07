@@ -1,10 +1,11 @@
 import mongoose = require('mongoose');
 import {
+  GradedSubmissionModel,
   isGradedSubmission,
   SubmissionModel,
   SubmissionOverview, SubmissionOverviewProblems,
   SubmissionOverviewStatus,
-  TestCaseSubmissionModel
+  TestCaseSubmissionModel, UploadSubmissionModel
 } from '../../../common/src/models/submission.model';
 import {GradedProblemModel, ProblemType, TestCaseOutputMode} from '../../../common/src/models/problem.model';
 import {ModelPopulateOptions} from 'mongoose';
@@ -68,7 +69,7 @@ const SubmissionSchema = new mongoose.Schema({
   problem: {type: mongoose.Schema.Types.ObjectId, ref: 'Problem'},
   language: String,
   code: String,
-  score: Number,
+  rubric: {type: Map, of: Number, default: () => new Map()},
   test: {type: Boolean, default: false},
   testCases: [TestCaseSubmissionSchema],
   error: String,
@@ -96,39 +97,43 @@ export function sanitizeSubmission(submission: SubmissionModel): SubmissionModel
 }
 
 SubmissionSchema.virtual('result').get(function() {
-  if (this.overrideCorrect) {
+  const submission = this as UploadSubmissionModel & GradedSubmissionModel;
+
+  if (submission.overrideCorrect) {
     return 'Override correct';
   }
 
-  else if (this.error) {
+  else if (submission.error) {
     return 'Error';
   }
 
-  else if (this.problem.type === ProblemType.OpenEnded) {
-    return this.test ? 'Test' : 'Submitted'
+  else if (submission.problem.type === ProblemType.OpenEnded) {
+    return submission.test ? 'Test' : 'Submitted'
   }
 
   else {
-    return ((this.testCases.filter(testCase => isTestCaseSubmissionCorrect(testCase, this.problem)).length / this.testCases.length) * 100).toFixed(0) + '%';
+    return ((submission.testCases.filter(testCase => isTestCaseSubmissionCorrect(testCase, this.problem)).length / this.testCases.length) * 100).toFixed(0) + '%';
   }
 });
 
 SubmissionSchema.virtual('points').get(function() {
   if (isGradedSubmission(this)) {
-    if (this.test) {
+    const submission = this as GradedSubmissionModel;
+
+    if (submission.test) {
       return 0;
     }
 
-    else if (this.overrideCorrect) {
-      return ProblemUtil.getPoints(this.problem, this.team);
+    else if (submission.overrideCorrect) {
+      return ProblemUtil.getPoints(submission.problem, submission.team);
     }
 
-    else if (this.error) {
+    else if (submission.error) {
       return 0;
     }
 
-    else if (this.testCases.every(testCase => testCase.toObject().correct)) {
-      return ProblemUtil.getPoints(this.problem, this.team);
+    else if (submission.testCases.every((testCase: TestCaseSubmissionModel & {toObject(): TestCaseSubmissionModel}) => testCase.toObject().correct)) {
+      return ProblemUtil.getPoints(submission.problem, submission.team);
     }
 
     else {
@@ -137,8 +142,8 @@ SubmissionSchema.virtual('points').get(function() {
   }
 
   else {
-    // TODO: Take into account algorithm performance
-    return this.score;
+    const submission = this as UploadSubmissionModel;
+    return Array.from(submission.rubric.values()).reduce((sum, current) => sum + current, 0);
   }
 });
 
@@ -244,7 +249,7 @@ export class SubmissionDao {
   static async updateSubmission(id: string, submission: SubmissionModel): Promise<SubmissionModel> {
     const subm = await Submission.findOneAndUpdate({_id: id}, submission, {new: true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
     SocketManager.instance.emit(subm.team._id.toString(), new UpdateTeamPacket());
-    return subm;
+    return subm.toObject();
   }
 
   static async deleteSubmission(id: string): Promise<void> {

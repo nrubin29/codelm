@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import { SubmissionComponent } from '../submission/submission.component';
 import { UploadSubmissionModel } from '../../../../../../common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
@@ -7,18 +7,21 @@ import {CodeSaverService} from "../../../services/code-saver.service";
 import {OpenEndedProblemModel} from "../../../../../../common/src/models/problem.model";
 import {Router} from "@angular/router";
 import {ProblemService} from "../../../services/problem.service";
+import {MatRadioButton} from "@angular/material/radio";
+import {rubric} from "./rubric";
 
 @Component({
   selector: 'app-upload-submission',
   templateUrl: './upload-submission.component.html',
   styleUrls: ['./upload-submission.component.scss']
 })
-export class UploadSubmissionComponent implements OnInit {
+export class UploadSubmissionComponent implements OnInit, AfterViewInit {
   @Input() submission: UploadSubmissionModel;
-  score: number;
-
   mode: string;
+  rubric = rubric;
+
   @ViewChild(CodeMirrorComponent, {static: true}) codeMirror: CodeMirrorComponent;
+  @ViewChildren(MatRadioButton) buttons: QueryList<MatRadioButton>;
 
   constructor(private submissionComponent: SubmissionComponent, private submissionService: SubmissionService, private problemService: ProblemService, private codeSaverService: CodeSaverService, private router: Router) {
   }
@@ -28,10 +31,18 @@ export class UploadSubmissionComponent implements OnInit {
     this.codeMirror.writeValue(this.submission.code);
   }
 
+  ngAfterViewInit() {
+    this.buttons.forEach(button => {
+      if (button.value === this.submission.rubric.get(button.name)) {
+        button.checked = true;
+      }
+    });
+  }
+
   setScore() {
-    this.submission.score = this.score;
-    this.submissionService.updateSubmission(this.submission).then(() => {
-      this.submission.points = this.score;
+    this.submission.rubric = new Map<string, number>(this.buttons.filter(button => button.checked).map(button => [button.name, button.value]));
+    this.submissionService.updateSubmission(this.submission).then(submission => {
+      this.submission = submission as UploadSubmissionModel;
       alert('Updated');
     }).catch(alert);
   }

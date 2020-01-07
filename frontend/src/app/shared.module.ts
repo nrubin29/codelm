@@ -30,6 +30,8 @@ import { GradedSubmissionComponent } from './common/views/graded-submission/grad
 import { UploadSubmissionComponent } from './common/views/upload-submission/upload-submission.component';
 import {HighlowComponent} from "./common/views/highlow/highlow.component";
 import {TimesweeperComponent} from "./common/views/timesweeper/timesweeper.component";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import {TimesweeperComponent} from "./common/views/timesweeper/timesweeper.compo
     MatCheckboxModule,
     MatExpansionModule,
     MatMenuModule,
+    MatRadioModule,
+    MatTooltipModule,
   ],
   exports: [
     SubmissionComponent,

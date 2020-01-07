@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <a [routerLink]="['/dashboard', 'problem', submission.problem._id]" *ngIf="!admin && submission.points === 0"
+      <a [routerLink]="['/dashboard', 'problem', submission.problem._id]" *ngIf="!admin && ((submission.type === 'graded' && submission.points === 0) || (submission.type === 'upload' && submission.test))"
          class="back">
         <mat-icon>arrow_back</mat-icon>
       </a>

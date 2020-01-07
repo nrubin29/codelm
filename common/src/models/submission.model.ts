@@ -45,7 +45,7 @@ export function isGradedSubmission(submission: SubmissionModel): submission is G
 export interface UploadSubmissionModel extends SubmissionModel {
   type: 'upload';
   problem: OpenEndedProblemModel;
-  score: number;
+  rubric: Map<string, number>;
 }
 
 export function isUploadSubmission(submission: SubmissionModel): submission is UploadSubmissionModel {
