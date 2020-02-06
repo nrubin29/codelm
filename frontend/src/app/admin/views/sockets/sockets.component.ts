@@ -16,12 +16,12 @@ export class SocketsComponent implements OnInit {
       this.sockets = res;
     });
 
-    setInterval(() => {
-      this.socketRestService.getSockets().then(res => {
-        console.log(res);
-        this.sockets = res;
-      });
-    }, 30 * 1000);
+    // setInterval(() => {
+    //   this.socketRestService.getSockets().then(res => {
+    //     console.log(res);
+    //     this.sockets = res;
+    //   });
+    // }, 30 * 1000);
   }
 
   kick(id: string) {

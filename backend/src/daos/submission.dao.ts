@@ -181,8 +181,6 @@ export class SubmissionDao {
     const problems = await ProblemDao.getProblemsForDivision(divisionId);
 
     for (const team of teams) {
-      console.log(team.username, team.score);
-
       const data: SubmissionOverviewProblems = {};
       const submissions = await SubmissionDao.getSubmissionsForTeam(team._id);
 

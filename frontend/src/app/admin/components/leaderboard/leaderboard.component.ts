@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DivisionModel} from '../../../../../../common/src/models/division.model';
 import {TeamService} from '../../../services/team.service';
 import {SubmissionService} from "../../../services/submission.service";
@@ -17,14 +17,14 @@ import {ViewSubmissionsComponent} from "../view-submissions/view-submissions.com
   templateUrl: './leaderboard.component.html',
   styleUrls: ['./leaderboard.component.scss']
 })
-export class LeaderboardComponent implements OnInit {
+export class LeaderboardComponent implements OnInit, OnDestroy {
   @Input() division: DivisionModel;
 
   submissionOverview: SubmissionOverview;
-
   problems: ProblemModel[] = [];
 
-  // TODO: Load/reload data when this component is visible
+  intervalHandle: number;
+
   // TODO: Add filtering
   // TODO: Incorporate disputes (yellow background + ! icon)
 
@@ -32,6 +32,16 @@ export class LeaderboardComponent implements OnInit {
 
   ngOnInit() {
     this.problemService.getProblems(this.division._id).then(problems => this.problems = problems);
+
+    this.refresh();
+    this.intervalHandle = setInterval(this.refresh.bind(this), 30 * 1000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.intervalHandle);
+  }
+
+  refresh() {
     this.submissionService.getSubmissionOverview(this.division._id).then(overview => this.submissionOverview = overview);
   }
 

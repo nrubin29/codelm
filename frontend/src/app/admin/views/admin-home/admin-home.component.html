@@ -5,7 +5,9 @@
 </mat-toolbar>
 <mat-tab-group *ngIf="divisions">
   <mat-tab *ngFor="let division of divisions" [label]="division.name">
-    <app-leaderboard [division]="division"></app-leaderboard>
+    <ng-template matTabContent>
+      <app-leaderboard [division]="division"></app-leaderboard>
+    </ng-template>
   </mat-tab>
 </mat-tab-group>
 <p *ngIf="!divisions">Loading...</p>
