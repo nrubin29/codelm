@@ -1,8 +1,9 @@
 import {Packet} from "./packet";
+import {SubmissionModel} from "../models/submission.model";
 
 export class SubmissionCompletedPacket extends Packet {
 
-  constructor(public _id: string) {
+  constructor(public submission: SubmissionModel) {
     super('submissionCompleted');
   }
 }

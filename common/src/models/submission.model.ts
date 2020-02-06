@@ -21,6 +21,7 @@ export interface SubmissionModel {
   type: 'graded' | 'upload';
   team: TeamModel;
   problem: ProblemModel;
+  result?: string;
   points?: number;
   datetime?: Date;
   language: string;
@@ -31,7 +32,6 @@ export interface SubmissionModel {
 export interface GradedSubmissionModel extends SubmissionModel {
   type: 'graded';
   problem: GradedProblemModel;
-  result?: string;
   overrideCorrect?: boolean;
   dispute?: DisputeModel;
   error?: string;

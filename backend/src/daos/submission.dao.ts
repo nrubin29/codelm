@@ -96,24 +96,28 @@ export function sanitizeSubmission(submission: SubmissionModel): SubmissionModel
   return submission;
 }
 
-SubmissionSchema.virtual('result').get(function() {
-  const submission = this as UploadSubmissionModel & GradedSubmissionModel;
+export function submissionResult(submission: SubmissionModel) {
+  if (isGradedSubmission(submission)) {
+    if (submission.overrideCorrect) {
+      return 'Override correct';
+    }
 
-  if (submission.overrideCorrect) {
-    return 'Override correct';
-  }
+    else if (submission.error) {
+      return 'Error';
+    }
 
-  else if (submission.error) {
-    return 'Error';
-  }
-
-  else if (submission.problem.type === ProblemType.OpenEnded) {
-    return submission.test ? 'Test' : 'Submitted'
+    else {
+      return ((submission.testCases.filter(testCase => isTestCaseSubmissionCorrect(testCase, submission.problem)).length / submission.testCases.length) * 100).toFixed(0) + '%';
+    }
   }
 
   else {
-    return ((submission.testCases.filter(testCase => isTestCaseSubmissionCorrect(testCase, this.problem)).length / this.testCases.length) * 100).toFixed(0) + '%';
+    return submission.test ? 'Test' : 'Submitted';
   }
+}
+
+SubmissionSchema.virtual('result').get(function() {
+  return submissionResult(this);
 });
 
 SubmissionSchema.virtual('points').get(function() {
@@ -132,7 +136,7 @@ SubmissionSchema.virtual('points').get(function() {
       return 0;
     }
 
-    else if (submission.testCases.every((testCase: TestCaseSubmissionModel & {toObject(): TestCaseSubmissionModel}) => testCase.toObject().correct)) {
+    else if (submission.testCases.every(testCase => testCase.correct)) {
       return ProblemUtil.getPoints(submission.problem, submission.team);
     }
 
@@ -243,7 +247,9 @@ export class SubmissionDao {
   }
 
   static addSubmission(submission: SubmissionModel): Promise<SubmissionModel> {
-    return Submission.create(submission);
+    // For some reason, Submission#create doesn't populate the team and then the points virtual gets messed up.
+    // Even manually populating it before calling s.toObject() doesn't work.
+    return Submission.create(submission).then(s => SubmissionDao.getSubmission(s._id.toString()));
   }
 
   static async updateSubmission(id: string, submission: SubmissionModel): Promise<SubmissionModel> {

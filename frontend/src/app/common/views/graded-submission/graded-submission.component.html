@@ -40,8 +40,7 @@
         <app-card title="Error" *ngIf="submission.error">
             <code [innerHTML]="submissionError"></code>
         </app-card>
-        <app-card title="Dispute"
-                  *ngIf="submission.dispute || ((submission.test || submission.points === 0) && !admin)">
+        <app-card title="Dispute" *ngIf="submission.dispute || (submission.points === 0 && !admin)">
             <ng-container *ngIf="submission.dispute">
                 <h3>{{admin ? 'The' : 'Your'}} dispute {{submission.dispute.open ? 'is currently open' : 'has been resolved'}}.</h3>
                 <p>{{submission.dispute.message}}</p>

@@ -11,7 +11,7 @@ import {SubmissionPacket} from "../../common/src/packets/submission.packet";
 import {ServerProblemSubmission} from "../../common/src/problem-submission";
 import {ProblemDao} from "./daos/problem.dao";
 import {isGradedProblem, isOpenEndedProblem, ProblemModel} from "../../common/src/models/problem.model";
-import {isFalse, SubmissionDao} from "./daos/submission.dao";
+import {isFalse, SubmissionDao, submissionResult} from "./daos/submission.dao";
 import {spawn} from "child_process";
 import {
   GradedSubmissionModel,
@@ -275,42 +275,27 @@ export class SocketManager {
     }
 
     const {testCases, err} = await this.runSubmission(serverProblemSubmission, problem, socket);
-    let submission: SubmissionModel;
 
-    if (err) {
-      submission = await SubmissionDao.addSubmission({
-        type: isGradedProblem(problem) ? 'graded' : 'upload',
-        team: packet.team,
-        problem: problem,
-        language: problemSubmission.language,
-        code: problemSubmission.code,
-        error: err,
-        test: problemSubmission.test
-      } as GradedSubmissionModel);
+    let submission: SubmissionModel = {
+      type: isGradedProblem(problem) ? 'graded' : 'upload',
+      team: packet.team,
+      problem,
+      language: problemSubmission.language,
+      code: problemSubmission.code,
+      testCases,
+      error: err,
+      test: problemSubmission.test
+    } as GradedSubmissionModel;
+
+    if (problemSubmission.test) {
+      submission.result = submissionResult(submission);
     }
 
     else {
-      submission = await SubmissionDao.addSubmission({
-        type: isGradedProblem(problem) ? 'graded' : 'upload',
-        team: packet.team,
-        problem: problem,
-        language: problemSubmission.language,
-        code: problemSubmission.code,
-        testCases: testCases,
-        test: problemSubmission.test
-      } as GradedSubmissionModel);
+      submission = await SubmissionDao.addSubmission(submission);
     }
 
-    /*
-    // or
-    const submission = await SubmissionDao.addSubmission({
-      team: packet.team,
-      problem: problem,
-      score: (<GameResult>JSON.parse(lastData)).score
-    } as UploadSubmissionModel);
-    */
-
-    this.emitToSocket(new SubmissionCompletedPacket(submission._id), socket);
+    this.emitToSocket(new SubmissionCompletedPacket(submission), socket);
   }
 
   // TODO: Combine this with onSubmissionPacket
@@ -334,7 +319,7 @@ export class SocketManager {
     }
 
     await this.runSubmission(serverProblemSubmission, submission.problem, socket);
-    this.emitToSocket(new SubmissionCompletedPacket(submission._id), socket);
+    this.emitToSocket(new SubmissionCompletedPacket(submission), socket);
   }
 
   private runSubmission(serverProblemSubmission: ServerProblemSubmission, problem: ProblemModel, socket: WebSocket): Promise<{testCases: TestCaseSubmissionModel[], err: string}> {

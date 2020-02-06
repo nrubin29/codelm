@@ -39,7 +39,7 @@ export class SubmitComponent implements OnInit {
           this.dashboard.toggle().then(() => {
             // setTimeout(() => {
               this.finished = true;
-              this.router.navigate(['dashboard', 'submission', packet._id]);
+              this.router.navigate(['dashboard', 'submission', packet.submission._id || 'test'], {state: {submission: packet.submission}});
             // }, 200);
           });
         });

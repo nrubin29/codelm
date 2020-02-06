@@ -37,4 +37,18 @@ export class SubmissionComponent implements OnInit {
   get admin() {
     return !this.teamService.team.getValue();
   }
+
+  get showBackButton() {
+    if (this.admin) {
+      return false;
+    }
+
+    else if (this.submission.test) {
+      return true;
+    }
+
+    else if (this.submission.type === 'graded') {
+      return this.submission.points === 0;
+    }
+  }
 }

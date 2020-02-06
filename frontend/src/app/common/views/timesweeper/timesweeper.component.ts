@@ -108,7 +108,7 @@ export class TimesweeperComponent implements OnInit, AfterViewInit {
             // this.teamService.refreshTeam().then(() => {
             this.toggle().then(() => {
               this.status = 'Finished';
-              this._id = packet._id;
+              this._id = packet.submission._id;
               // setTimeout(() => {
               // this.finished = true;
               // this.router.navigate(['dashboard', 'submission', packet._id]);
