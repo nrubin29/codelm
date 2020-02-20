@@ -1,3 +1,4 @@
 .idea/
 dist/
 profiling/
+.DS_Store
