@@ -32,6 +32,7 @@ import {HighlowComponent} from "./common/views/highlow/highlow.component";
 import {TimesweeperComponent} from "./common/views/timesweeper/timesweeper.component";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {AllCodeComponent} from "./common/components/all-code/all-code.component";
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     TimesweeperComponent,
     CardComponent,
     CodeMirrorComponent,
+    AllCodeComponent,
     PluralizePipe
   ],
   imports: [
@@ -101,6 +103,9 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     MatCheckboxModule,
     MatExpansionModule,
     MatMenuModule,
+  ],
+  entryComponents: [
+    AllCodeComponent
   ]
 })
 export class SharedModule { }

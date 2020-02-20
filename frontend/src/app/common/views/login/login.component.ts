@@ -5,6 +5,8 @@ import { LoginResponse } from '../../../../../../common/src/packets/login.respon
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { SettingsModel } from '../../../../../../common/src/models/settings.model';
 import { VERSION } from '../../../../../../common/version';
+import {MatDialog} from "@angular/material/dialog";
+import {AllCodeComponent} from "../../components/all-code/all-code.component";
 
 @Component({
   selector: 'app-login',
@@ -15,7 +17,7 @@ export class LoginComponent implements OnInit {
   formGroup: FormGroup;
   settings: SettingsModel;
 
-  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router) { }
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.formGroup = new FormGroup({
@@ -49,6 +51,13 @@ export class LoginComponent implements OnInit {
 
   register() {
     this.router.navigate(['register']);
+  }
+
+  showAllCode() {
+    this.dialog.open(AllCodeComponent, {
+      width: '90vw',
+      height: '90vh'
+    });
   }
 
   get version() {

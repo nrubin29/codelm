@@ -1,0 +1,9 @@
+:host ::ng-deep {
+  .mat-card-content app-code-mirror:not(:last-child) .CodeMirror {
+    margin-bottom: 1em;
+  }
+}
+
+mat-dialog-content {
+  max-height: initial;
+}
