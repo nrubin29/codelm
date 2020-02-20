@@ -42,5 +42,5 @@
       <button mat-raised-button color="accent" (click)="replay()">Replay Submission</button>
     </app-card>
   </div>
-  <app-code-mirror [config]="{ lineNumbers: true, lineWrapping: true, mode: mode, readOnly: true }"></app-code-mirror>
+  <app-code-mirror [mode]="mode" [readOnly]="true"></app-code-mirror>
 </div>

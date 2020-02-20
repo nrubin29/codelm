@@ -55,7 +55,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private subscribeTo(codeMirror: CodeMirrorComponent) {
-    codeMirror.writeValue(this.codeSaverService.get(this.problem._id, codeMirror.config.mode));
+    codeMirror.writeValue(this.codeSaverService.get(this.problem._id, codeMirror.mode));
     codeMirror.change.pipe(debounceTime(5000)).subscribe(() => {
       this.saveCode();
     });
@@ -73,7 +73,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   saveCode() {
-    this.codeSaverService.save(this.problem._id, this.codeMirrors.first.config.mode, this.codeMirrors.first.value);
+    this.codeSaverService.save(this.problem._id, this.codeMirrors.first.mode, this.codeMirrors.first.value);
   }
 
   get documentation() {

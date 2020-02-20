@@ -11,7 +11,8 @@ import { EditorConfiguration, EditorFromTextArea } from 'codemirror';
 })
 export class CodeMirrorComponent implements AfterViewInit {
   @ViewChild('host', {static: false}) host: ElementRef;
-  @Input() config: EditorConfiguration;
+  @Input() mode: string = undefined;
+  @Input() readOnly = false;
   @Output() instance: EditorFromTextArea;
   @Output() change = new EventEmitter<string>();
 
@@ -26,8 +27,12 @@ export class CodeMirrorComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.config = this.config || {};
-    this.instance = CodeMirror.fromTextArea(this.host.nativeElement, this.config);
+    this.instance = CodeMirror.fromTextArea(this.host.nativeElement, {
+      lineNumbers: true,
+      lineWrapping: true,
+      mode: this.mode,
+      readOnly: this.readOnly
+    });
     this.instance.setValue(this._value);
 
     this.instance.on('change', () => {
