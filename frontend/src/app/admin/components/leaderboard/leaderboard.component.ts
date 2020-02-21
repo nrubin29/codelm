@@ -9,7 +9,7 @@ import {
   SubmissionOverviewElement,
   SubmissionOverviewStatus
 } from "../../../../../../common/src/models/submission.model";
-import {MatDialog} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import {ViewSubmissionsComponent} from "../view-submissions/view-submissions.component";
 
 @Component({

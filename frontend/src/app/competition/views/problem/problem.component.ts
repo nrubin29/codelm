@@ -12,8 +12,8 @@ import {TeamModel} from '../../../../../../common/src/models/team.model';
 import {CodeSaverService} from '../../../services/code-saver.service';
 import {ProblemUtil} from '../../../../../../common/src/utils/problem.util';
 import {CodeMirrorComponent} from "../../../common/components/code-mirror/code-mirror.component";
-import {ClientProblemSubmission} from "../../../../../../common/src/problem-submission";
 import {debounceTime} from "rxjs/operators";
+import {MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'app-problem',
@@ -30,6 +30,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChildren(CodeMirrorComponent) codeMirrors: QueryList<CodeMirrorComponent>;
   language: string;
+  documentation: string;
 
   constructor(private problemService: ProblemService, private teamService: TeamService, private codeSaverService: CodeSaverService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
@@ -72,12 +73,13 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     return isGradedProblem(this.problem);
   }
 
-  saveCode() {
-    this.codeSaverService.save(this.problem._id, this.codeMirrors.first.mode, this.codeMirrors.first.value);
+  onLanguageChange(event: MatSelectChange) {
+    this.documentation = this.codeSaverService.getDocumentation(event.value);
+    this.saveCode();
   }
 
-  get documentation() {
-    return this.codeSaverService.getDocumentation();
+  saveCode() {
+    this.codeSaverService.save(this.problem._id, this.codeMirrors.first.mode, this.codeMirrors.first.value);
   }
 
   submitClicked(test: boolean) {

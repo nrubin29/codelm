@@ -8,7 +8,7 @@ import {SocketService} from "../../../services/socket.service";
 import {ProblemService} from "../../../services/problem.service";
 import {TeamService} from "../../../services/team.service";
 import {GamePacket} from "../../../../../../common/src/packets/game.packet";
-import {MatTable} from "@angular/material";
+import { MatTable } from "@angular/material/table";
 import {isPacket} from "../../../../../../common/src/packets/packet";
 import {ReplayPacket} from "../../../../../../common/src/packets/replay.packet";
 import {AdminComponent} from "../../../admin/views/admin/admin.component";

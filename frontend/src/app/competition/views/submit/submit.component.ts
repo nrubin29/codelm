@@ -25,7 +25,7 @@ export class SubmitComponent implements OnInit {
   ngOnInit() {
     this.finished = false;
     this.problemSubmission = this.problemService.problemSubmission;
-    this.animation = Math.floor(Math.random() * 11);
+    this.animation = Math.floor(Math.random() * 12);
 
     this.dashboard.toggle().then(() => {
       this.socketService.on<SubmissionStatusPacket>('submissionStatus', packet => {

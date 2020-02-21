@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AdminModel } from '../../../../../../common/src/models/admin.model';
 import { AdminService } from '../../../services/admin.service';
 import {DialogResult} from "../../../dialog-result";
-import {MatDialog} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import {ActivatedRoute} from "@angular/router";
 import {EditAdminComponent} from "../../components/edit-admin/edit-admin.component";
 

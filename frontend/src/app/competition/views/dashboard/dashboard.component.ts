@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProblemModel } from '../../../../../../common/src/models/problem.model';
 import { TeamService } from '../../../services/team.service';
 import { ProblemService } from '../../../services/problem.service';
-import { MatDrawerToggleResult, MatSidenav } from '@angular/material';
+import { MatDrawerToggleResult, MatSidenav } from '@angular/material/sidenav';
 import { TeamModel } from '../../../../../../common/src/models/team.model';
 import { SocketService } from '../../../services/socket.service';
 import { SubmissionUtil } from '../../../../../../common/src/utils/submission.util';
@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
   private submissions: SubmissionModel[];
   problems: ProblemModel[] = [];
 
-  @ViewChild(MatSidenav, {static: false}) private sideNav: MatSidenav;
+  @ViewChild(MatSidenav) private sideNav: MatSidenav;
 
   constructor(private problemService: ProblemService, private teamService: TeamService, private submissionService: SubmissionService, private socketService: SocketService, private router: Router) { }
 

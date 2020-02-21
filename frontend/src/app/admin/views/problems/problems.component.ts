@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProblemModel } from '../../../../../../common/src/models/problem.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DivisionModelWithProblems } from '../../../resolves/divisions-problems.resolve';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogResult } from '../../../dialog-result';
 import { ProblemService } from '../../../services/problem.service';
 import { DivisionModel } from '../../../../../../common/src/models/division.model';

@@ -11,7 +11,7 @@ import {
 import {SubmissionStatusPacket} from "../../../../../../common/src/packets/submission.status.packet";
 import {GamePacket} from "../../../../../../common/src/packets/game.packet";
 import {SubmissionCompletedPacket} from "../../../../../../common/src/packets/submission.completed.packet";
-import {MatTable} from "@angular/material";
+import { MatTable } from "@angular/material/table";
 import {DashboardComponent} from "../../../competition/views/dashboard/dashboard.component";
 import {ProblemService} from "../../../services/problem.service";
 import {TeamService} from "../../../services/team.service";

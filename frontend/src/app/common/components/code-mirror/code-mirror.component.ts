@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, View
 import * as CodeMirror from 'codemirror';
 import 'codemirror/mode/python/python';
 import 'codemirror/mode/clike/clike';
-import { EditorConfiguration, EditorFromTextArea } from 'codemirror';
+import { EditorFromTextArea } from 'codemirror';
 
 @Component({
   selector: 'app-code-mirror',
@@ -10,7 +10,7 @@ import { EditorConfiguration, EditorFromTextArea } from 'codemirror';
   styleUrls: ['./code-mirror.component.scss']
 })
 export class CodeMirrorComponent implements AfterViewInit {
-  @ViewChild('host', {static: false}) host: ElementRef;
+  @ViewChild('host') host: ElementRef;
   @Input() mode: string = undefined;
   @Input() readOnly = false;
   @Output() instance: EditorFromTextArea;

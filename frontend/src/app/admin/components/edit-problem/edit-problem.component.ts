@@ -3,7 +3,7 @@ import { ProblemDivision, ProblemModel, ProblemType } from '../../../../../../co
 import { DivisionModel } from '../../../../../../common/src/models/division.model';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ProblemService } from '../../../services/problem.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-problem',

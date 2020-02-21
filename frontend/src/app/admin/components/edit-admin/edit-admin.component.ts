@@ -1,11 +1,9 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import {Component, Inject, OnInit} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AdminModel } from '../../../../../../common/src/models/admin.model';
 import { AdminService } from '../../../services/admin.service';
-import { AdminsComponent } from '../../views/admins/admins.component';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {EditProblemComponent} from "../edit-problem/edit-problem.component";
-import {DivisionModel} from "../../../../../../common/src/models/division.model";
 
 @Component({
   selector: 'app-edit-admin',

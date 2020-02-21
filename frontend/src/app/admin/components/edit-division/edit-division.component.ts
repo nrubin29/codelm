@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {EditProblemComponent} from '../edit-problem/edit-problem.component';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {DivisionModel, DivisionType, StarterCode} from '../../../../../../common/src/models/division.model';
 import {DivisionService} from '../../../services/division.service';
 import {SettingsState} from "../../../../../../common/src/models/settings.model";

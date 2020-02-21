@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DivisionModel } from '../../../../../../common/src/models/division.model';
 import { DivisionService } from '../../../services/division.service';
 import { DialogResult } from '../../../dialog-result';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { EditDivisionComponent } from '../../components/edit-division/edit-division.component';
 import {ActivatedRoute} from "@angular/router";
 

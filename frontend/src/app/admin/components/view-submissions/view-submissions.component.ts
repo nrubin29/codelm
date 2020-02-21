@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {ProblemModel} from "../../../../../../common/src/models/problem.model";
 import {TeamModel} from "../../../../../../common/src/models/team.model";
 import {SubmissionModel} from "../../../../../../common/src/models/submission.model";
