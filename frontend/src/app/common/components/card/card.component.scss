@@ -7,6 +7,8 @@
 mat-card {
   padding: 0 !important;
   margin-bottom: 1em;
+  box-shadow: none;
+  border: thin solid #eee;
 }
 
 mat-card-header {
