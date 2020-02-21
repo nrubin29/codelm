@@ -10,29 +10,28 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.5",
+    "express-fileupload": "^1.1.6",
     "express-ws": "^4.0.0",
-    "mongoose": "^5.6.11",
+    "mongoose": "^5.9.1",
     "morgan": "^1.9.1",
     "node-schedule": "^1.3.2",
     "path": "^0.12.7",
-    "ws": "^7.1.2"
+    "ws": "^7.2.1"
   },
   "devDependencies": {
-    "@types/express": "^4.17.1",
-    "@types/express-fileupload": "^1.1.0",
+    "@types/express-fileupload": "^1.1.2",
     "@types/express-ws": "^3.0.0",
-    "@types/mongoose": "^5.5.15",
+    "@types/mongoose": "^5.7.1",
     "@types/morgan": "^1.7.37",
-    "@types/node": "^12.7.2",
-    "@types/node-schedule": "^1.2.4",
-    "@types/webpack": "^4.39.1",
+    "@types/node": "^13.7.4",
+    "@types/node-schedule": "^1.3.0",
+    "@types/webpack": "^4.41.6",
     "@types/webpack-merge": "^4.1.5",
-    "@types/ws": "^6.0.3",
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.5.3",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7",
+    "@types/ws": "^7.2.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "~3.7.5",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2"
   }
 }

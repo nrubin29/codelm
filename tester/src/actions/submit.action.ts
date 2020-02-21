@@ -17,7 +17,7 @@ export class SubmitAction extends Action {
 
             tester.once<SubmissionCompletedPacket>('submissionCompleted', packet => {
                 tester.off('submissionStatus');
-                console.log("Submission finished! id =", packet._id);
+                console.log("Submission finished! id =", packet.submission._id);
                 resolve();
             });
 

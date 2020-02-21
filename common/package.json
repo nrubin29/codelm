@@ -6,12 +6,12 @@
   "dependencies": {
     "fs-extra": "^8.1.0",
     "moment": "^2.24.0",
-    "rxjs": "^6.5.3",
-    "ws": "^7.1.2"
+    "rxjs": "^6.5.4",
+    "ws": "^7.2.1"
   },
   "devDependencies": {
-    "@types/fs-extra": "^8.0.0",
+    "@types/fs-extra": "^8.1.0",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.3"
+    "typescript": "~3.7.5"
   }
 }
