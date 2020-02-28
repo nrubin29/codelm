@@ -234,8 +234,9 @@ export class SubmissionDao {
     return result;
   }
 
-  static getDisputedSubmissions(): Promise<SubmissionModel[]> {
-    return Submission.find({'dispute.open': true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
+  static async getDisputedSubmissions(): Promise<SubmissionModel[]> {
+    const submissions = await Submission.find({'dispute.open': true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
+    return submissions.map(submission => submission.toObject());
   }
 
   static async getScoreForTeam(teamId: string): Promise<number> {

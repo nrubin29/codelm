@@ -52,6 +52,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
       this.submissions = data.submissions.filter(submission => submission.problem._id === this.problem._id);
       this.problemNumber = ProblemUtil.getProblemNumberForTeam(this.problem, this.team);
       this.problemPoints = ProblemUtil.getPoints(this.problem, this.team);
+      this.documentation = this.codeSaverService.getDocumentation();
 
       if (this.codeMirrors !== undefined) {
         this.ngAfterViewInit();

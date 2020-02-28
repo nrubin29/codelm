@@ -1,24 +1,24 @@
 <mat-sidenav-container>
   <mat-sidenav mode="side" [opened]="true" [disableClose]="true" [fixedInViewport]="true">
-    <a [routerLink]="['..', 'dashboard']" class="logo"><img src="assets/logo-portrait.png"></a>
-    <br><br>
+    <a [routerLink]="['/dashboard']" class="logo"><img src="assets/logo-portrait.png"></a>
+    <br>
     <ng-container *ngIf="team">
       <h2>{{team.username}}</h2>
       <h3>WaveCoins: {{team.score}}</h3>
       <app-countdown></app-countdown>
     </ng-container>
-    <br><br>
+    <br>
     <mat-divider></mat-divider>
     <br>
     <mat-nav-list>
-      <mat-list-item>
+      <a mat-list-item [routerLink]="['/dashboard']">
         <mat-icon mat-list-icon>dashboard</mat-icon>
-        <a mat-line [routerLink]="['/dashboard']">Dashboard</a>
-      </mat-list-item>
-      <mat-list-item *ngFor="let problem of problems">
+        <p mat-line>Dashboard</p>
+      </a>
+      <a mat-list-item *ngFor="let problem of problems" [routerLink]="['problem', problem._id]">
         <mat-icon mat-list-icon>{{didSolve(problem) ? 'check_circle' : 'label'}}</mat-icon>
-        <a mat-line [routerLink]="['problem', problem._id]">{{problem.title}}</a>
-      </mat-list-item>
+        <p mat-line>{{problem.title}}</p>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

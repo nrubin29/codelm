@@ -1,49 +1,49 @@
 <mat-sidenav-container>
-    <mat-sidenav mode="side" [opened]="true" [disableClose]="true" [fixedInViewport]="true">
-        <a [routerLink]="['/admin']" class="logo"><img src="assets/logo-portrait.png"></a>
-        <br><br>
-        <h2 *ngIf="admin">{{admin.name}}</h2>
-        <h3>Judging Dashboard</h3>
-        <h4>For official use only</h4>
-        <br><br>
-        <mat-divider></mat-divider>
-        <br>
-        <mat-nav-list *ngIf="admin">
-            <mat-list-item>
-                <mat-icon mat-list-icon>bar_chart</mat-icon>
-                <a mat-line [routerLink]="['/admin']">Standings</a>
-            </mat-list-item>
-          <mat-list-item *ngIf="admin.superUser">
-            <mat-icon mat-list-icon>settings_ethernet</mat-icon>
-            <a mat-line [routerLink]="['/admin', 'sockets']">Sockets</a>
-          </mat-list-item>
-            <mat-list-item *ngIf="admin.superUser">
-                <mat-icon mat-list-icon>settings</mat-icon>
-                <a mat-line [routerLink]="['/admin', 'settings']">Settings</a>
-            </mat-list-item>
-            <mat-list-item>
-                <mat-icon mat-list-icon>feedback</mat-icon>
-                <a mat-line [routerLink]="['/admin', 'disputes']">Disputes</a>
-            </mat-list-item>
-            <mat-list-item *ngIf="admin.superUser">
-                <mat-icon mat-list-icon>view_list</mat-icon>
-                <a mat-line [routerLink]="['/admin', 'divisions']">Divisions</a>
-            </mat-list-item>
-            <mat-list-item *ngIf="admin.superUser">
-                <mat-icon mat-list-icon>insert_drive_file</mat-icon>
-                <a mat-line [routerLink]="['/admin', 'problems']">Problems</a>
-            </mat-list-item>
-            <mat-list-item *ngIf="admin.superUser">
-                <mat-icon mat-list-icon>assignment_ind</mat-icon>
-                <a mat-line [routerLink]="['/admin', 'admins']">Admins</a>
-            </mat-list-item>
-            <mat-list-item>
-                <mat-icon mat-list-icon>group_add</mat-icon>
-                <a mat-line [routerLink]="['/admin', 'add-team']">Add Team</a>
-            </mat-list-item>
-        </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <router-outlet></router-outlet>
-    </mat-sidenav-content>
+  <mat-sidenav mode="side" [opened]="true" [disableClose]="true" [fixedInViewport]="true">
+    <a [routerLink]="['/admin']" class="logo"><img src="assets/logo-portrait.png"></a>
+    <br>
+    <h2 *ngIf="admin">{{admin.name}}</h2>
+    <h3>Judging Dashboard</h3>
+    <h4>For official use only</h4>
+    <br>
+    <mat-divider></mat-divider>
+    <br>
+    <mat-nav-list *ngIf="admin">
+      <a mat-list-item [routerLink]="['/admin']">
+        <mat-icon mat-list-icon>bar_chart</mat-icon>
+        <p mat-line>Standings</p>
+      </a>
+      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'sockets']">
+        <mat-icon mat-list-icon>settings_ethernet</mat-icon>
+        <p mat-line>Sockets</p>
+      </a>
+      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'settings']">
+        <mat-icon mat-list-icon>settings</mat-icon>
+        <p mat-line>Settings</p>
+      </a>
+      <a mat-list-item [routerLink]="['/admin', 'disputes']">
+        <mat-icon mat-list-icon>feedback</mat-icon>
+        <p mat-line>Disputes</p>
+      </a>
+      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'divisions']">
+        <mat-icon mat-list-icon>view_list</mat-icon>
+        <p mat-line>Divisions</p>
+      </a>
+      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'problems']">
+        <mat-icon mat-list-icon>insert_drive_file</mat-icon>
+        <p mat-line>Problems</p>
+      </a>
+      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'admins']">
+        <mat-icon mat-list-icon>assignment_ind</mat-icon>
+        <p mat-line>Admins</p>
+      </a>
+      <a mat-list-item [routerLink]="['/admin', 'add-team']">
+        <mat-icon mat-list-icon>group_add</mat-icon>
+        <p mat-line>Add Team</p>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
 </mat-sidenav-container>

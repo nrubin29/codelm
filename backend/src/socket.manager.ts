@@ -138,7 +138,7 @@ export class SocketManager {
 
       socket.onclose = event => {
         if (!event.wasClean) {
-          console.error(_id, event.code, event.reason);
+          console.error('Socket closed not clean', _id, event.code, event.reason);
         }
 
         if (_id) {
@@ -374,8 +374,8 @@ export class SocketManager {
         }
       });
 
-      // TODO: What if an error occurs in the middle of running?
       process.stderr.on('data', (data: Buffer) => {
+        // TODO: Can't throw an error here. Should log and reject().
         throw new Error(data.toString());
       });
 
