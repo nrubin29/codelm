@@ -38,10 +38,24 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     this.teamService.team.subscribe(team => this.team = team);
 
     this.activatedRoute.data.subscribe(data => {
-      this.problem = data['problem'];
-      this.submissions = data['submissions'].filter(submission => submission.problem._id === this.problem._id);
+      if (this.codeMirrors !== undefined) {
+        /*
+        Angular will reuse the same problem component if we navigate directly between two problems. Thus, we need to
+        call ngOnDestroy() and ngAfterViewInit() manually whenever the problem changes. When the component is first
+        initialized, this.codeMirrors will be undefined, which is good because Angular will just call ngAfterViewInit()
+        when it's ready. For all future problem changes, we have to call it manually.
+         */
+        this.ngOnDestroy();
+      }
+
+      this.problem = data.problem;
+      this.submissions = data.submissions.filter(submission => submission.problem._id === this.problem._id);
       this.problemNumber = ProblemUtil.getProblemNumberForTeam(this.problem, this.team);
       this.problemPoints = ProblemUtil.getPoints(this.problem, this.team);
+
+      if (this.codeMirrors !== undefined) {
+        this.ngAfterViewInit();
+      }
     });
 
     this.language = this.codeSaverService.getLanguage();
@@ -63,9 +77,6 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // TODO: For some reason, when there are two open-ended problems, switching between them directly reuses the component,
-    //  and so ngOnDestroy() and ngAfterViewInit() aren't called, and the code from the first problem stays in the second
-    //  problem's box and then it causes headaches.
     this.saveCode();
   }
 
