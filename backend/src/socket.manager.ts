@@ -11,10 +11,10 @@ import {SubmissionPacket} from "../../common/src/packets/submission.packet";
 import {ServerProblemSubmission} from "../../common/src/problem-submission";
 import {ProblemDao} from "./daos/problem.dao";
 import {isGradedProblem, isOpenEndedProblem, ProblemModel} from "../../common/src/models/problem.model";
-import {isFalse, SubmissionDao, submissionResult} from "./daos/submission.dao";
+import {isFalse, isTestCaseSubmissionCorrect, SubmissionDao, submissionResult} from "./daos/submission.dao";
 import {spawn} from "child_process";
 import {
-  GradedSubmissionModel,
+  GradedSubmissionModel, isGradedSubmission,
   SubmissionModel,
   TestCaseSubmissionModel
 } from "../../common/src/models/submission.model";
@@ -289,6 +289,12 @@ export class SocketManager {
 
     if (problemSubmission.test) {
       submission.result = submissionResult(submission);
+
+      if (isGradedSubmission(submission) && isGradedProblem(problem)) {
+        for (let testCase of submission.testCases) {
+          testCase.correct = isTestCaseSubmissionCorrect(testCase, problem);
+        }
+      }
     }
 
     else {

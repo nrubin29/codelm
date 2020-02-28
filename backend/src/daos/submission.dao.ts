@@ -35,7 +35,7 @@ export function isFalse(str: string): boolean {
   return str === 'false' || str === 'False' || str === '0';
 }
 
-function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: GradedProblemModel): boolean {
+export function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: GradedProblemModel): boolean {
   if (!testCase.output) {
     return false;
   }
