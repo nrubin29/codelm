@@ -23,8 +23,8 @@ export class ViewSubmissionsComponent implements OnInit {
     this.submissionService.getSubmissionsForTeamAndProblem(this.data.team._id, this.data.problem._id).then(submissions => this.submissions = submissions.reverse());
   }
 
-  asMoment(date: Date): moment.Moment {
-    return moment(date);
+  formattedDate(date: Date): string {
+    return moment(date).format('MMM D, h:mm:ss a');
   }
 
   close() {
