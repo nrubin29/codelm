@@ -100,12 +100,12 @@ export class PermissionsUtil {
     next();
   }
 
-  static requireSuperUser(req: Request, res: Response, next: NextFunction) {
-    if (!req.params.admin) {
-      next(new Error('No admin found. Did you forget to use requireAdmin?'));
-    }
+  static async requireSuperUser(req: Request, res: Response, next: NextFunction) {
+    await PermissionsUtil.requireAdmin(req, res, (err) => {
+      if (err) {
+        throw err;
+      }
 
-    else {
       if (req.params.admin.superUser) {
         next();
       }
@@ -113,7 +113,7 @@ export class PermissionsUtil {
       else {
         next(new Error('Admin does not have superuser permissions.'));
       }
-    }
+    });
   }
 
   static async requireAuth(req: Request, res: Response, next: NextFunction) {

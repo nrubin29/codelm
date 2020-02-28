@@ -8,11 +8,11 @@ router.get('/', async (req: Request, res: Response) => {
   res.json(await SettingsDao.getSettings());
 });
 
-router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+router.put('/', PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   res.json(await SettingsDao.updateSettings(req.body));
 });
 
-router.delete('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+router.delete('/', PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   await SettingsDao.resetSettings();
   res.json(true);
 });

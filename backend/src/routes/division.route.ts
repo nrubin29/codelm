@@ -22,7 +22,7 @@ router.get('/', PermissionsUtil.requestAdmin, async (req: Request, res: Response
   res.json(divisions);
 });
 
-router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request & {files?: FileArray}, res: Response) => {
+router.put('/', PermissionsUtil.requireSuperUser, async (req: Request & {files?: FileArray}, res: Response) => {
   const division: DivisionModel & {'states[]': string[]} = req.body;
 
   if (!division['states[]']) {
@@ -61,7 +61,7 @@ router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, 
   res.json(updatedDivision);
 });
 
-router.delete('/:id', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+router.delete('/:id', PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   await DivisionDao.deleteDivision(req.params.id);
   res.json(true);
 });

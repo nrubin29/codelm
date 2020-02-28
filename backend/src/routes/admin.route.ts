@@ -4,15 +4,15 @@ import { PermissionsUtil } from '../permissions.util';
 
 const router = Router();
 
-router.get('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+router.get('/', PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   res.json(await AdminDao.getAdmins());
 });
 
-router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+router.put('/', PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   res.json(await AdminDao.addOrUpdateAdmin(req.body));
 });
 
-router.delete('/:id', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+router.delete('/:id', PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   await AdminDao.deleteAdmin(req.params.id);
   res.json(true);
 });

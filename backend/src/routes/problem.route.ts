@@ -8,7 +8,7 @@ import {DivisionType} from "../../../common/src/models/division.model";
 
 const router = Router();
 
-router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+router.put('/', PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   res.json(await ProblemDao.addOrUpdateProblem(req.body as ProblemModel));
 });
 
@@ -22,7 +22,7 @@ router.get('/:id', PermissionsUtil.requireAuth, async (req: Request, res: Respon
   res.json(problem);
 });
 
-router.delete('/:id', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+router.delete('/:id', PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   await ProblemDao.deleteProblem(req.params.id);
   res.json(true);
 });
