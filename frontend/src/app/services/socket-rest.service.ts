@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import { SubmissionModel } from '../../../../common/src/models/submission.model';
+import {SocketList} from "../../../../common/src/models/sockets.model";
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +10,8 @@ export class SocketRestService {
 
   constructor(private restService: RestService) { }
 
-  getSockets(): Promise<SubmissionModel> {
-    return this.restService.get<any>(this.endpoint);
+  getSockets(): Promise<SocketList> {
+    return this.restService.get<SocketList>(this.endpoint);
   }
 
   kick(id: string): Promise<void> {

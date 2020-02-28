@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SocketRestService} from "../../../services/socket-rest.service";
+import {SocketList} from "../../../../../../common/src/models/sockets.model";
 
 @Component({
   selector: 'app-sockets',
@@ -7,7 +8,7 @@ import {SocketRestService} from "../../../services/socket-rest.service";
   styleUrls: ['./sockets.component.scss']
 })
 export class SocketsComponent implements OnInit {
-  sockets: any;
+  sockets: SocketList;
 
   constructor(private socketRestService: SocketRestService) { }
 

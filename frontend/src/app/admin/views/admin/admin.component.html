@@ -13,8 +13,8 @@
                 <mat-icon mat-list-icon>bar_chart</mat-icon>
                 <a mat-line [routerLink]="['/admin']">Standings</a>
             </mat-list-item>
-          <mat-list-item>
-<!--            <mat-icon mat-list-icon>bar_chart</mat-icon>-->
+          <mat-list-item *ngIf="admin.superUser">
+            <mat-icon mat-list-icon>settings_ethernet</mat-icon>
             <a mat-line [routerLink]="['/admin', 'sockets']">Sockets</a>
           </mat-list-item>
             <mat-list-item *ngIf="admin.superUser">
