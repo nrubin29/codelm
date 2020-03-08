@@ -3,9 +3,7 @@ import { EditAdminComponent } from './components/edit-admin/edit-admin.component
 import { EditDivisionComponent } from './components/edit-division/edit-division.component';
 import { EditProblemComponent } from './components/edit-problem/edit-problem.component';
 import { EditTeamComponent } from './components/edit-team/edit-team.component';
-import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { AdminComponent } from './views/admin/admin.component';
-import { StandingsComponent } from './views/standings/standings.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { TeamComponent } from './views/team/team.component';
 import { SharedModule } from '../shared.module';
@@ -17,6 +15,7 @@ import { ViewSubmissionsComponent } from './components/view-submissions/view-sub
 import { SocketsComponent } from './views/sockets/sockets.component';
 import { EntityGroupingComponent } from './views/entity-grouping/entity-grouping.component';
 import { EntityListComponent } from './views/entity-list/entity-list.component';
+import { LeaderboardCellComponent } from './components/leaderboard-cell/leaderboard-cell.component';
 
 @NgModule({
   declarations: [
@@ -24,9 +23,7 @@ import { EntityListComponent } from './views/entity-list/entity-list.component';
     EditDivisionComponent,
     EditProblemComponent,
     EditTeamComponent,
-    LeaderboardComponent,
     AdminComponent,
-    StandingsComponent,
     SettingsComponent,
     TeamComponent,
     EditGradedProblemComponent,
@@ -35,6 +32,7 @@ import { EntityListComponent } from './views/entity-list/entity-list.component';
     SocketsComponent,
     EntityGroupingComponent,
     EntityListComponent,
+    LeaderboardCellComponent,
   ],
   imports: [
     SharedModule,

@@ -7,10 +7,16 @@ import {EditDivisionComponent} from "../admin/components/edit-division/edit-divi
 @Injectable({
   providedIn: 'root'
 })
-export class DivisionService implements SingleEntityService {
+export class DivisionService extends SingleEntityService<DivisionModel> {
   private endpoint = 'divisions';
 
-  constructor(private restService: RestService) { }
+  constructor(private restService: RestService) {
+    super({
+      entityName: 'division',
+      columns: [{name: 'name', isEditColumn: true}, 'type'],
+      editComponent: EditDivisionComponent
+    });
+  }
 
   getAll(): Promise<DivisionModel[]> {
     return this.restService.get<DivisionModel[]>(this.endpoint);
@@ -43,11 +49,4 @@ export class DivisionService implements SingleEntityService {
   delete(division: DivisionModel): Promise<void> {
     return this.restService.delete<void>(`${this.endpoint}/${division._id}`);
   }
-
-  // SECTION: SingleEntitySevice
-
-  columns = [{name: 'name', isEditColumn: true}, 'type'];
-  title = 'Divisions';
-  editComponent = EditDivisionComponent;
-  type = 'single' as const;
 }

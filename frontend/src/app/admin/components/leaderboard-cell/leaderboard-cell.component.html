@@ -1,0 +1,8 @@
+<div *ngIf="element.problems[problem._id].numSubmissions > 0" (click)="onClick()" [class.complete]="isComplete()" [class.error]="isError()" [class.incomplete]="isIncomplete()">
+  <ng-container [ngSwitch]="element.problems[problem._id].status">
+    <mat-icon *ngSwitchCase="'Complete'">check</mat-icon>
+    <mat-icon *ngSwitchCase="'Error'">close</mat-icon>
+    <mat-icon *ngSwitchCase="'None'">more_horiz</mat-icon>
+  </ng-container>
+  <p>{{element.problems[problem._id].numSubmissions}}</p>
+</div>

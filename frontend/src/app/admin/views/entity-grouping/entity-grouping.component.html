@@ -1,8 +1,10 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>{{title}}</span>
-    <span class="spacer"></span>
-    <button mat-raised-button color="accent" (click)="openEditComponent()"><mat-icon>add</mat-icon></button>
+    <span>{{entityName | titlecase | pluralize}}</span>
+    <ng-container *ngIf="editable">
+      <span class="spacer"></span>
+      <button mat-raised-button color="accent" (click)="openEditComponent()"><mat-icon>add</mat-icon></button>
+    </ng-container>
   </mat-toolbar-row>
 </mat-toolbar>
 <mat-tab-group *ngIf="parents; else: loading">

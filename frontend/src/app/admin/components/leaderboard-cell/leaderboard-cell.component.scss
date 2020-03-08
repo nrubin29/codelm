@@ -1,0 +1,25 @@
+:host {
+  width: 100%;
+  text-align: center;
+}
+
+div {
+  flex-direction: column;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border: thin solid black; // TODO: Fix overlapping borders (border-collapse doesn't work here)
+  cursor: pointer;
+
+  &.complete {
+    background: lightgreen;
+  }
+
+  &.error {
+    background: #ef3d47;
+    color: white;
+  }
+
+  &.incomplete {
+    background: lightgray;
+  }
+}

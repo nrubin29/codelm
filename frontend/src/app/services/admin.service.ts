@@ -8,11 +8,17 @@ import {EditAdminComponent} from "../admin/components/edit-admin/edit-admin.comp
 @Injectable({
   providedIn: 'root'
 })
-export class AdminService implements SingleEntityService {
+export class AdminService extends SingleEntityService<AdminModel> {
   private endpoint = 'admins';
   admin: BehaviorSubject<AdminModel>;
 
   constructor(private restService: RestService) {
+    super({
+      entityName: 'admin',
+      columns: [{name: 'username', isEditColumn: true}, 'name', {name: 'superUser', display: 'boolean' as const}],
+      editComponent: EditAdminComponent
+    });
+
     this.admin = new BehaviorSubject<AdminModel>(null);
   }
 
@@ -27,11 +33,4 @@ export class AdminService implements SingleEntityService {
   delete(admin: AdminModel): Promise<void> {
     return this.restService.delete<void>(`${this.endpoint}/${admin._id}`);
   }
-
-  // SECTION: SingleEntityService
-
-  columns = [{name: 'username', isEditColumn: true}, 'name', {name: 'superUser', display: 'boolean' as const}];
-  editComponent = EditAdminComponent;
-  title = 'Admins';
-  type = 'single' as const;
 }

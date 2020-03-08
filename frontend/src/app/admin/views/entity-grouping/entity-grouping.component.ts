@@ -1,5 +1,5 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {Entity, EntityService, GroupedEntityService} from "../../../services/entity.service";
+import {Entity, GroupedEntityService} from "../../../services/entity.service";
 import {ActivatedRoute} from "@angular/router";
 import {EntityListComponent} from "../entity-list/entity-list.component";
 
@@ -9,7 +9,7 @@ import {EntityListComponent} from "../entity-list/entity-list.component";
   styleUrls: ['./entity-grouping.component.scss']
 })
 export class EntityGroupingComponent implements OnInit {
-  entityService: GroupedEntityService;
+  entityService: GroupedEntityService<any, any>;
   parents: Entity[];
 
   @ViewChildren(EntityListComponent) entityLists: QueryList<EntityListComponent>;
@@ -24,16 +24,16 @@ export class EntityGroupingComponent implements OnInit {
     });
   }
 
-  get type() {
-    return this.entityService.type;
-  }
-
-  get title() {
-    return this.entityService.title;
+  get entityName() {
+    return this.entityService.config.entityName;
   }
 
   label(entity: any) {
     return this.entityService.getGroupLabel(entity);
+  }
+
+  get editable() {
+    return this.entityService.config.editComponent !== undefined;
   }
 
   openEditComponent() {

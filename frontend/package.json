@@ -26,6 +26,7 @@
     "codemirror": "^5.52.0",
     "core-js": "^3.6.4",
     "moment": "^2.24.0",
+    "tslib": "^1.10.0",
     "rxjs": "~6.5.2",
     "spinkit": "^2.0.1",
     "zone.js": "~0.10.2"
@@ -38,7 +39,6 @@
     "@types/codemirror": "^0.0.85",
     "@types/moment": "^2.13.0",
     "ts-node": "~8.6.2",
-    "tslib": "^1.10.0",
     "tslint": "~6.0.0",
     "typescript": "~3.7.5"
   }

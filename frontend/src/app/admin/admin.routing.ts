@@ -1,5 +1,4 @@
 import { RouterModule, Routes } from '@angular/router';
-import { StandingsComponent } from './views/standings/standings.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { SettingsResolve } from '../resolves/settings.resolve';
 import { TeamComponent } from './views/team/team.component';
@@ -25,7 +24,8 @@ const routes: Routes = [
   {
     path: '', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
       [
-        {path: '', component: StandingsComponent},
+        {path: '', redirectTo: 'standings', pathMatch: 'full'},
+        {path: 'standings', component: EntityGroupingComponent, resolve: {entityService: EntityServiceResolve}},
         {path: 'settings', component: SettingsComponent, canActivate: [SuperUserGuard], resolve: {settings: SettingsResolve}},
         {path: 'sockets', component: SocketsComponent},
         {path: 'team/:id', component: TeamComponent, resolve: {team: TeamResolve, submissions: SubmissionsResolve}},

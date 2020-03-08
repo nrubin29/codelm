@@ -7,14 +7,14 @@ import {
 } from '../../../../common/src/problem-submission';
 import {DivisionModel} from "../../../../common/src/models/division.model";
 import {DivisionService} from "./division.service";
-import {GroupedEntityService} from "./entity.service";
+import {Column, GroupedEntityService} from "./entity.service";
 import {ProblemUtil} from "../../../../common/src/utils/problem.util";
 import {EditProblemComponent} from "../admin/components/edit-problem/edit-problem.component";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProblemService implements GroupedEntityService {
+export class ProblemService extends GroupedEntityService<ProblemModel, DivisionModel> {
   private endpoint = 'problems';
 
   // This holds a ClientProblemSubmission from problem.component and gives it to submit.component.
@@ -51,7 +51,13 @@ export class ProblemService implements GroupedEntityService {
     this._replayRequest = value;
   }
 
-  constructor(private restService: RestService, private divisionService: DivisionService) { }
+  constructor(private restService: RestService, private divisionService: DivisionService) {
+    super({
+      entityName: 'problem',
+      columns: ['number', {name: 'title', isEditColumn: true}],
+      editComponent: EditProblemComponent
+    });
+  }
 
   getProblem(id: string): Promise<ProblemModel> {
     return this.restService.get<ProblemModel>(`${this.endpoint}/${id}`);
@@ -72,11 +78,6 @@ export class ProblemService implements GroupedEntityService {
 
   // SECTION: GroupedEntityService
 
-  columns = ['number', {name: 'title', isEditColumn: true}];
-  editComponent = EditProblemComponent;
-  title = 'Problems';
-  type = 'grouped' as const;
-
   getGroupLabel(entity: DivisionModel): string {
     return entity.name;
   }
@@ -89,8 +90,8 @@ export class ProblemService implements GroupedEntityService {
     return this.getProblems(parent._id.toString());
   }
 
-  getData(column: string, value: ProblemModel, parent: DivisionModel): any | undefined {
-    if (column === 'number') {
+  getData(column: Column, value: ProblemModel, parent: DivisionModel): any | undefined {
+    if (column.name === 'number') {
       return ProblemUtil.getProblemNumberForDivision(value, parent);
     }
   }

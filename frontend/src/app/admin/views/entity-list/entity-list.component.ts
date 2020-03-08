@@ -1,34 +1,59 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import {Column, Entity, EntityService} from "../../../services/entity.service";
+import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {
+  Column,
+  Entity,
+  EntityService,
+  GroupedEntityService,
+  SingleEntityService
+} from "../../../services/entity.service";
 import {DialogResult} from "../../../dialog-result";
 import {MatDialog} from "@angular/material/dialog";
 import {ActivatedRoute} from "@angular/router";
+
+// TODO: Add searching
 
 @Component({
   selector: 'app-entity-list',
   templateUrl: './entity-list.component.html',
   styleUrls: ['./entity-list.component.scss']
 })
-export class EntityListComponent implements OnInit {
-  private entityService: EntityService;
+export class EntityListComponent implements OnInit, OnDestroy {
+  private entityService: EntityService<Entity, Entity>;
+  columns: Column[];
+
   @Input() parent: Entity;
   entities: Entity[];
+
+  intervalHandle: number;
 
   constructor(private route: ActivatedRoute, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.entityService = this.route.snapshot.data.entityService;
-    this.refreshData();
+    this.entityService.getColumns(this.parent).then(columns => {
+      this.columns = columns;
+      this.refreshData();
+
+      if (this.entityService.config.refresh) {
+        this.intervalHandle = setInterval(this.refreshData.bind(this), 30 * 1000);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.entityService.config.refresh) {
+      clearInterval(this.intervalHandle);
+    }
   }
 
   refreshData() {
-    if (this.entityService.type === 'single') {
+    if (this.entityService instanceof SingleEntityService) {
       this.entityService.getAll().then(entities => {
         this.entities = entities;
       });
     }
 
-    else {
+    else if (this.entityService instanceof GroupedEntityService) {
       this.entityService.getChildren(this.parent).then(entities => {
         this.entities = entities;
       });
@@ -36,31 +61,27 @@ export class EntityListComponent implements OnInit {
   }
 
   get type() {
-    return this.entityService.type;
+    return this.entityService instanceof SingleEntityService ? 'single' : 'grouped';
   }
 
-  get title() {
-    return this.entityService.title;
-  }
-
-  get columns(): Column[] {
-    return this.entityService.columns.map(column => typeof column === 'string' ? {name: column, display: 'string'} : Object.assign({}, column, {display: column.display ?? 'string'}));
+  get entityName() {
+    return this.entityService.config.entityName;
   }
 
   get columnNames() {
-    return this.entityService.columns.map(column => typeof column === 'string' ? column : column.name);
+    return this.columns.map(column => column.name);
   }
 
-  getData(column: string, value: Entity) {
-    if (this.entityService.getData) {
-      return this.entityService.getData(column, value, this.parent) ?? value[column];
-    }
+  get editable() {
+    return this.entityService.config.editComponent !== undefined;
+  }
 
-    return value[column];
+  getData(column: Column, value: Entity) {
+    return this.entityService.getData(column, value, this.parent) ?? value[column.name];
   }
 
   openEditComponent(entity: Entity | null) {
-    const ref = this.dialog.open(this.entityService.editComponent, {
+    const ref = this.dialog.open(this.entityService.config.editComponent, {
       data: {entity},
       disableClose: true
     });

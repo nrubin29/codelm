@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'pluralize'
 })
 export class PluralizePipe implements PipeTransform {
-  transform(value: string, num: number): string {
+  transform(value: string, num?: number): string {
     return value + (num !== 1 ? 's' : '');
   }
 }
