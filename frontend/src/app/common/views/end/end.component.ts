@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SettingsModel} from "../../../../../../common/src/models/settings.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-end',
@@ -10,7 +10,7 @@ import {ActivatedRoute} from "@angular/router";
 export class EndComponent implements OnInit {
   settings: SettingsModel;
 
-  constructor(private activatedRoute: ActivatedRoute) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
@@ -18,4 +18,7 @@ export class EndComponent implements OnInit {
     });
   }
 
+  adminLogIn() {
+    this.router.navigate(['/login'], {state: {force: true}});
+  }
 }

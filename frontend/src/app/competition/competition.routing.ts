@@ -1,4 +1,4 @@
-import { EndGuard } from '../guards/end.guard';
+import { IsNotEndGuard } from '../guards/is-not-end.guard';
 import { SocketGuard } from '../guards/socket.guard';
 import { TeamGuard } from '../guards/team.guard';
 import { RouterModule, Routes } from '@angular/router';
@@ -18,7 +18,7 @@ import {TimesweeperComponent} from "../common/views/timesweeper/timesweeper.comp
 
 const routes: Routes = [
   {
-    path: '', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard, EndGuard], children:
+    path: '', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard, IsNotEndGuard], children:
       [
         {path: '', component: StandingsComponent},
         {path: 'problem/:id', component: ProblemComponent, canActivate: [ProblemGuard], resolve: {problem: ProblemResolve, submissions: SubmissionsResolve}},
