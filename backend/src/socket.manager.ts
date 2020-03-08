@@ -332,7 +332,18 @@ export class SocketManager {
     return new Promise<{testCases: TestCaseSubmissionModel[], err: string}>(resolve => {
       this.emitToSocket(new SubmissionExtrasPacket(serverProblemSubmission.problemExtras, VERSION), socket);
 
-      const process = spawn('docker', ['run', '-i', '--rm', '--cap-drop', 'ALL', '--net=none', 'coderunner']);
+      const dockerArgs = [
+        'run',
+        '-i',             // Keep stdin open
+        '--rm',           // Delete container after exit
+        '--cap-drop=ALL', // Remove all capabilities
+        '--net=none',     // Disable networking
+        '--memory=256M',  // Cap memory at 256 MB
+        '--cpus=1.0',     // Cap number of CPUs at 1
+        'coderunner'
+      ];
+
+      const process = spawn('docker', dockerArgs);
       const testCases: TestCaseSubmissionModel[] = [];
       const errors = [];
 
@@ -379,11 +390,15 @@ export class SocketManager {
         throw new Error(data.toString());
       });
 
-      process.on('exit', async () => {
+      process.on('exit', async code => {
         let err = undefined;
 
         if (errors.length > 0) {
           err = errors.join('\n');
+        }
+
+        else if (code !== 0) {
+          err = `Docker process exited with non-zero error code ${code}`;
         }
 
         resolve({testCases, err});
