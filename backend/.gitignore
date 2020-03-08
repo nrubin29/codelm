@@ -2,6 +2,7 @@
 
 # secret files
 deployment/newwavecomputers.com.*
+db
 
 # compiled output
 /dist
