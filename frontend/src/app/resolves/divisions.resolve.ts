@@ -10,6 +10,6 @@ export class DivisionsResolve implements Resolve<DivisionModel[]> {
   constructor(private divisionService: DivisionService) {}
 
   resolve(route: ActivatedRouteSnapshot): Promise<DivisionModel[]> {
-    return this.divisionService.getDivisions();
+    return this.divisionService.getAll();
   }
 }

@@ -5,11 +5,7 @@ import { EditProblemComponent } from './components/edit-problem/edit-problem.com
 import { EditTeamComponent } from './components/edit-team/edit-team.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { AdminComponent } from './views/admin/admin.component';
-import { AdminHomeComponent } from './views/admin-home/admin-home.component';
-import { AdminsComponent } from './views/admins/admins.component';
-import { DisputesComponent } from './views/disputes/disputes.component';
-import { DivisionsComponent } from './views/divisions/divisions.component';
-import { ProblemsComponent } from './views/problems/problems.component';
+import { StandingsComponent } from './views/standings/standings.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { TeamComponent } from './views/team/team.component';
 import { SharedModule } from '../shared.module';
@@ -19,6 +15,8 @@ import { EditOpenEndedProblemComponent } from './components/edit-open-ended-prob
 import {AngularEditorModule} from "@kolkov/angular-editor";
 import { ViewSubmissionsComponent } from './components/view-submissions/view-submissions.component';
 import { SocketsComponent } from './views/sockets/sockets.component';
+import { EntityGroupingComponent } from './views/entity-grouping/entity-grouping.component';
+import { EntityListComponent } from './views/entity-list/entity-list.component';
 
 @NgModule({
   declarations: [
@@ -28,17 +26,15 @@ import { SocketsComponent } from './views/sockets/sockets.component';
     EditTeamComponent,
     LeaderboardComponent,
     AdminComponent,
-    AdminHomeComponent,
-    AdminsComponent,
-    DisputesComponent,
-    DivisionsComponent,
-    ProblemsComponent,
+    StandingsComponent,
     SettingsComponent,
     TeamComponent,
     EditGradedProblemComponent,
     EditOpenEndedProblemComponent,
     ViewSubmissionsComponent,
-    SocketsComponent
+    SocketsComponent,
+    EntityGroupingComponent,
+    EntityListComponent,
   ],
   imports: [
     SharedModule,

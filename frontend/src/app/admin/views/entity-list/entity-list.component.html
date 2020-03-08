@@ -1,0 +1,29 @@
+<mat-toolbar color="primary" *ngIf="type === 'single'">
+  <mat-toolbar-row>
+    <span>{{title}}</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="openEditComponent(null)"><mat-icon>add</mat-icon></button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <mat-table [dataSource]="entities" *ngIf="entities; else: loading">
+    <ng-container *ngFor="let column of columns" [matColumnDef]="column.name">
+      <mat-header-cell *matHeaderCellDef>{{column.name | titlecase}}</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <ng-container *ngIf="column.display === 'string'">
+          <a *ngIf="column.link" [routerLink]="column.link(element)">{{getData(column.name, element)}}</a>
+          <a *ngIf="column.isEditColumn" (click)="openEditComponent(element)" href="javascript:void(0)">{{getData(column.name, element)}}</a>
+          <ng-container *ngIf="!column.link && !column.isEditColumn">{{getData(column.name, element)}}</ng-container>
+        </ng-container>
+        <ng-container *ngIf="column.display === 'boolean'">
+          <mat-checkbox color="accent" [checked]="getData(column.name, element)" disabled=""></mat-checkbox>
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="columnNames"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnNames;"></mat-row>
+  </mat-table>
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>
+</div>

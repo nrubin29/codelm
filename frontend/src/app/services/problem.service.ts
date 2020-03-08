@@ -5,11 +5,16 @@ import {
   ClientProblemSubmission,
   ClientReplayRequest
 } from '../../../../common/src/problem-submission';
+import {DivisionModel} from "../../../../common/src/models/division.model";
+import {DivisionService} from "./division.service";
+import {GroupedEntityService} from "./entity.service";
+import {ProblemUtil} from "../../../../common/src/utils/problem.util";
+import {EditProblemComponent} from "../admin/components/edit-problem/edit-problem.component";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProblemService {
+export class ProblemService implements GroupedEntityService {
   private endpoint = 'problems';
 
   // This holds a ClientProblemSubmission from problem.component and gives it to submit.component.
@@ -46,7 +51,7 @@ export class ProblemService {
     this._replayRequest = value;
   }
 
-  constructor(private restService: RestService) { }
+  constructor(private restService: RestService, private divisionService: DivisionService) { }
 
   getProblem(id: string): Promise<ProblemModel> {
     return this.restService.get<ProblemModel>(`${this.endpoint}/${id}`);
@@ -56,12 +61,37 @@ export class ProblemService {
     return this.restService.get<ProblemModel[]>(`${this.endpoint}/division/${divisionId}`);
   }
 
-  addOrUpdateProblem(problem: any): Promise<ProblemModel> {
+  addOrUpdate(problem: any): Promise<ProblemModel> {
     // problem should be a ProblemModel but division is a string[] rather than a DivisionModel[].
     return this.restService.put<ProblemModel>(this.endpoint, problem);
   }
 
-  deleteProblem(problemId: string): Promise<void> {
-    return this.restService.delete<void>(`${this.endpoint}/${problemId}`);
+  delete(problem: ProblemModel): Promise<void> {
+    return this.restService.delete<void>(`${this.endpoint}/${problem._id}`);
+  }
+
+  // SECTION: GroupedEntityService
+
+  columns = ['number', {name: 'title', isEditColumn: true}];
+  editComponent = EditProblemComponent;
+  title = 'Problems';
+  type = 'grouped' as const;
+
+  getGroupLabel(entity: DivisionModel): string {
+    return entity.name;
+  }
+
+  getParents(): Promise<DivisionModel[]> {
+    return this.divisionService.getAll();
+  }
+
+  getChildren(parent: DivisionModel): Promise<ProblemModel[]> {
+    return this.getProblems(parent._id.toString());
+  }
+
+  getData(column: string, value: ProblemModel, parent: DivisionModel): any | undefined {
+    if (column === 'number') {
+      return ProblemUtil.getProblemNumberForDivision(value, parent);
+    }
   }
 }

@@ -4,6 +4,7 @@ import { DivisionModel } from '../../../../../../common/src/models/division.mode
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ProblemService } from '../../../services/problem.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {DivisionService} from "../../../services/division.service";
 
 @Component({
   selector: 'app-edit-problem',
@@ -17,11 +18,10 @@ export class EditProblemComponent implements OnInit {
   divisions: FormArray;
   formGroup: FormGroup;
 
-  constructor(private problemService: ProblemService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {problem: ProblemModel, divisions: DivisionModel[]}) { }
+  constructor(private problemService: ProblemService, private divisionService: DivisionService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {entity: ProblemModel}) { }
 
   ngOnInit() {
-    this.divisionModels = this.data.divisions;
-    this.problem = this.data.problem ? this.data.problem : {
+    this.problem = this.data.entity ?? {
       _id: undefined,
       title: undefined,
       description: undefined,
@@ -29,14 +29,17 @@ export class EditProblemComponent implements OnInit {
       divisions: []
     };
 
-    this.divisions = new FormArray(this.problem.divisions.map(problemDivision => this.createProblemDivisionGroup(problemDivision)));
+    this.divisionService.getAll().then(divisions => {
+      this.divisionModels = divisions;
+      this.divisions = new FormArray(this.problem.divisions.map(problemDivision => this.createProblemDivisionGroup(problemDivision)));
 
-    this.formGroup = new FormGroup({
-      _id: new FormControl(this.problem._id),
-      title: new FormControl(this.problem.title),
-      description: new FormControl(this.problem.description),
-      type: new FormControl(this.problem.type),
-      divisions: this.divisions
+      this.formGroup = new FormGroup({
+        _id: new FormControl(this.problem._id),
+        title: new FormControl(this.problem.title),
+        description: new FormControl(this.problem.description),
+        type: new FormControl(this.problem.type),
+        divisions: this.divisions
+      });
     });
   }
 

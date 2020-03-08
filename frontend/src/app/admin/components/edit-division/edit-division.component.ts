@@ -17,10 +17,10 @@ export class EditDivisionComponent implements OnInit {
   starterCode: FormArray;
   formGroup: FormGroup;
 
-  constructor(private divisionService: DivisionService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {division: DivisionModel}) { }
+  constructor(private divisionService: DivisionService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {entity: DivisionModel}) { }
 
   ngOnInit() {
-    this.division = this.data.division ? this.data.division : {_id: undefined, name: undefined, type: undefined, starterCode: []};
+    this.division = this.data.entity ?? {_id: undefined, name: undefined, type: undefined, starterCode: []};
 
     this.starterCode = new FormArray(this.division.starterCode.map(sc => this.createStarterCodeGroup(sc)));
 

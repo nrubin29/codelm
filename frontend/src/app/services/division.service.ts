@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { DivisionModel } from '../../../../common/src/models/division.model';
+import {SingleEntityService} from "./entity.service";
+import {EditDivisionComponent} from "../admin/components/edit-division/edit-division.component";
 
 @Injectable({
   providedIn: 'root'
 })
-export class DivisionService {
+export class DivisionService implements SingleEntityService {
   private endpoint = 'divisions';
 
   constructor(private restService: RestService) { }
 
-  getDivisions(): Promise<DivisionModel[]> {
+  getAll(): Promise<DivisionModel[]> {
     return this.restService.get<DivisionModel[]>(this.endpoint);
   }
 
-  addOrUpdateDivision(division: DivisionModel): Promise<DivisionModel> {
+  addOrUpdate(division: DivisionModel): Promise<DivisionModel> {
     const formData = new FormData();
 
     for (let starterCode of division.starterCode) {
@@ -38,7 +40,14 @@ export class DivisionService {
     return this.restService.put<DivisionModel>(this.endpoint, formData);
   }
 
-  deleteDivision(divisionId: string): Promise<void> {
-    return this.restService.delete<void>(`${this.endpoint}/${divisionId}`);
+  delete(division: DivisionModel): Promise<void> {
+    return this.restService.delete<void>(`${this.endpoint}/${division._id}`);
   }
+
+  // SECTION: SingleEntitySevice
+
+  columns = [{name: 'name', isEditColumn: true}, 'type'];
+  title = 'Divisions';
+  editComponent = EditDivisionComponent;
+  type = 'single' as const;
 }

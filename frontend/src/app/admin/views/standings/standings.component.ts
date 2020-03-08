@@ -6,11 +6,11 @@ import {SubmissionService} from "../../../services/submission.service";
 // TODO: Use a resolve.
 
 @Component({
-  selector: 'app-admin-home',
-  templateUrl: './admin-home.component.html',
-  styleUrls: ['./admin-home.component.scss']
+  selector: 'app-standings',
+  templateUrl: './standings.component.html',
+  styleUrls: ['./standings.component.scss']
 })
-export class AdminHomeComponent implements OnInit {
+export class StandingsComponent implements OnInit {
   divisions: DivisionModel[] = [];
 
   // TODO: Add an "overall" tab (for easy filtering)
@@ -19,7 +19,7 @@ export class AdminHomeComponent implements OnInit {
   constructor(private divisionService: DivisionService, private submissionService: SubmissionService) { }
 
   ngOnInit() {
-    this.divisionService.getDivisions().then(divisions => {
+    this.divisionService.getAll().then(divisions => {
       this.divisions = divisions;
     });
   }

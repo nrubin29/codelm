@@ -16,10 +16,10 @@ export class EditAdminComponent implements OnInit {
   formGroup: FormGroup;
   originalPassword: string;
 
-  constructor(private adminService: AdminService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {admin: AdminModel}) { }
+  constructor(private adminService: AdminService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {entity: AdminModel}) { }
 
   ngOnInit() {
-    this.admin = this.data.admin ? this.data.admin : {_id: undefined, name: undefined, superUser: false, username: undefined, password: undefined, salt: undefined};
+    this.admin = this.data.entity ?? {_id: undefined, name: undefined, superUser: false, username: undefined, password: undefined, salt: undefined};
     this.originalPassword = this.admin.password;
 
     this.formGroup = new FormGroup({
