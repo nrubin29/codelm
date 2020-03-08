@@ -94,12 +94,16 @@ export class TeamDao {
       team.password = hash;
     }
 
+    else if (team.password === '') {
+      team.password = undefined;
+    }
+
     if (!team._id) {
       return await TeamDao.addScore(await Team.create(team as TeamModel));
     }
 
     else {
-      return await TeamDao.addScore(await Team.findByIdAndUpdate(team._id, team, {new: true}).exec());
+      return await TeamDao.addScore(await Team.findByIdAndUpdate(team._id, team, {new: true, omitUndefined: true}).exec());
     }
   }
 

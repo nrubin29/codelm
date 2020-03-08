@@ -51,12 +51,16 @@ export class AdminDao {
       admin.password = hash;
     }
 
+    else if (admin.password === '') {
+      admin.password = undefined;
+    }
+
     if (!admin._id) {
       return Admin.create(admin as AdminModel);
     }
 
     else {
-      return Admin.findByIdAndUpdate(admin._id, admin, {new: true}).exec();
+      return Admin.findByIdAndUpdate(admin._id, admin, {new: true, omitUndefined: true}).exec();
     }
   }
 
