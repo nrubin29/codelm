@@ -4,7 +4,11 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class CodeSaverService {
-  mode: string = 'text/x-java';
+  language: string;
+
+  constructor() {
+    this.language = window.localStorage.getItem('language') ?? 'java';
+  }
 
   save(problemId: string, mode: string, code: string) {
     const problem = JSON.parse(window.localStorage.getItem(problemId) || '{}');
@@ -13,17 +17,20 @@ export class CodeSaverService {
   }
 
   get(problemId: string, mode: string): string | null {
-    this.mode = mode;
-
     const problem = JSON.parse(window.localStorage.getItem(problemId) || '{}');
     return problem[mode] || null;
   }
 
-  getMode(language?: string) {
-    if (language === undefined) {
-      return this.mode;
-    }
+  getLanguage() {
+    return this.language;
+  }
 
+  setLanguage(language: string) {
+    this.language = language;
+    window.localStorage.setItem('language', language);
+  }
+
+  getMode(language: string) {
     return {
       python: 'text/x-python',
       java: 'text/x-java',
@@ -31,23 +38,11 @@ export class CodeSaverService {
     }[language];
   }
 
-  getLanguage(mode?: string) {
-    return {
-      'text/x-python': 'python',
-      'text/x-java': 'java',
-      'text/x-c++src': 'cpp'
-    }[mode || this.mode];
-  }
-
-  getDocumentation(language?: string) {
-    if (language === undefined) {
-      language = this.getLanguage(this.mode);
-    }
-
+  getDocumentation() {
     return {
       python: 'https://docs.python.org/3.5/index.html',
       java: 'https://docs.oracle.com/javase/8/docs/api/',
       cpp: 'http://www.cplusplus.com/reference/'
-    }[language];
+    }[this.language];
   }
 }

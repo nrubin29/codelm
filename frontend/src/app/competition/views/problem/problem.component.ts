@@ -86,7 +86,8 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onLanguageChange(event: MatSelectChange) {
-    this.documentation = this.codeSaverService.getDocumentation(event.value);
+    this.codeSaverService.setLanguage(event.value);
+    this.documentation = this.codeSaverService.getDocumentation();
     this.saveCode();
   }
 
