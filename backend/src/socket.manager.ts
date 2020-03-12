@@ -355,8 +355,15 @@ export class SocketManager {
             continue;
           }
 
-          const obj = JSON.parse(packet.trim());
-          // console.log(obj);
+          let obj;
+
+          try {
+            obj = JSON.parse(packet.trim());
+          }
+
+          catch (e) {
+            obj = {error: 'An internal error occurred: invalid JSON packet'};
+          }
 
           if (obj.hasOwnProperty('error')) {
             errors.push(obj['error']);
