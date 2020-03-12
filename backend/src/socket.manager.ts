@@ -131,10 +131,10 @@ export class SocketManager {
         }
       };
 
-      socket.on('login', packet => this.onLoginPacket(packet as LoginPacket, socket).then(__id => _id = __id).catch(() => {}));
-      socket.on('register', packet => this.onRegisterPacket(packet as RegisterPacket, socket).then(__id => _id = __id).catch(() => {}));
-      socket.on('submission', packet => this.onSubmissionPacket(packet as SubmissionPacket, socket).catch(() => {}));
-      socket.on('replay', packet => this.onReplayPacket(packet as ReplayPacket, socket).catch(() => {}));
+      socket.on('login', packet => this.onLoginPacket(packet as LoginPacket, socket).then(__id => _id = __id));
+      socket.on('register', packet => this.onRegisterPacket(packet as RegisterPacket, socket).then(__id => _id = __id));
+      socket.on('submission', packet => this.onSubmissionPacket(packet as SubmissionPacket, socket));
+      socket.on('replay', packet => this.onReplayPacket(packet as ReplayPacket, socket));
 
       socket.onclose = event => {
         if (!event.wasClean) {

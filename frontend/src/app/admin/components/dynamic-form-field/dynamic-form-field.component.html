@@ -1,0 +1,26 @@
+<ng-container [ngSwitch]="attribute.type">
+  <ng-container *ngSwitchCase="'boolean'">
+    <mat-checkbox color="accent" [(ngModel)]="value" [disabled]="attribute.readonly">{{hideLabel ? '' : attribute.name | title}}</mat-checkbox>
+    <br />
+  </ng-container>
+  <mat-form-field color="accent" *ngSwitchCase="'password'">
+    <input matInput [(ngModel)]="value" type="password" [placeholder]="hideLabel ? null : attribute.name | title" [readonly]="attribute.readonly">
+  </mat-form-field>
+  <angular-editor *ngSwitchCase="'wysiwyg'" [(ngModel)]="value" [disabled]="attribute.readonly"></angular-editor>
+  <ng-container *ngSwitchCase="'file'">
+    <ng-container *ngIf="value; else: upload">
+      <p>File uploaded.</p>
+    </ng-container>
+    <ng-template #upload>
+      <input type="file" accept="application/zip" (change)="handleFile($event.target.files)">
+    </ng-template>
+  </ng-container>
+  <mat-form-field color="accent" *ngSwitchCase="'select'">
+    <mat-select [(ngModel)]="value" [placeholder]="hideLabel ? null : attribute.name | title">
+      <mat-option *ngFor="let option of options | async" [value]="option.value">{{option.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field color="accent" *ngSwitchDefault>
+    <input matInput [(ngModel)]="value" type="text" [placeholder]="hideLabel ? null : attribute.name | title" [readonly]="attribute.readonly">
+  </mat-form-field>
+</ng-container>

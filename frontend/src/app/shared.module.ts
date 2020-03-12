@@ -31,6 +31,7 @@ import {TimesweeperComponent} from "./common/views/timesweeper/timesweeper.compo
 import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AllCodeComponent} from "./common/components/all-code/all-code.component";
+import {TitlePipe} from "./pipes/title.pipe";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {AllCodeComponent} from "./common/components/all-code/all-code.component"
     CardComponent,
     CodeMirrorComponent,
     AllCodeComponent,
-    PluralizePipe
+    PluralizePipe,
+    TitlePipe,
   ],
   imports: [
     CommonModule,
@@ -78,6 +80,7 @@ import {AllCodeComponent} from "./common/components/all-code/all-code.component"
     CardComponent,
     CodeMirrorComponent,
     PluralizePipe,
+    TitlePipe,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

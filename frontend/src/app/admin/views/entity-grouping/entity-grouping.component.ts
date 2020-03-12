@@ -33,7 +33,7 @@ export class EntityGroupingComponent implements OnInit {
   }
 
   get editable() {
-    return this.entityService.config.editComponent !== undefined;
+    return this.entityService.config.editable;
   }
 
   openEditComponent() {

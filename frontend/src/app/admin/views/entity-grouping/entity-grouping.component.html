@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>{{entityName | titlecase | pluralize}}</span>
+    <span>{{entityName | title | pluralize}}</span>
     <ng-container *ngIf="editable">
       <span class="spacer"></span>
       <button mat-raised-button color="accent" (click)="openEditComponent()"><mat-icon>add</mat-icon></button>

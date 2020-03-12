@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mongod --dbpath db
+mongod --dbpath "$1"

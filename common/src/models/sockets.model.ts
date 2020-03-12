@@ -1,4 +1,3 @@
-export interface SocketList {
-    teams: string[];
-    admins: string[];
+export interface SocketConnection {
+    _id: string;
 }

@@ -1,1 +1,0 @@
-export type DialogResult = 'save' | 'delete' | 'close';

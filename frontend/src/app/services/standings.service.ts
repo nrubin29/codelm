@@ -15,10 +15,11 @@ export class StandingsService extends GroupedEntityService<SubmissionOverviewEle
     super({
       entityName: 'standing',
       columns: [
-        {name: 'team', link: (entity: SubmissionOverviewElement) => ['/admin', 'team', entity.team._id]},
-        'score',
+        {name: 'team', link: (entity: SubmissionOverviewElement) => ['/admin', 'team', entity.team._id]} as Column,
+        {name: 'score'},
       ],
-      refresh: true
+      editable: false,
+      refresh: true,
     });
   }
 
@@ -30,8 +31,8 @@ export class StandingsService extends GroupedEntityService<SubmissionOverviewEle
     return this.submissionService.getSubmissionOverview(parent._id);
   }
 
-  getGroupLabel(entity: DivisionModel): string {
-    return entity.name;
+  getGroupLabel(parent: DivisionModel): string {
+    return parent.name;
   }
 
   async getDynamicColumns(parent?: DivisionModel) {
@@ -50,5 +51,9 @@ export class StandingsService extends GroupedEntityService<SubmissionOverviewEle
     else if (column.name === 'score') {
       return value.team.score;
     }
+  }
+
+  getName(entity: SubmissionOverviewElement) {
+    return entity.team ? `Standings for ${entity.team.username}` : 'Standings';
   }
 }

@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import { ProblemModel } from '../../../../common/src/models/problem.model';
+import {
+  ProblemDivision,
+  ProblemModel,
+  ProblemType,
+  TestCaseOutputMode
+} from '../../../../common/src/models/problem.model';
 import {
   ClientProblemSubmission,
   ClientReplayRequest
@@ -9,7 +14,6 @@ import {DivisionModel} from "../../../../common/src/models/division.model";
 import {DivisionService} from "./division.service";
 import {Column, GroupedEntityService} from "./entity.service";
 import {ProblemUtil} from "../../../../common/src/utils/problem.util";
-import {EditProblemComponent} from "../admin/components/edit-problem/edit-problem.component";
 
 @Injectable({
   providedIn: 'root'
@@ -54,8 +58,29 @@ export class ProblemService extends GroupedEntityService<ProblemModel, DivisionM
   constructor(private restService: RestService, private divisionService: DivisionService) {
     super({
       entityName: 'problem',
-      columns: ['number', {name: 'title', isEditColumn: true}],
-      editComponent: EditProblemComponent
+      columns: [
+        {name: 'number'},
+        {name: 'title', isEditColumn: true},
+      ],
+      attributes: [
+        {name: '_id', optional: true, readonly: true},
+        {name: 'title'},
+        {name: 'description', type: 'wysiwyg'},
+        {name: 'type', type: 'select', options: Object.keys(ProblemType).map(type => ProblemType[type])},
+        {name: 'divisions', type: 'table', columns: [
+          {name: 'division', type: 'select', options: () => this.divisionService.getAll().then(divisions => divisions.map(division => ({name: division.name, value: division._id.toString()}))), transform: (value?: Partial<ProblemDivision>) => value?.division?._id},
+          {name: 'problemNumber'},
+          {name: 'points'},
+        ]},
+        // TODO: Support open-ended questions. Should just have a drop-down with options as Game enum values.
+        {name: 'testCases', type: 'table', columns: [
+          {name: 'input'},
+          {name: 'output'},
+          {name: 'hidden', type: 'boolean', optional: true}
+        ]},
+        {name: 'testCaseOutputMode', type: 'select', options: Object.keys(TestCaseOutputMode).map(mode => TestCaseOutputMode[mode])},
+      ],
+      editable: true,
     });
   }
 
@@ -78,10 +103,6 @@ export class ProblemService extends GroupedEntityService<ProblemModel, DivisionM
 
   // SECTION: GroupedEntityService
 
-  getGroupLabel(entity: DivisionModel): string {
-    return entity.name;
-  }
-
   getParents(): Promise<DivisionModel[]> {
     return this.divisionService.getAll();
   }
@@ -94,5 +115,13 @@ export class ProblemService extends GroupedEntityService<ProblemModel, DivisionM
     if (column.name === 'number') {
       return ProblemUtil.getProblemNumberForDivision(value, parent);
     }
+  }
+
+  getGroupLabel(parent: DivisionModel): string {
+    return parent.name;
+  }
+
+  getName(entity: ProblemModel) {
+    return entity.title;
   }
 }

@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import {isUploadSubmission, SubmissionModel, SubmissionOverview} from '../../../../common/src/models/submission.model';
+import {
+  GradedSubmissionModel,
+  isUploadSubmission,
+  SubmissionModel,
+  SubmissionOverview
+} from '../../../../common/src/models/submission.model';
 import {objectFromEntries} from "../../../../common/src/utils/submission.util";
 
 @Injectable({
@@ -31,8 +36,8 @@ export class SubmissionService {
     return this.restService.get<SubmissionModel[]>(`${this.endpoint}/problem/${problemId}/team/${teamId}`).then(fixSubmissions);
   }
 
-  getDisputedSubmissions(): Promise<SubmissionModel[]> {
-    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/disputes`).then(fixSubmissions);
+  getDisputedSubmissions(): Promise<GradedSubmissionModel[]> {
+    return this.restService.get<GradedSubmissionModel[]>(`${this.endpoint}/disputes`);
   }
 
   updateSubmission(submission: SubmissionModel): Promise<SubmissionModel> {

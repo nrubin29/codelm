@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import { DivisionModel } from '../../../../common/src/models/division.model';
+import {DivisionModel, DivisionType} from '../../../../common/src/models/division.model';
 import {SingleEntityService} from "./entity.service";
-import {EditDivisionComponent} from "../admin/components/edit-division/edit-division.component";
+import {SettingsState} from "../../../../common/src/models/settings.model";
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,20 @@ export class DivisionService extends SingleEntityService<DivisionModel> {
   constructor(private restService: RestService) {
     super({
       entityName: 'division',
-      columns: [{name: 'name', isEditColumn: true}, 'type'],
-      editComponent: EditDivisionComponent
+      columns: [
+        {name: 'name', isEditColumn: true},
+        {name: 'type'}
+      ],
+      attributes: [
+        {name: '_id', readonly: true, optional: true},
+        {name: 'name'},
+        {name: 'type', type: 'select', options: Object.keys(DivisionType).map(type => DivisionType[type])},
+        {name: 'starterCode', type: 'table', columns: [
+          {name: 'state', type: 'select', options: Object.keys(SettingsState).map(type => SettingsState[type])},
+          {name: 'file', type: 'file'},
+        ]}
+      ],
+      editable: true,
     });
   }
 
@@ -48,5 +60,9 @@ export class DivisionService extends SingleEntityService<DivisionModel> {
 
   delete(division: DivisionModel): Promise<void> {
     return this.restService.delete<void>(`${this.endpoint}/${division._id}`);
+  }
+
+  getName(entity: DivisionModel) {
+    return entity.name;
   }
 }

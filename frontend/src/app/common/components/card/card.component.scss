@@ -9,6 +9,19 @@ mat-card {
   margin-bottom: 1em;
   box-shadow: none;
   border: thin solid #eee;
+
+  &.error {
+    color: #b71c1c;
+
+    & mat-card-header {
+      color: #ffcdd2;
+      background: #b71c1c;
+    }
+
+    & mat-card-content {
+      background: #ffcdd2;
+    }
+  }
 }
 
 mat-card-header {

@@ -1,0 +1,44 @@
+<h2 mat-dialog-title *ngIf="isModal">{{title}}</h2>
+<app-card *ngIf="hasError" display="error">
+  <p>There are one or more errors in the form.</p>
+</app-card>
+<form #form="ngForm" [formGroup]="formGroup">
+  <mat-dialog-content>
+    <ng-container *ngFor="let attribute of attributes">
+      <ng-container *ngIf="attribute.type === 'table'; else: dynamic">
+        <div class="flex horizontal" style="margin: 1em 0">
+          <h3 mat-dialog-title style="margin: 0">{{attribute.name | title}}</h3>
+          <span class="spacer"></span>
+          <button mat-button (click)="addRow(attribute)"><mat-icon>add</mat-icon></button>
+        </div>
+        <br />
+        <table>
+          <thead>
+          <tr>
+            <th *ngFor="let column of attribute.columns">{{column.name | title}}</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody [formArrayName]="attribute.name">
+          <tr *ngFor="let _ of controls(attribute); index as i" [formGroupName]="i">
+            <td *ngFor="let column of attribute.columns">
+              <app-dynamic-form-field [attribute]="column" [hideLabel]="true" [formControlName]="column.name"></app-dynamic-form-field>
+            </td>
+            <td>
+              <button mat-icon-button (click)="deleteRow(attribute, i)"><mat-icon>delete</mat-icon></button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-template #dynamic>
+        <app-dynamic-form-field [attribute]="attribute" [formControlName]="attribute.name"></app-dynamic-form-field>
+      </ng-template>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions [class.flex]="!isModal" [class.right]="!isModal">
+    <button mat-button color="accent" type="button" (click)="onButtonClick('save')">Save</button>
+    <button mat-button color="warn" type="button" (click)="onButtonClick('delete')" *ngIf="entity._id">Delete</button>
+    <button mat-button type="button" (click)="onButtonClick('close')" *ngIf="isModal">Cancel</button>
+  </mat-dialog-actions>
+</form>

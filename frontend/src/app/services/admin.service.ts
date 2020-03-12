@@ -3,7 +3,6 @@ import { RestService } from './rest.service';
 import { BehaviorSubject } from 'rxjs';
 import { AdminModel } from '../../../../common/src/models/admin.model';
 import {SingleEntityService} from "./entity.service";
-import {EditAdminComponent} from "../admin/components/edit-admin/edit-admin.component";
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +14,19 @@ export class AdminService extends SingleEntityService<AdminModel> {
   constructor(private restService: RestService) {
     super({
       entityName: 'admin',
-      columns: [{name: 'username', isEditColumn: true}, 'name', {name: 'superUser', display: 'boolean' as const}],
-      editComponent: EditAdminComponent
+      columns: [
+        {name: 'username', isEditColumn: true},
+        {name: 'name'},
+        {name: 'superUser', display: 'boolean'}
+      ],
+      attributes: [
+        {name: '_id', readonly: true, optional: true},
+        {name: 'username'},
+        {name: 'password', type: 'password', optional: true},
+        {name: 'name'},
+        {name: 'superUser', type: 'boolean', optional: true},
+      ],
+      editable: true,
     });
 
     this.admin = new BehaviorSubject<AdminModel>(null);
@@ -32,5 +42,9 @@ export class AdminService extends SingleEntityService<AdminModel> {
 
   delete(admin: AdminModel): Promise<void> {
     return this.restService.delete<void>(`${this.endpoint}/${admin._id}`);
+  }
+
+  getName(entity: Partial<AdminModel>) {
+    return entity.username;
   }
 }

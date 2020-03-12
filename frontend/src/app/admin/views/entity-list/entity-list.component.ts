@@ -2,13 +2,12 @@ import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   Column,
   Entity,
-  EntityService,
-  GroupedEntityService,
+  GroupedEntityService, ListEntityService,
   SingleEntityService
 } from "../../../services/entity.service";
-import {DialogResult} from "../../../dialog-result";
 import {MatDialog} from "@angular/material/dialog";
 import {ActivatedRoute} from "@angular/router";
+import {DialogResult, EditEntityComponent} from "../../components/edit-entity/edit-entity.component";
 
 // TODO: Add searching
 
@@ -18,7 +17,7 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./entity-list.component.scss']
 })
 export class EntityListComponent implements OnInit, OnDestroy {
-  private entityService: EntityService<Entity, Entity>;
+  private entityService: ListEntityService<Entity, Entity>;
   columns: Column[];
 
   @Input() parent: Entity;
@@ -73,7 +72,7 @@ export class EntityListComponent implements OnInit, OnDestroy {
   }
 
   get editable() {
-    return this.entityService.config.editComponent !== undefined;
+    return this.entityService.config.editable;
   }
 
   getData(column: Column, value: Entity) {
@@ -81,8 +80,8 @@ export class EntityListComponent implements OnInit, OnDestroy {
   }
 
   openEditComponent(entity: Entity | null) {
-    const ref = this.dialog.open(this.entityService.config.editComponent, {
-      data: {entity},
+    const ref = this.dialog.open(EditEntityComponent, {
+      data: {entity, entityService: this.entityService},
       disableClose: true
     });
 

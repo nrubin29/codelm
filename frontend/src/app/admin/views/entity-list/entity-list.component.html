@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" *ngIf="type === 'single'">
   <mat-toolbar-row>
-    <span>{{entityName | titlecase | pluralize}}</span>
+    <span>{{entityName | title | pluralize}}</span>
     <ng-container *ngIf="editable">
       <span class="spacer"></span>
       <button mat-raised-button color="accent" (click)="openEditComponent(null)"><mat-icon>add</mat-icon></button>
@@ -10,11 +10,14 @@
 <div class="container">
   <mat-table [dataSource]="entities" *ngIf="entities; else: loading">
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.name">
-      <mat-header-cell *matHeaderCellDef>{{column.name | titlecase}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{column.name | title}}</mat-header-cell>
       <mat-cell *matCellDef="let element">
         <ng-container [ngSwitch]="column.display">
           <ng-container *ngSwitchCase="'boolean'">
             <mat-checkbox color="accent" [checked]="getData(column, element)" disabled=""></mat-checkbox>
+          </ng-container>
+          <ng-container *ngSwitchCase="'button'">
+            <button mat-icon-button (click)="column.action(element)"><mat-icon>{{column.icon}}</mat-icon></button>
           </ng-container>
           <ng-container *ngSwitchCase="'custom'">
             <!-- TODO: Dynamically instantiate custom components if we need more than one type -->
