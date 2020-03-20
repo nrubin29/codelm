@@ -9,10 +9,13 @@ import {DEBUG} from "./server";
 
 export class PermissionsUtil {
   static async canRegister(): Promise<boolean> {
+    // TODO: Ensure that if settings.preliminaries is true, the user is registering for a preliminaries division
+    //  and if settings.preliminaries is false, the user is registering for a competition division.
+
     const settings = await SettingsDao.getSettings();
 
     return settings.state === SettingsState.Debug || (
-      settings.preliminaries &&
+      settings.registration &&
       (settings.state === SettingsState.Graded || settings.state === SettingsState.Upload)
     );
   }

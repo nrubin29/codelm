@@ -1,7 +1,7 @@
 <ng-container [ngSwitch]="attribute.type">
   <ng-container *ngSwitchCase="'boolean'">
     <mat-checkbox color="accent" [(ngModel)]="value" [disabled]="attribute.readonly">{{hideLabel ? '' : attribute.name | title}}</mat-checkbox>
-    <br />
+    <br /><br />
   </ng-container>
   <mat-form-field color="accent" *ngSwitchCase="'password'">
     <input matInput [(ngModel)]="value" type="password" [placeholder]="hideLabel ? null : attribute.name | title" [readonly]="attribute.readonly">

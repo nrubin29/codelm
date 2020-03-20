@@ -15,6 +15,7 @@ export interface SettingsModel {
   state: SettingsState;
   schedule: ScheduleModel[];
   preliminaries: boolean;
+  registration: boolean;
   endSurveyLink: string;
 }
 
@@ -22,5 +23,6 @@ export const defaultSettingsModel: SettingsModel = Object.freeze({
   state: SettingsState.Closed,
   schedule: [],
   preliminaries: false,
+  registration: false,
   endSurveyLink: '#'
 });

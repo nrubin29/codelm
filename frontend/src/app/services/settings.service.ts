@@ -15,6 +15,7 @@ export class SettingsService extends EntityService<SettingsModel> {
       attributes: [
         {name: 'state', type: 'select', options: Object.keys(SettingsState).map(state => SettingsState[state])},
         {name: 'preliminaries', type: 'boolean'},
+        {name: 'registration', type: 'boolean'},
         {name: 'endSurveyLink', optional: true},
         {name: 'schedule', type: 'table', columns: [
           {name: 'newState', type: 'select', options: Object.keys(SettingsState).map(state => SettingsState[state])},

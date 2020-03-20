@@ -1,9 +1,10 @@
-import { Request, Response, Router } from 'express';
-import { DivisionDao } from '../daos/division.dao';
-import { DivisionModel, DivisionType } from '../../../common/src/models/division.model';
-import { PermissionsUtil } from '../permissions.util';
-import { FileArray, UploadedFile } from 'express-fileupload';
+import {Request, Response, Router} from 'express';
+import {DivisionDao} from '../daos/division.dao';
+import {DivisionModel, DivisionType} from '../../../common/src/models/division.model';
+import {PermissionsUtil} from '../permissions.util';
+import {FileArray, UploadedFile} from 'express-fileupload';
 import {SettingsState} from "../../../common/src/models/settings.model";
+import {SettingsDao} from "../daos/settings.dao";
 
 const router = Router();
 
@@ -16,8 +17,17 @@ router.get('/', PermissionsUtil.requestAdmin, async (req: Request, res: Response
   }
 
   else {
-    divisions = await DivisionDao.getDivisionsOfType(DivisionType.Preliminaries);
-    divisions.forEach(division => delete division.starterCode);
+    const settings = await SettingsDao.getSettings();
+
+    if (settings.preliminaries) {
+      divisions = await DivisionDao.getDivisionsOfType(DivisionType.Preliminaries);
+    }
+
+    else {
+      divisions = await DivisionDao.getDivisionsOfType(DivisionType.Competition);
+    }
+
+    divisions.forEach(division => { delete division.starterCode; });
   }
   res.json(divisions);
 });
