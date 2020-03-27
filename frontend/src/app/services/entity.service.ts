@@ -16,7 +16,7 @@ export interface Attribute {
    * The type of the attribute. This determines what control is used in the edit form. By default, we treat the input
    * like a string and display a basic <input>.
    */
-  type?: 'wysiwyg' | 'password' | 'file' | 'boolean' | 'select' | 'table';
+  type?: 'wysiwyg' | 'multiline' | 'password' | 'file' | 'boolean' | 'select' | 'table';
 
   optional?: boolean;
   readonly?: boolean;

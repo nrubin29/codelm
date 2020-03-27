@@ -7,6 +7,9 @@
     <input matInput [(ngModel)]="value" type="password" [placeholder]="hideLabel ? null : attribute.name | title" [readonly]="attribute.readonly">
   </mat-form-field>
   <angular-editor *ngSwitchCase="'wysiwyg'" [(ngModel)]="value" [disabled]="attribute.readonly"></angular-editor>
+  <mat-form-field color="accent" *ngSwitchCase="'multiline'">
+    <textarea matInput [(ngModel)]="value" [placeholder]="hideLabel ? null : attribute.name | title" [readonly]="attribute.readonly"></textarea>
+  </mat-form-field>
   <ng-container *ngSwitchCase="'file'">
     <ng-container *ngIf="value; else: upload">
       <p>File uploaded.</p>

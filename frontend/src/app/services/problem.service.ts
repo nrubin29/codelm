@@ -74,8 +74,8 @@ export class ProblemService extends GroupedEntityService<ProblemModel, DivisionM
         ]},
         // TODO: Support open-ended questions. Should just have a drop-down with options as Game enum values.
         {name: 'testCases', type: 'table', columns: [
-          {name: 'input'},
-          {name: 'output'},
+          {name: 'input', type: 'multiline'},
+          {name: 'output', type: 'multiline'},
           {name: 'hidden', type: 'boolean', optional: true}
         ]},
         {name: 'testCaseOutputMode', type: 'select', options: Object.keys(TestCaseOutputMode).map(mode => TestCaseOutputMode[mode])},
