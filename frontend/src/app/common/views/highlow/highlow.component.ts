@@ -1,16 +1,11 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Optional, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Optional, ViewChild} from '@angular/core';
 import {DashboardComponent} from "../../../competition/views/dashboard/dashboard.component";
-import {SubmissionStatusPacket} from "../../../../../../common/src/packets/submission.status.packet";
-import {SubmissionCompletedPacket} from "../../../../../../common/src/packets/submission.completed.packet";
-import {SubmissionPacket} from "../../../../../../common/src/packets/submission.packet";
+import {GamePacket, SubmissionCompletedPacket, SubmissionStatusPacket} from "../../../../../../common/src/packets/server.packet";
 import {VERSION} from "../../../../../../common/version";
 import {SocketService} from "../../../services/socket.service";
 import {ProblemService} from "../../../services/problem.service";
 import {TeamService} from "../../../services/team.service";
-import {GamePacket} from "../../../../../../common/src/packets/game.packet";
 import { MatTable } from "@angular/material/table";
-import {isPacket} from "../../../../../../common/src/packets/packet";
-import {ReplayPacket} from "../../../../../../common/src/packets/replay.packet";
 import {AdminComponent} from "../../../admin/views/admin/admin.component";
 
 @Component({
@@ -78,7 +73,7 @@ export class HighlowComponent implements AfterViewInit {
         if (this.queue.length > 0) {
           const packet = this.queue.shift();
 
-          if (isPacket<SubmissionCompletedPacket>(packet, 'submissionCompleted')) {
+          if (packet.name === 'submissionCompleted') {
             clearInterval(interval);
 
             // this.teamService.refreshTeam().then(() => {
@@ -93,7 +88,7 @@ export class HighlowComponent implements AfterViewInit {
             // });
           }
 
-          else if (isPacket<SubmissionStatusPacket>(packet, 'submissionStatus')) {
+          else if (packet.name === 'submissionStatus') {
             this.status = packet.status;
           }
 
@@ -106,11 +101,11 @@ export class HighlowComponent implements AfterViewInit {
       }, 500);
 
       if (this.problemService.peekProblemSubmission) {
-        this.socketService.emit(new SubmissionPacket(this.problemService.problemSubmission, this.teamService.team.getValue(), VERSION));
+        this.socketService.emit({name: 'submission', submission: this.problemService.problemSubmission, team: this.teamService.team.getValue(), version: VERSION});
       }
 
       else {
-        this.socketService.emit(new ReplayPacket(this.problemService.replayRequest, this.teamService.team.getValue(), VERSION));
+        this.socketService.emit({name: 'replay', replayRequest: this.problemService.replayRequest, team: this.teamService.team.getValue(), version: VERSION});
       }
     });
   }

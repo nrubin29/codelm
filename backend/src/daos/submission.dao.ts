@@ -10,7 +10,6 @@ import {
 import {GradedProblemModel, ProblemType, TestCaseOutputMode} from '../../../common/src/models/problem.model';
 import {ModelPopulateOptions} from 'mongoose';
 import {SocketManager} from '../socket.manager';
-import {UpdateTeamPacket} from '../../../common/src/packets/update.team.packet';
 import {ProblemUtil} from '../../../common/src/utils/problem.util';
 import {TeamDao} from "./team.dao";
 import {ProblemDao} from "./problem.dao";
@@ -253,13 +252,13 @@ export class SubmissionDao {
 
   static async updateSubmission(id: string, submission: SubmissionModel): Promise<SubmissionModel> {
     const subm = await Submission.findOneAndUpdate({_id: id}, submission, {new: true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
-    SocketManager.instance.emit(subm.team._id.toString(), new UpdateTeamPacket());
+    SocketManager.instance.emit(subm.team._id.toString(), {name: 'updateTeam'});
     return subm.toObject();
   }
 
   static async deleteSubmission(id: string): Promise<void> {
     const submission = await SubmissionDao.getSubmission(id);
     await Submission.deleteOne({_id: id}).exec();
-    SocketManager.instance.emit(submission.team._id.toString(), new UpdateTeamPacket());
+    SocketManager.instance.emit(submission.team._id.toString(), {name: 'updateTeam'});
   }
 }

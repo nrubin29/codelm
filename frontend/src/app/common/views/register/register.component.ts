@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { LoginResponse } from '../../../../../../common/src/packets/login.response.packet';
+import { LoginResponse } from '../../../../../../common/src/packets/server.packet';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DivisionModel } from '../../../../../../common/src/models/division.model';
 

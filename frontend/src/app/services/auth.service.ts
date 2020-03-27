@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { LoginPacket } from '../../../../common/src/packets/login.packet';
-import { LoginResponse, LoginResponsePacket } from '../../../../common/src/packets/login.response.packet';
+import {LoginResponse, LoginResponsePacket} from '../../../../common/src/packets/server.packet';
 import { SocketService } from './socket.service';
 import { TeamService } from './team.service';
 import { RestService } from './rest.service';
 import { AdminService } from './admin.service';
-import { RegisterPacket, RegisterTeamData } from '../../../../common/src/packets/register.packet';
+import { RegisterTeamData } from '../../../../common/src/packets/client.packet';
 import { VERSION } from '../../../../common/version';
 import {Packet} from "../../../../common/src/packets/packet";
 
@@ -16,11 +15,11 @@ export class AuthService {
   constructor(private socketService: SocketService, private restService: RestService, private teamService: TeamService, private adminService: AdminService) {}
 
   login(username: string, password: string): Promise<LoginResponse> {
-    return this.connect(new LoginPacket(username, password, VERSION));
+    return this.connect({name: 'login', username, password, version: VERSION});
   }
 
   register(teamData: RegisterTeamData): Promise<LoginResponse> {
-    return this.connect(new RegisterPacket(teamData, VERSION));
+    return this.connect({name: 'register', teamData, version: VERSION});
   }
 
   private connect(packet: Packet) {

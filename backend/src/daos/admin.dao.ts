@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 import crypto = require('crypto');
 import { AdminModel } from '../../../common/src/models/admin.model';
-import { LoginResponse } from '../../../common/src/packets/login.response.packet';
+import { LoginResponse } from '../../../common/src/packets/server.packet';
 
 type AdminType = AdminModel & mongoose.Document;
 

@@ -2,8 +2,6 @@ import mongoose = require('mongoose');
 import {defaultSettingsModel, SettingsModel, SettingsState} from '../../../common/src/models/settings.model';
 import {Job, scheduleJob} from 'node-schedule';
 import {SocketManager} from '../socket.manager';
-import {UpdateSettingsPacket} from '../../../common/src/packets/update.settings.packet';
-import {StateSwitchPacket} from '../../../common/src/packets/state.switch.packet';
 
 type SettingsType = SettingsModel & mongoose.Document;
 
@@ -42,10 +40,10 @@ export class SettingsDao {
     const newSettings: SettingsModel = await Settings.findOneAndUpdate({}, settings, {upsert: true, new: true}).exec();
 
     SettingsDao.scheduleJobs(newSettings);
-    SocketManager.instance.emitToAll(new UpdateSettingsPacket());
+    SocketManager.instance.emitToAll({name: 'updateSettings'});
 
     if (oldSettings.state !== newSettings.state) {
-      SocketManager.instance.emitToAll(new StateSwitchPacket(newSettings.state));
+      SocketManager.instance.emitToAll({name: 'stateSwitch', newState: newSettings.state});
     }
 
     if (newSettings.state === SettingsState.Closed || newSettings.state === SettingsState.End) {
@@ -69,7 +67,7 @@ export class SettingsDao {
     settings.schedule.forEach(schedule => {
       const job = scheduleJob(schedule.when, function (newState: SettingsState) {
         Settings.updateOne({}, {$set: {state: newState}}).exec().then(() => {
-          SocketManager.instance.emitToAll(new StateSwitchPacket(newState));
+          SocketManager.instance.emitToAll({name: 'stateSwitch', newState});
 
           if (newState === SettingsState.Closed || newState === SettingsState.End) {
             SocketManager.instance.kickTeams();
@@ -89,7 +87,7 @@ export class SettingsDao {
     await Settings.deleteOne({}).exec();
     const settings = await Settings.create(defaultSettingsModel);
     SettingsDao.resetJobs();
-    SocketManager.instance.emitToAll(new UpdateSettingsPacket());
+    SocketManager.instance.emitToAll({name: 'updateSettings'});
     return settings;
   }
 }

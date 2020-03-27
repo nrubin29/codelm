@@ -8,7 +8,7 @@ import { SocketService } from '../../../services/socket.service';
 import { SubmissionUtil } from '../../../../../../common/src/utils/submission.util';
 import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
-import {StateSwitchPacket} from "../../../../../../common/src/packets/state.switch.packet";
+import {StateSwitchPacket} from "../../../../../../common/src/packets/server.packet";
 import {SettingsState} from "../../../../../../common/src/models/settings.model";
 import {Router} from "@angular/router";
 

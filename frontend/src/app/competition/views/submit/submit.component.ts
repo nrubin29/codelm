@@ -5,10 +5,8 @@ import { ProblemService } from '../../../services/problem.service';
 import { ClientProblemSubmission } from '../../../../../../common/src/problem-submission';
 import { TeamService } from '../../../services/team.service';
 import {SocketService} from "../../../services/socket.service";
-import {SubmissionPacket} from "../../../../../../common/src/packets/submission.packet";
 import {VERSION} from "../../../../../../common/version";
-import {SubmissionStatusPacket} from "../../../../../../common/src/packets/submission.status.packet";
-import {SubmissionCompletedPacket} from "../../../../../../common/src/packets/submission.completed.packet";
+import {SubmissionCompletedPacket, SubmissionStatusPacket} from "../../../../../../common/src/packets/server.packet";
 
 @Component({
   selector: 'app-submit',
@@ -45,7 +43,7 @@ export class SubmitComponent implements OnInit {
         });
       });
 
-      this.socketService.emit(new SubmissionPacket(this.problemSubmission, this.teamService.team.getValue(), VERSION));
+      this.socketService.emit({name: 'submission', submission: this.problemSubmission, team: this.teamService.team.getValue(), version: VERSION});
     });
   }
 }

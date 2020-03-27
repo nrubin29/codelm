@@ -1,8 +1,4 @@
-export class Packet {
-  constructor(public name: string) {
-  }
-}
+import {ClientPacket} from "./client.packet";
+import {ServerPacket} from "./server.packet";
 
-export function isPacket<T extends Packet>(packet: Packet, name: string): packet is T {
-  return packet.name === name;
-}
+export type Packet = ClientPacket | ServerPacket;

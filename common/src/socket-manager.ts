@@ -8,29 +8,29 @@ interface WebSocketLike {
     onmessage: ((ev: any) => any) | null;
     onopen: ((ev: any) => any) | null;
     readyState: number;
-    send(string);
+    send(message: string);
 }
 
 export abstract class SocketManager<T extends WebSocketLike> {
     private socket: T;
 
-    private readonly events: Map<string, ((Packet) => void)[]>;
-    private readonly eventsOnce: Map<string, ((Packet) => void)[]>;
+    private readonly events: Map<Packet['name'], ((packet: Packet) => void)[]>;
+    private readonly eventsOnce: Map<Packet['name'], ((packet: Packet) => void)[]>;
 
     constructor(private websocketFactory: () => T) {
-        this.events = new Map<string, ((Packet) => void)[]>();
-        this.eventsOnce = new Map<string, ((Packet) => void)[]>();
+        this.events = new Map<Packet['name'], ((packet: Packet) => void)[]>();
+        this.eventsOnce = new Map<Packet['name'], ((packet: Packet) => void)[]>();
     }
 
-    on<T extends Packet>(event: string, fn: (packet: T) => void) {
-        this.events[event] = this.events.has(event) ? this.events[event].concat([fn]) : [fn];
+    on<T extends Packet>(event: T['name'], fn: (packet: T) => void) {
+        this.events[event as Packet['name']] = this.events.has(event) ? this.events[event as Packet['name']].concat([fn]) : [fn];
     }
 
-    once<T extends Packet>(event: string, fn: (packet: T) => void) {
-        this.eventsOnce[event] = this.eventsOnce.has(event) ? this.eventsOnce[event].concat([fn]) : [fn];
+    once<T extends Packet>(event: T['name'], fn: (packet: T) => void) {
+        this.eventsOnce[event as Packet['name']] = this.eventsOnce.has(event) ? this.eventsOnce[event as Packet['name']].concat([fn]) : [fn];
     }
 
-    off(event: string) {
+    off(event: Packet['name']) {
         this.events[event] = [];
         this.eventsOnce[event] = [];
     }

@@ -8,20 +8,14 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {SubmissionStatusPacket} from "../../../../../../common/src/packets/submission.status.packet";
-import {GamePacket} from "../../../../../../common/src/packets/game.packet";
-import {SubmissionCompletedPacket} from "../../../../../../common/src/packets/submission.completed.packet";
+import {GamePacket, SubmissionCompletedPacket, SubmissionExtrasPacket, SubmissionStatusPacket} from "../../../../../../common/src/packets/server.packet";
 import { MatTable } from "@angular/material/table";
 import {DashboardComponent} from "../../../competition/views/dashboard/dashboard.component";
 import {ProblemService} from "../../../services/problem.service";
 import {TeamService} from "../../../services/team.service";
 import {SocketService} from "../../../services/socket.service";
-import {isPacket} from "../../../../../../common/src/packets/packet";
-import {SubmissionPacket} from "../../../../../../common/src/packets/submission.packet";
 import {VERSION} from "../../../../../../common/version";
 import {AdminComponent} from "../../../admin/views/admin/admin.component";
-import {ReplayPacket} from "../../../../../../common/src/packets/replay.packet";
-import {SubmissionExtrasPacket} from "../../../../../../common/src/packets/submission.extras.packet";
 import {TimesweeperExtras, TimesweeperOutputType} from "../../../../../../common/src/models/game.model";
 
 @Component({
@@ -102,7 +96,7 @@ export class TimesweeperComponent implements OnInit, AfterViewInit {
         if (this.queue.length > 0) {
           const packet = this.queue.shift();
 
-          if (isPacket<SubmissionCompletedPacket>(packet, 'submissionCompleted')) {
+          if (packet.name === 'submissionCompleted') {
             clearInterval(interval);
 
             // this.teamService.refreshTeam().then(() => {
@@ -117,7 +111,7 @@ export class TimesweeperComponent implements OnInit, AfterViewInit {
             // });
           }
 
-          else if (isPacket<SubmissionStatusPacket>(packet, 'submissionStatus')) {
+          else if (packet.name === 'submissionStatus') {
             this.status = packet.status;
           }
 
@@ -164,11 +158,11 @@ export class TimesweeperComponent implements OnInit, AfterViewInit {
       }, 750);
 
       if (this.problemService.peekProblemSubmission) {
-        this.socketService.emit(new SubmissionPacket(this.problemService.problemSubmission, this.teamService.team.getValue(), VERSION));
+        this.socketService.emit({name: 'submission', submission: this.problemService.problemSubmission, team: this.teamService.team.getValue(), version: VERSION});
       }
 
       else {
-        this.socketService.emit(new ReplayPacket(this.problemService.replayRequest, this.teamService.team.getValue(), VERSION));
+        this.socketService.emit({name: 'replay', replayRequest: this.problemService.replayRequest, team: this.teamService.team.getValue(), version: VERSION});
       }
     });
   }
