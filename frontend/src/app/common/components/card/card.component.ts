@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class CardComponent implements OnInit {
   @Input() title: string;
   @Input() pad = true;
-  @Input() display: 'normal' | 'error' = 'normal';
+  @Input() display: 'normal' | 'info' | 'error' = 'normal';
 
   constructor() { }
 

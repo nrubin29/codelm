@@ -32,6 +32,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AllCodeComponent} from "./common/components/all-code/all-code.component";
 import {TitlePipe} from "./pipes/title.pipe";
+import {FaqComponent} from "./common/components/faq/faq.component";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {TitlePipe} from "./pipes/title.pipe";
     CardComponent,
     CodeMirrorComponent,
     AllCodeComponent,
+    FaqComponent,
     PluralizePipe,
     TitlePipe,
   ],
@@ -104,9 +106,6 @@ import {TitlePipe} from "./pipes/title.pipe";
     MatCheckboxModule,
     MatExpansionModule,
     MatMenuModule,
-  ],
-  entryComponents: [
-    AllCodeComponent
   ]
 })
 export class SharedModule { }

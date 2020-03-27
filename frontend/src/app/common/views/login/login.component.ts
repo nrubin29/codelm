@@ -7,6 +7,7 @@ import { SettingsModel } from '../../../../../../common/src/models/settings.mode
 import { VERSION } from '../../../../../../common/version';
 import {MatDialog} from "@angular/material/dialog";
 import {AllCodeComponent} from "../../components/all-code/all-code.component";
+import {FaqComponent} from "../../components/faq/faq.component";
 
 @Component({
   selector: 'app-login',
@@ -51,6 +52,13 @@ export class LoginComponent implements OnInit {
 
   register() {
     this.router.navigate(['register']);
+  }
+
+  showFaq() {
+    this.dialog.open(FaqComponent, {
+      width: '90vw',
+      height: '90vh'
+    });
   }
 
   showAllCode() {

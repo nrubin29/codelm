@@ -10,6 +10,19 @@ mat-card {
   box-shadow: none;
   border: thin solid #eee;
 
+  &.info {
+    color: #0d47a1;
+
+    & mat-card-header {
+      color: #bbdefb;
+      background: #0d47a1;
+    }
+
+    & mat-card-content {
+      background: #bbdefb;
+    }
+  }
+
   &.error {
     color: #b71c1c;
 
