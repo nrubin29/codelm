@@ -1,7 +1,6 @@
 import {Action} from "../action";
 import {Tester} from "../tester";
-import {LoginResponse, LoginResponsePacket} from "../../../common/src/packets/login.response.packet";
-import {LoginPacket} from "../../../common/src/packets/login.packet";
+import {LoginResponse, LoginResponsePacket} from "../../../common/src/packets/server.packet";
 import {VERSION} from "../../../common/version";
 
 export class LoginAction extends Action {
@@ -17,7 +16,7 @@ export class LoginAction extends Action {
                 }
             });
 
-            tester.emit(new LoginPacket(tester.team.username, 'password', VERSION));
+            tester.emit({name: 'login', username: tester.team.username, password: 'password', version: VERSION});
         }));
     }
 }

@@ -2,9 +2,7 @@ import {Action} from "../action";
 import {Tester} from "../tester";
 import {VERSION} from "../../../common/version";
 import {PROBLEM_SUBMISSIONS} from "../data";
-import {SubmissionStatusPacket} from "../../../common/src/packets/submission.status.packet";
-import {SubmissionCompletedPacket} from "../../../common/src/packets/submission.completed.packet";
-import {SubmissionPacket} from "../../../common/src/packets/submission.packet";
+import {SubmissionCompletedPacket, SubmissionStatusPacket} from "../../../common/src/packets/server.packet";
 
 export class SubmitAction extends Action {
     runAction(tester: Tester) {
@@ -21,7 +19,7 @@ export class SubmitAction extends Action {
                 resolve();
             });
 
-            tester.emit(new SubmissionPacket(problemSubmission, tester.team, VERSION));
+            tester.emit({name: 'submission', submission: problemSubmission, team: tester.team, version: VERSION});
         });
     }
 }
