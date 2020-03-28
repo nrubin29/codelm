@@ -14,7 +14,7 @@ export const languages: {[language: string]: Language} = Object.freeze({
     extension: 'java'
   },
   python: {
-    compile: files => ['python', '-m', 'py_compile'].concat(files),
+    compile: files => ['pyflakes'].concat(files),
     run: files => ['python3', files[0]],
     extension: 'py',
     files: [new CodeFile('__init__.py', '')]
