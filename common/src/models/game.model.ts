@@ -1,4 +1,4 @@
-export enum Game {
+export enum GameType {
     HighLow = 'High Low',
     Timesweeper = 'Timesweeper'
 }
@@ -9,7 +9,10 @@ export enum TimesweeperOutputType {
 }
 
 export interface TimesweeperExtras {
+    game: GameType.Timesweeper;
     boardSize: number;
     numPeople: number;
     outputType: TimesweeperOutputType;
 }
+
+export type GameExtras = TimesweeperExtras;

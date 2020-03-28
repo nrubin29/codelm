@@ -1,5 +1,5 @@
 import { isGradedProblem, ProblemModel } from '../models/problem.model';
-import { SubmissionModel } from '../models/submission.model';
+import {isGradedSubmission, SubmissionModel} from '../models/submission.model';
 
 export class SubmissionUtil {
   static getSolution(problem: ProblemModel, submissions: SubmissionModel[]): SubmissionModel {
@@ -20,6 +20,18 @@ export class SubmissionUtil {
     }
 
     return null;
+  }
+
+  static hasError(submission: SubmissionModel): boolean {
+    if (submission.compilationError) {
+      return true;
+    }
+
+    else if (isGradedSubmission(submission)) {
+      return submission.testCases.find(testCase => testCase.error !== undefined) !== undefined;
+    }
+
+    return false;
   }
 }
 

@@ -4,36 +4,36 @@ import chai = require('chai');
 import chaiAsPromised = require('chai-as-promised');
 import {languages} from "./language";
 import {CodeFile} from "./codefile";
-import {HighLow} from "./games/high-low";
+import {HighLow} from "../../backend/src/games/high-low";
 
 chai.use(chaiAsPromised);
 chai.should();
 
-describe('CodeRunner', () => {
-  describe('#highLow', () => {
-    it('should run the high low game', async () => {
-      const runner = new CodeRunner(languages['python'], 'coderunner-test', [new CodeFile('main.py', `
-low = 0
-high = 100
-      
-while True:
-    guess = (low + high) // 2
-    print(guess)
-      
-    inp = input()
-    if inp == 'Too high':
-        high = guess
-    elif inp == 'Too low':
-        low = guess
-      `)]);
-
-      runner.output.subscribe(next => console.log(next));
-
-      await runner.setup();
-      await runner.runGame(new HighLow());
-    });
-  });
-
+// describe('CodeRunner', () => {
+//   describe('#highLow', () => {
+//     it('should run the high low game', async () => {
+//       const runner = new CodeRunner(languages['python'], 'coderunner-test', [new CodeFile('main.py', `
+// low = 0
+// high = 100
+//
+// while True:
+//     guess = (low + high) // 2
+//     print(guess)
+//
+//     inp = input()
+//     if inp == 'Too high':
+//         high = guess
+//     elif inp == 'Too low':
+//         low = guess
+//       `)]);
+//
+//       runner.output.subscribe(next => console.log(next));
+//
+//       await runner.setup();
+//       await runner.runGame(new HighLow());
+//     });
+//   });
+//
 //   describe('#badCompile', () => {
 //     it('should fail with a compile error', () => {
 //       const runner = new CodeRunner(languages['python'], "coderunner-test", [new CodeFile("main.py", "def")]);
@@ -214,4 +214,4 @@ while True:
 //       ]).should.eventually.be.fulfilled;
 //     });
 //   });
-});
+// });

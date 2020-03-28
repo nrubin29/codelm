@@ -7,7 +7,8 @@ export interface TestCaseSubmissionModel {
   hidden: boolean;
   input: string;
   output: string;
-  correctOutput: string;
+  correctOutput: string; // TODO: Don't store this here, get the value from the corresponding TestCaseModel.
+  error?: string;
   correct?: boolean;
 }
 
@@ -21,6 +22,7 @@ export interface SubmissionModel {
   type: 'graded' | 'upload';
   team: TeamModel;
   problem: ProblemModel;
+  compilationError?: string;
   result?: string;
   points?: number;
   datetime?: Date;
@@ -34,7 +36,6 @@ export interface GradedSubmissionModel extends SubmissionModel {
   problem: GradedProblemModel;
   overrideCorrect?: boolean;
   dispute?: DisputeModel;
-  error?: string;
   testCases?: TestCaseSubmissionModel[];
 }
 

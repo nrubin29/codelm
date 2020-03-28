@@ -1,14 +1,11 @@
-import {readFile, writeFile} from "fs-extra";
+import {writeFile} from "fs-extra";
+
+export const FOLDER = 'code';
 
 export class CodeFile {
   constructor(public name: string, public code: string) { }
 
-  static async fromFile(name: string, path: string): Promise<CodeFile> {
-    const data = await readFile(path);
-    return new CodeFile(name, data.toString());
-  }
-
-  mkfile(folderPath: string): Promise<void> {
-    return writeFile(folderPath + '/' + this.name, this.code);
+  mkfile(): Promise<void> {
+    return writeFile(`${FOLDER}/${this.name}`, this.code);
   }
 }

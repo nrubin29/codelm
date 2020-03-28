@@ -13,7 +13,7 @@ module.exports = {
         ]),
     ],
     entry: {
-        'code': './src/code.ts'
+        'coderunner': './src/coderunner.ts'
     },
     module: {
         rules: [

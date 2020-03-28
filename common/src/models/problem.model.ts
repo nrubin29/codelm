@@ -1,5 +1,5 @@
 import { DivisionModel } from './division.model';
-import {Game} from "./game.model";
+import {GameType} from "./game.model";
 
 export interface ProblemDivision {
   _id?: string;
@@ -44,7 +44,7 @@ export function isGradedProblem(problem: ProblemModel): problem is GradedProblem
 }
 
 export interface OpenEndedProblemModel extends ProblemModel {
-  game: Game;
+  gameType: GameType;
   extras?: any;
 }
 

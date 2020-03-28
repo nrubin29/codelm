@@ -13,6 +13,7 @@ import {SocketManager} from '../socket.manager';
 import {ProblemUtil} from '../../../common/src/utils/problem.util';
 import {TeamDao} from "./team.dao";
 import {ProblemDao} from "./problem.dao";
+import {SubmissionUtil} from "../../../common/src/utils/submission.util";
 
 type SubmissionType = SubmissionModel & mongoose.Document;
 
@@ -20,7 +21,8 @@ const TestCaseSubmissionSchema = new mongoose.Schema({
   hidden: Boolean,
   input: String,
   correctOutput: String,
-  output: String
+  output: String,
+  error: {type: String, default: undefined},
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -35,7 +37,7 @@ export function isFalse(str: string): boolean {
 }
 
 export function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: GradedProblemModel): boolean {
-  if (!testCase.output) {
+  if (testCase.error || !testCase.output) {
     return false;
   }
 
@@ -71,7 +73,7 @@ const SubmissionSchema = new mongoose.Schema({
   rubric: {type: Map, of: Number, default: () => new Map()},
   test: {type: Boolean, default: false},
   testCases: [TestCaseSubmissionSchema],
-  error: String,
+  compilationError: {type: String, default: undefined},
   overrideCorrect: {type: Boolean, default: false},
   datetime: {type: Date, default: Date.now},
   dispute: {
@@ -101,8 +103,12 @@ export function submissionResult(submission: SubmissionModel) {
       return 'Override correct';
     }
 
-    else if (submission.error) {
-      return 'Error';
+    else if (submission.compilationError) {
+      return 'Compilation error';
+    }
+
+    else if (SubmissionUtil.hasError(submission)) {
+      return 'Test case error';
     }
 
     else {
@@ -131,7 +137,7 @@ SubmissionSchema.virtual('points').get(function() {
       return ProblemUtil.getPoints(submission.problem, submission.team);
     }
 
-    else if (submission.error) {
+    else if (SubmissionUtil.hasError(submission)) {
       return 0;
     }
 

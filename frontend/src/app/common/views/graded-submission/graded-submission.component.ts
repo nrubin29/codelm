@@ -4,6 +4,7 @@ import { CodeMirrorComponent } from '../../components/code-mirror/code-mirror.co
 import { SubmissionService } from '../../../services/submission.service';
 import { CodeSaverService } from '../../../services/code-saver.service';
 import { SubmissionComponent } from '../submission/submission.component';
+import {SubmissionUtil} from "../../../../../../common/src/utils/submission.util";
 
 @Component({
   selector: 'app-graded-submission',
@@ -26,8 +27,13 @@ export class GradedSubmissionComponent implements OnInit {
     this.codeMirror.writeValue(this.submission.code);
   }
 
+  get hasError() {
+    return SubmissionUtil.hasError(this.submission);
+  }
+
   get submissionError() {
-    return this.submission.error.replace(/\n/g, '<br />');
+    const error = this.submission.compilationError ?? this.submission.testCases.find(testCase => testCase.error !== undefined).error;
+    return error.replace(/\n/g, '<br />');
   }
 
   overrideCorrect() {

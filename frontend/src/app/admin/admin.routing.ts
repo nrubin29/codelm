@@ -11,8 +11,7 @@ import { AdminGuard } from '../guards/admin.guard';
 import { AdminComponent } from './views/admin/admin.component';
 import { NgModule } from '@angular/core';
 import { SuperUserGuard } from '../guards/super-user.guard';
-import {HighlowComponent} from "../common/views/highlow/highlow.component";
-import {TimesweeperComponent} from "../common/views/timesweeper/timesweeper.component";
+import {GameComponent} from '../common/views/game/game.component';
 import {EntityGroupingComponent} from "./views/entity-grouping/entity-grouping.component";
 import {EntityServiceResolve} from "../resolves/entity-service.resolve";
 import {EntityListComponent} from "./views/entity-list/entity-list.component";
@@ -32,10 +31,7 @@ const routes: Routes = [
         {path: 'problems', component: EntityGroupingComponent, canActivate: [SuperUserGuard], resolve: {entityService: EntityServiceResolve}},
         {path: 'admins', component: EntityListComponent, canActivate: [SuperUserGuard], resolve: {entityService: EntityServiceResolve}},
         {path: 'add-team', component: EditTeamComponent},
-        {path: 'game', children: [
-            {path: 'highlow', component: HighlowComponent},
-            {path: 'timesweeper', component: TimesweeperComponent}
-          ]}
+        {path: 'game/:gameType', component: GameComponent},
       ]
   }
 ];

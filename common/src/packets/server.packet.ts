@@ -2,11 +2,7 @@ import {TeamModel} from "../models/team.model";
 import {AdminModel} from "../models/admin.model";
 import {SettingsState} from "../models/settings.model";
 import {SubmissionModel} from "../models/submission.model";
-
-export interface GamePacket {
-  name: 'game';
-  data: object;
-}
+import {GameExtras} from '../models/game.model';
 
 export const enum LoginResponse {
   SuccessTeam = 'Success Team',
@@ -37,14 +33,19 @@ export interface SubmissionCompletedPacket {
   submission: SubmissionModel;
 }
 
-export interface SubmissionExtrasPacket {
+export interface GameExtrasPacket {
   name: 'submissionExtras';
-  extras: any;
+  extras: GameExtras;
+}
+
+export enum SubmissionStatus {
+  Compiling = 'Compiling',
+  Running = 'Running',
 }
 
 export interface SubmissionStatusPacket {
   name: 'submissionStatus';
-  status: string;
+  status: SubmissionStatus;
 }
 
 export interface UpdateSettingsPacket {
@@ -55,5 +56,5 @@ export interface UpdateTeamPacket {
   name: 'updateTeam';
 }
 
-export type ServerPacket = GamePacket | LoginResponsePacket | StateSwitchPacket | SubmissionCompletedPacket |
-    SubmissionExtrasPacket | SubmissionStatusPacket | UpdateSettingsPacket | UpdateTeamPacket;
+export type ServerPacket = LoginResponsePacket | StateSwitchPacket | SubmissionCompletedPacket | GameExtrasPacket |
+    SubmissionStatusPacket | UpdateSettingsPacket | UpdateTeamPacket;

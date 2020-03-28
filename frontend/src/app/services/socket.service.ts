@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import {SocketManager} from "../../../../common/src/socket-manager";
+import {SocketPacketManager} from "../../../../common/src/packet.manager";
 import {skipWhile} from "rxjs/operators";
 import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
-export class SocketService extends SocketManager<WebSocket> {
+export class SocketService extends SocketPacketManager<WebSocket> {
   listening = false;
 
   constructor(private router: Router) {

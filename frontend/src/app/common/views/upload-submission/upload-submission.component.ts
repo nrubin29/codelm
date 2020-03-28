@@ -4,7 +4,6 @@ import { UploadSubmissionModel } from '../../../../../../common/src/models/submi
 import { SubmissionService } from '../../../services/submission.service';
 import {CodeMirrorComponent} from "../../components/code-mirror/code-mirror.component";
 import {CodeSaverService} from "../../../services/code-saver.service";
-import {OpenEndedProblemModel} from "../../../../../../common/src/models/problem.model";
 import {Router} from "@angular/router";
 import {ProblemService} from "../../../services/problem.service";
 import {MatRadioButton} from "@angular/material/radio";
@@ -52,7 +51,7 @@ export class UploadSubmissionComponent implements OnInit, AfterViewInit {
       _id: this.submission._id
     };
 
-    this.router.navigate(['admin', 'game', (<OpenEndedProblemModel>this.submission.problem).game.toLowerCase().replace(' ', '')]);
+    this.router.navigate(['admin', 'game', this.submission.problem.gameType]);
   }
 
   delete() {

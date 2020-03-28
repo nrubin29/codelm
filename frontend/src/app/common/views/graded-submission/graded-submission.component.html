@@ -30,14 +30,14 @@
                 <ng-container matColumnDef="status">
                     <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                        <mat-icon>{{element.correct ? 'check_circle' : 'highlight_off'}}</mat-icon>
+                        <mat-icon>{{element.error ? 'error_outline' : element.correct ? 'check_circle_outline' : 'highlight_off'}}</mat-icon>
                     </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="['input', 'correctOutput', 'yourOutput', 'status']"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: ['input', 'correctOutput', 'yourOutput', 'status'];"></mat-row>
             </mat-table>
         </app-card>
-        <app-card title="Error" *ngIf="submission.error">
+        <app-card title="Error" *ngIf="hasError">
             <code [innerHTML]="submissionError"></code>
         </app-card>
         <app-card title="Dispute" *ngIf="submission.dispute || (submission.points === 0 && !admin)">

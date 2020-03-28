@@ -1,5 +1,4 @@
-import Game from "./game";
-import {GameResult} from "./game.result";
+import {Game, GameResult} from "./game";
 import {TimesweeperExtras, TimesweeperOutputType} from "../../../common/src/models/game.model";
 
 const PERSON = 9;

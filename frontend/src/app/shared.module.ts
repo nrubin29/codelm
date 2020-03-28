@@ -26,13 +26,14 @@ import { CardComponent } from './common/components/card/card.component';
 import { CodeMirrorComponent } from './common/components/code-mirror/code-mirror.component';
 import { GradedSubmissionComponent } from './common/views/graded-submission/graded-submission.component';
 import { UploadSubmissionComponent } from './common/views/upload-submission/upload-submission.component';
-import {HighlowComponent} from "./common/views/highlow/highlow.component";
-import {TimesweeperComponent} from "./common/views/timesweeper/timesweeper.component";
+import {HighlowComponent} from "./common/components/highlow/highlow.component";
+import {TimesweeperComponent} from "./common/components/timesweeper/timesweeper.component";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AllCodeComponent} from "./common/components/all-code/all-code.component";
 import {TitlePipe} from "./pipes/title.pipe";
 import {FaqComponent} from "./common/components/faq/faq.component";
+import {GameComponent} from './common/views/game/game.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {FaqComponent} from "./common/components/faq/faq.component";
     CodeMirrorComponent,
     AllCodeComponent,
     FaqComponent,
+    GameComponent,
     PluralizePipe,
     TitlePipe,
   ],

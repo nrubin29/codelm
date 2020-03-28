@@ -1,24 +1,29 @@
-import {LoginPacket, RegisterPacket, ReplayPacket, SubmissionPacket} from '../../common/src/packets/client.packet';
+import {isClientPacket, LoginPacket, RegisterPacket, ReplayPacket, SubmissionPacket} from '../../common/src/packets/client.packet';
 import {sanitizeTeam, TeamDao} from './daos/team.dao';
 import {AdminDao} from './daos/admin.dao';
 import {Packet} from '../../common/src/packets/packet';
 import {PermissionsUtil} from './permissions.util';
-import {LoginResponse} from '../../common/src/packets/server.packet';
+import {LoginResponse, SubmissionStatus} from '../../common/src/packets/server.packet';
 import {VERSION} from '../../common/version';
-import {isClientPacket} from '../../common/src/packets/client.packet';
-import {ServerProblemSubmission} from "../../common/src/problem-submission";
-import {ProblemDao} from "./daos/problem.dao";
-import {isGradedProblem, isOpenEndedProblem, ProblemModel} from "../../common/src/models/problem.model";
-import {isFalse, isTestCaseSubmissionCorrect, SubmissionDao, submissionResult} from "./daos/submission.dao";
-import {spawn} from "child_process";
+import {ServerProblemSubmission} from '../../common/src/problem-submission';
+import {ProblemDao} from './daos/problem.dao';
+import {isGradedProblem, isOpenEndedProblem, OpenEndedProblemModel, ProblemType} from '../../common/src/models/problem.model';
+import {isFalse, isTestCaseSubmissionCorrect, SubmissionDao, submissionResult} from './daos/submission.dao';
 import {
-  GradedSubmissionModel, isGradedSubmission,
+  GradedSubmissionModel,
+  isGradedSubmission,
   SubmissionModel,
   TestCaseSubmissionModel
-} from "../../common/src/models/submission.model";
+} from '../../common/src/models/submission.model';
 import * as WebSocket from 'ws';
-import {Express} from "express";
-import {WithWebsocketMethod} from "express-ws";
+import {Express} from 'express';
+import {WithWebsocketMethod} from 'express-ws';
+import {CodeRunnerConnection} from './coderunner.connection';
+import {GameType} from '../../common/src/models/game.model';
+import {Timesweeper} from './games/timesweeper';
+import {HighLow} from './games/high-low';
+import {CodeRunnerPacket} from '../../common/src/packets/coderunner.packet';
+import {Observable} from 'rxjs';
 
 export class SocketManager {
   private static _instance: SocketManager;
@@ -263,11 +268,11 @@ export class SocketManager {
     }
 
     else if (isOpenEndedProblem(problem)) {
-      serverProblemSubmission.game = problem.game;
+      serverProblemSubmission.gameType = problem.gameType;
       serverProblemSubmission.problemExtras = problem.extras;
     }
 
-    const {testCases, err} = await this.runSubmission(serverProblemSubmission, problem, socket);
+    const {testCases, compilationError} = await this.runSubmission(serverProblemSubmission, socket);
 
     let submission: SubmissionModel = {
       type: isGradedProblem(problem) ? 'graded' : 'upload',
@@ -275,8 +280,8 @@ export class SocketManager {
       problem,
       language: problemSubmission.language,
       code: problemSubmission.code,
-      testCases,
-      error: err,
+      testCases: testCases ?? [],
+      compilationError,
       test: problemSubmission.test
     } as GradedSubmissionModel;
 
@@ -308,104 +313,119 @@ export class SocketManager {
       code: submission.code
     };
 
-    if (isGradedProblem(submission.problem)) {
-      serverProblemSubmission.testCases = submission.problem.testCases.filter(testCase => isFalse(submission.test.toString()) || !testCase.hidden);
-    }
+    const problem = submission.problem as OpenEndedProblemModel;
+    serverProblemSubmission.gameType = problem.gameType;
+    serverProblemSubmission.problemExtras = problem.extras;
 
-    else if (isOpenEndedProblem(submission.problem)) {
-      serverProblemSubmission.game = submission.problem.game;
-      serverProblemSubmission.problemExtras = submission.problem.extras;
-    }
-
-    await this.runSubmission(serverProblemSubmission, submission.problem, socket);
+    await this.runSubmission(serverProblemSubmission, socket);
     this.emitToSocket({name: 'submissionCompleted', submission}, socket);
   }
 
-  private runSubmission(serverProblemSubmission: ServerProblemSubmission, problem: ProblemModel, socket: WebSocket): Promise<{testCases: TestCaseSubmissionModel[], err: string}> {
-    return new Promise<{testCases: TestCaseSubmissionModel[], err: string}>(resolve => {
-      this.emitToSocket({name: 'submissionExtras', extras: serverProblemSubmission.problemExtras}, socket);
+  private async runGradedSubmission(serverProblemSubmission: ServerProblemSubmission, connection: CodeRunnerConnection): Promise<{testCases: TestCaseSubmissionModel[]}> {
+    const testCases: TestCaseSubmissionModel[] = [];
 
-      const dockerArgs = [
-        'run',
-        '-i',             // Keep stdin open
-        '--rm',           // Delete container after exit
-        '--cap-drop=ALL', // Remove all capabilities
-        '--net=none',     // Disable networking
-        '--memory=256M',  // Cap memory at 256 MB
-        '--cpus=1.0',     // Cap number of CPUs at 1
-        'coderunner'
-      ];
+    for (let testCase of serverProblemSubmission.testCases) {
+      let testCaseSubmission: TestCaseSubmissionModel;
 
-      const process = spawn('docker', dockerArgs);
-      const testCases: TestCaseSubmissionModel[] = [];
-      const errors = [];
+      try {
+        testCaseSubmission = await connection.runTestCase(testCase);
+      }
 
-      process.stdout.on('data',  (data: Buffer) => {
-        // Sometimes, two packets will be read at once. This ensures that they are treated separately.
-        for (let packet of data.toString().split(/(?<=})\n/g)) {
-          // Every packet ends with a \n, so the last element of the split will always be empty, and we want to skip it.
-          if (!packet) {
-            continue;
-          }
+      catch (e) {
+        connection.kill();
 
-          let obj;
-
-          try {
-            obj = JSON.parse(packet.trim());
-          }
-
-          catch (e) {
-            obj = {error: 'An internal error occurred: invalid JSON packet'};
-          }
-
-          if (obj.hasOwnProperty('error')) {
-            errors.push(obj['error']);
-
-            if (!isGradedProblem(problem)) {
-              this.emitToSocket({name: 'game', data: obj}, socket);
-            }
-          }
-
-          else if (obj.hasOwnProperty('status')) {
-            this.emitToSocket({name: 'submissionStatus', status: obj.status}, socket);
-          }
-
-          else if (obj.hasOwnProperty('testCase')) {
-            testCases.push(obj['testCase']);
-            this.emitToSocket({name: 'submissionStatus', status: 'test case completed'}, socket);
-          }
-
-          else if (isOpenEndedProblem(problem)) {
-            this.emitToSocket({name: 'game', data: obj}, socket);
-          }
-
-          else {
-            throw new Error('Unknown object from container: ' + JSON.stringify(obj));
-          }
-        }
-      });
-
-      process.stderr.on('data', (data: Buffer) => {
-        // TODO: Can't throw an error here. Should log and reject().
-        throw new Error(data.toString());
-      });
-
-      process.on('exit', async code => {
-        let err = undefined;
-
-        if (errors.length > 0) {
-          err = errors.join('\n');
+        if (e.name === 'dockerKilled') {
+          testCaseSubmission = {
+            hidden: testCase.hidden,
+            input: testCase.input,
+            output: '',
+            correctOutput: testCase.output,
+            error: e.reason,
+          };
         }
 
-        else if (code !== 0) {
-          err = `Docker process exited with non-zero error code ${code}`;
+        else {
+          throw e;
         }
+      }
 
-        resolve({testCases, err});
-      });
+      testCases.push(testCaseSubmission);
 
-      process.stdin.write(JSON.stringify(serverProblemSubmission) + '\n');
-      process.stdin.end();
+      if (testCaseSubmission.error) {
+        // Stop running test cases if a test case gives an error.
+        connection.kill();
+        return {testCases};
+      }
+    }
+
+    connection.kill();
+    return {testCases};
+  }
+
+  private runOpenEndedSubmission(serverProblemSubmission: ServerProblemSubmission, connection: CodeRunnerConnection, socket: WebSocket): Promise<{}> {
+    return new Promise<{}>(resolve => {
+      let packetStream: Observable<CodeRunnerPacket>;
+
+      switch (serverProblemSubmission.gameType) {
+        case GameType.HighLow: {
+          packetStream = connection.runGame(new HighLow());
+          break;
+        }
+        case GameType.Timesweeper: {
+          packetStream = connection.runGame(new Timesweeper(serverProblemSubmission.problemExtras));
+          break;
+        }
+      }
+
+      packetStream.subscribe(
+        value => {
+          this.emitToSocket(value, socket);
+        },
+        error => {
+            this.emitToSocket(error, socket);
+        },
+        () => {
+          resolve({});
+        }
+      );
     });
+  }
+
+  private async runSubmission(serverProblemSubmission: ServerProblemSubmission, socket: WebSocket): Promise<{testCases?: TestCaseSubmissionModel[], compilationError?: string}> {
+    this.emitToSocket({name: 'submissionExtras', extras: serverProblemSubmission.problemExtras}, socket);
+
+    const connection = new CodeRunnerConnection();
+
+    try {
+      this.emitToSocket({name: 'submissionStatus', status: SubmissionStatus.Compiling}, socket);
+      const compilationResult = await connection.compile(serverProblemSubmission);
+
+      if (!compilationResult.success) {
+        connection.kill();
+        return {compilationError: compilationResult.error};
+      }
+    }
+
+    catch (e) {
+      connection.kill();
+
+      if (e.name === 'dockerKilled') {
+        return {compilationError: 'Your code could not compile. Maybe the server is overloaded?'};
+      }
+
+      else {
+        throw e;
+      }
+    }
+
+    this.emitToSocket({name: 'submissionStatus', status: SubmissionStatus.Running}, socket);
+
+    if (serverProblemSubmission.type === ProblemType.Graded) {
+      return await this.runGradedSubmission(serverProblemSubmission, connection);
+    }
+
+    else {
+      return await this.runOpenEndedSubmission(serverProblemSubmission, connection, socket);
+    }
   }
 }

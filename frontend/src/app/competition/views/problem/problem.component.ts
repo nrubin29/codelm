@@ -1,10 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {
-  isGradedProblem,
-  OpenEndedProblemModel,
-  ProblemModel
-} from '../../../../../../common/src/models/problem.model';
+import {isGradedProblem, OpenEndedProblemModel, ProblemModel} from '../../../../../../common/src/models/problem.model';
 import {ProblemService} from '../../../services/problem.service';
 import {SubmissionModel} from '../../../../../../common/src/models/submission.model';
 import {TeamService} from '../../../services/team.service';
@@ -110,7 +106,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     else {
-      this.router.navigate(['dashboard', 'game', (<OpenEndedProblemModel>this.problem).game.toLowerCase().replace(' ', '')]);
+      this.router.navigate(['dashboard', 'game', (this.problem as OpenEndedProblemModel).gameType]);
     }
   }
 }

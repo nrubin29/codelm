@@ -1,5 +1,4 @@
-import Game from "./game";
-import {GameResult} from "./game.result";
+import {Game, GameResult} from "./game";
 
 export class HighLow implements Game {
   answer: number;

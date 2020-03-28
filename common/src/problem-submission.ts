@@ -1,5 +1,5 @@
 import {ProblemType, TestCaseModel} from './models/problem.model';
-import {Game} from "./models/game.model";
+import {GameType} from "./models/game.model";
 
 export interface ClientReplayRequest {
   _id: string;
@@ -15,7 +15,7 @@ export interface ClientProblemSubmission {
 export interface ServerProblemSubmission {
   problemTitle: string;
   type: ProblemType;
-  game?: Game;
+  gameType?: GameType;
   problemExtras?: any;
   testCases?: TestCaseModel[];
   language: string;
