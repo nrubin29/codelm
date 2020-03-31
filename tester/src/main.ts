@@ -2,14 +2,24 @@ import * as fetchHttp from 'node-fetch';
 import {VERSION} from "../../common/version";
 import {Tester} from "./tester";
 import {TeamModel} from "../../common/src/models/team.model";
-import {LoginAction} from "./actions/login.action";
-import {SubmitAction} from "./actions/submit.action";
 
 console.log(`Starting CodeLM tester build ${VERSION}`);
 
-const actions = [new LoginAction(), new SubmitAction()];
+const REMOTE = process.argv.includes('--remote');
+const SECURE = REMOTE ? 's' : '';
+const BASE_URL = REMOTE ? 'newwavecomputers.com' : 'localhost:8080';
 
-fetchHttp.default('http://localhost:8080/api/debug/init')
+export function makeURL(path: string) {
+    return `http${SECURE}://${BASE_URL}${path}`;
+}
+
+export function makeWebsocketURI() {
+    return `ws${SECURE}://${BASE_URL}`;
+}
+
+let testers: Tester[];
+
+fetchHttp.default(makeURL('/api/debug/init?num_accounts=50'))
     .then(resp => resp.json())
     .catch(e => {
         console.error('Initialization failed. Is the server running?', e);
@@ -18,13 +28,12 @@ fetchHttp.default('http://localhost:8080/api/debug/init')
         if (resp && resp.length > 0) {
             console.log(resp.length, 'debug accounts created.');
 
-            const testers = resp.map(team => new Tester(team));
+            testers = resp.map(team => new Tester(team));
 
-            Promise.all(testers.map(tester => actions[0].run(tester))).then(() => {
+            Promise.all(testers.map(tester => tester.login())).then(() => {
                 console.log('Testers connected.');
 
-                // noinspection JSIgnoredPromiseFromCall
-                runActions(testers);
+                testers.forEach(tester => tester.start());
             });
         }
 
@@ -33,26 +42,21 @@ fetchHttp.default('http://localhost:8080/api/debug/init')
         }
     });
 
-async function runActions(testers: Tester[]) {
-    for (let action of actions.slice(1)) {
-        await Promise.all(testers.map(tester => action.run(tester)));
-    }
-
-    for (let action of actions) {
-        console.log();
-        console.log(action.results);
-        console.log();
-    }
-}
-
 function exitHandler() {
-    fetchHttp.default('http://localhost:8080/api/debug/deinit').then(resp => resp.json()).then(resp => {
+    fetchHttp.default(makeURL('/api/debug/deinit')).then(resp => resp.json()).then(resp => {
         if (resp.success) {
             console.log('Cleaned up.');
         }
 
         else {
             console.log('Could not clean up. Is the server running?');
+        }
+
+        for (let tester of testers) {
+            console.log();
+            console.log(tester.team.username);
+            tester.history.forEach(action => console.dir(action, {depth: null}));
+            console.log();
         }
 
         process.exit();

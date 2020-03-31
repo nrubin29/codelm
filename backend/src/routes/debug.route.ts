@@ -4,7 +4,7 @@ import {DivisionDao} from "../daos/division.dao";
 import {DivisionType} from "../../../common/src/models/division.model";
 import {PermissionsUtil} from "../permissions.util";
 
-const debugTeamUsernames = Object.freeze(Array.from({length: 20}, (_, i) => `debug${i}`));
+let debugTeamUsernames: readonly string[];
 
 const router = Router();
 
@@ -15,6 +15,15 @@ router.get('/', (req: Request, res: Response) => {
 });
 
 router.get('/init', async (req: Request, res: Response) => {
+    const numAccounts = parseInt(req.query.num_accounts);
+
+    if (!numAccounts) {
+        res.status(400).json({error: 'Must specify num_accounts param.'});
+        return;
+    }
+
+    debugTeamUsernames = Object.freeze(Array.from({length: numAccounts}, (_, i) => `debug${i}`));
+
     let division = await DivisionDao.getDivisionByName('Debug');
 
     if (!division) {

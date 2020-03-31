@@ -1,28 +1,11 @@
 import {Tester} from "./tester";
 
 export abstract class Action {
-    results = new Map<string, ActionData>();
-
-    run(tester: Tester) {
-        const data = {timeStart: new Date(), timeStop: undefined, timeDelta: undefined};
-        this.results.set(tester.team.username, data);
-        return this.runAction(tester).then(res => {
-            data.timeStop = new Date();
-            data.timeDelta = new TimeDelta(data.timeStart, data.timeStop);
-            return res;
-        });
-    }
-
-    abstract runAction(tester: Tester): Promise<any>;
+    protected constructor(public name: string) {}
+    abstract run(tester: Tester): Promise<any>;
 }
 
-interface ActionData {
-    timeStart: Date;
-    timeStop: Date;
-    timeDelta: TimeDelta;
-}
-
-class TimeDelta {
+export class TimeDelta {
     seconds: number;
     milliseconds: number;
 
@@ -31,4 +14,20 @@ class TimeDelta {
         this.seconds = delta.getSeconds();
         this.milliseconds = delta.getMilliseconds();
     }
+
+    toString(): string {
+        return `${this.seconds}:${this.milliseconds}`;
+    }
+}
+
+interface ActionTiming {
+    timeStart: Date;
+    timeStop: Date;
+    timeDelta: TimeDelta;
+}
+
+export interface ActionInvocation {
+    action: string;
+    timing: ActionTiming;
+    result: any;
 }

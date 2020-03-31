@@ -4,11 +4,15 @@ import {LoginResponse, LoginResponsePacket} from "../../../common/src/packets/se
 import {VERSION} from "../../../common/version";
 
 export class LoginAction extends Action {
-    runAction(tester: Tester) {
-        return tester.connect().then(() => new Promise<void>((resolve, reject) => {
+    constructor() {
+        super('login');
+    }
+
+    run(tester: Tester) {
+        return tester.connect().then(() => new Promise<LoginResponsePacket>((resolve, reject) => {
             tester.once<LoginResponsePacket>('loginResponse', packet => {
                 if (packet.response === LoginResponse.SuccessTeam) {
-                    resolve();
+                    resolve(packet);
                 }
 
                 else {
