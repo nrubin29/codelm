@@ -69,7 +69,7 @@ abstract class PacketManager {
         }
 
         catch {
-            throw new Error(`Unexpected data: ${data}`);
+            packet = {name: 'unexpectedData', data};
         }
 
         (this.events.get(packet.name) ?? []).forEach(fn => fn(packet));

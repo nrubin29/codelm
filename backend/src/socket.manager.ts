@@ -334,18 +334,23 @@ export class SocketManager {
       catch (e) {
         connection.kill();
 
+        testCaseSubmission = {
+          hidden: testCase.hidden,
+          input: testCase.input,
+          output: '',
+          correctOutput: testCase.output,
+        };
+
         if (e.name === 'dockerKilled') {
-          testCaseSubmission = {
-            hidden: testCase.hidden,
-            input: testCase.input,
-            output: '',
-            correctOutput: testCase.output,
-            error: e.reason,
-          };
+          testCaseSubmission.error = e.reason;
+        }
+
+        else if (e.name === 'unexpectedData') {
+          testCaseSubmission.error = 'An unexpected error occurred. Maybe the server is overloaded? Please send the following error to a judge: ' + e.data;
         }
 
         else {
-          throw e;
+          testCaseSubmission.error = 'An unknown error occurred. Please send the following error to a judge: ' + JSON.stringify(e);
         }
       }
 
@@ -394,7 +399,15 @@ export class SocketManager {
   private async runSubmission(serverProblemSubmission: ServerProblemSubmission, socket: WebSocket): Promise<{testCases?: TestCaseSubmissionModel[], compilationError?: string}> {
     this.emitToSocket({name: 'submissionExtras', extras: serverProblemSubmission.problemExtras}, socket);
 
-    const connection = new CodeRunnerConnection();
+    let connection: CodeRunnerConnection;
+
+    try {
+      connection = new CodeRunnerConnection();
+    }
+
+    catch (e) {
+      return {compilationError: 'The server is overloaded. Please send the following error to a judge: ' + JSON.stringify(e)};
+    }
 
     try {
       this.emitToSocket({name: 'submissionStatus', status: SubmissionStatus.Compiling}, socket);
@@ -413,8 +426,12 @@ export class SocketManager {
         return {compilationError: 'Your code could not compile. Maybe the server is overloaded?'};
       }
 
+      else if (e.name === 'unexpectedData') {
+        return {compilationError: 'An unexpected error occurred. Maybe the server is overloaded? Please send the following error to a judge: ' + e.data};
+      }
+
       else {
-        throw e;
+        return {compilationError: 'An unknown occurred. Please send the following error to a judge: ' + JSON.stringify(e)};
       }
     }
 

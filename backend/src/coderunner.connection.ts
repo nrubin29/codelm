@@ -11,6 +11,7 @@ import {
 import {StdioPacketManager} from "../../common/src/packet.manager";
 import {Game} from './games/game';
 import {Observable} from 'rxjs';
+import {UnexpectedDataPacket} from '../../common/src/packets/packet';
 
 const dockerArgs = [
     'run',
@@ -45,12 +46,17 @@ export class CodeRunnerConnection extends StdioPacketManager {
     compile(serverProblemSubmission: ServerProblemSubmission): Promise<CompilationResultPacket> {
         return new Promise<CompilationResultPacket>((resolve, reject) => {
             this.once<CompilationResultPacket>('compilationResult', packet => {
-                this.off('dockerKilled');
+                this.offAll();
                 resolve(packet);
             });
 
             this.once<DockerKilledPacket>('dockerKilled', packet => {
-                this.off('compilationResult');
+                this.offAll();
+                reject(packet);
+            });
+
+            this.once<UnexpectedDataPacket>('unexpectedData', packet => {
+                this.offAll();
                 reject(packet);
             });
 
@@ -61,12 +67,17 @@ export class CodeRunnerConnection extends StdioPacketManager {
     runTestCase(testCase: TestCaseModel): Promise<TestCaseSubmissionModel> {
         return new Promise<TestCaseSubmissionModel>((resolve, reject) => {
             this.once<RunTestCaseResultPacket>('runTestCaseResult', packet => {
-                this.off('dockerKilled');
+                this.offAll();
                 resolve(packet.testCase);
             });
 
             this.once<DockerKilledPacket>('dockerKilled', packet => {
-                this.off('runTestCaseResult');
+                this.offAll();
+                reject(packet);
+            });
+
+            this.once<UnexpectedDataPacket>('unexpectedData', packet => {
+                this.offAll();
                 reject(packet);
             });
 
@@ -77,12 +88,12 @@ export class CodeRunnerConnection extends StdioPacketManager {
     runGame(game: Game): Observable<CodeRunnerPacket> {
         return new Observable<CodeRunnerPacket>(subscriber => {
             this.on<GameOutputPacket>('gameOutput', packet => {
-
                 const result = game.onInput(packet.output);
 
                 if (game.isFinished()) {
                   // this.output.next({input: game.getResult(), output: guess});
                   // resolve(game.getResult());
+                    this.offAll();
                     subscriber.complete();
                 }
 
@@ -99,7 +110,13 @@ export class CodeRunnerConnection extends StdioPacketManager {
             });
 
             this.once<DockerKilledPacket>('dockerKilled', packet => {
-                this.off('gameOutput');
+                this.offAll();
+                subscriber.error(packet);
+                subscriber.complete();
+            });
+
+            this.once<UnexpectedDataPacket>('unexpectedData', packet => {
+                this.offAll();
                 subscriber.error(packet);
                 subscriber.complete();
             });
