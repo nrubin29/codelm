@@ -8,12 +8,19 @@ export enum DivisionType {
 
 export interface StarterCode {
   state: SettingsState;
-  file: Buffer|File; // Buffer when it's in the database, File when it's being uploaded from the frontend.
+  file: string;
 }
 
 export interface DivisionModel {
   _id: string;
   name: string;
-  type: DivisionType,
-  starterCode: StarterCode[]
+  type: DivisionType;
+  starterCode: StarterCode[];
 }
+
+export type DivisionModelForUpload = Omit<DivisionModel, 'starterCode'> & {
+  starterCode: {
+    state: SettingsState;
+    file: string | File;
+  }[];
+};

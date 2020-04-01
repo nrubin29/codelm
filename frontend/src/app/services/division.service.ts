@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import {DivisionModel, DivisionType} from '../../../../common/src/models/division.model';
+import {DivisionModel, DivisionModelForUpload, DivisionType} from '../../../../common/src/models/division.model';
 import {SingleEntityService} from "./entity.service";
 import {SettingsState} from "../../../../common/src/models/settings.model";
 
@@ -34,12 +34,14 @@ export class DivisionService extends SingleEntityService<DivisionModel> {
     return this.restService.get<DivisionModel[]>(this.endpoint);
   }
 
-  addOrUpdate(division: DivisionModel): Promise<DivisionModel> {
+  addOrUpdate(entity: DivisionModel): Promise<DivisionModel> {
+    // This method has to take a DivisionModel, but we need to treat it as a DivisionModelForUpload.
+    const division = entity as unknown as DivisionModelForUpload;
     const formData = new FormData();
 
     for (let starterCode of division.starterCode) {
       if (starterCode.file && typeof starterCode.file === 'object') {
-        formData.append(starterCode.state.toString(), starterCode.file as File, (starterCode.file as File).name);
+        formData.append(starterCode.state, starterCode.file, starterCode.file.name);
       }
     }
 
@@ -48,12 +50,10 @@ export class DivisionService extends SingleEntityService<DivisionModel> {
     }
 
     for (let starterCode of division.starterCode) {
-      formData.append('states[]', starterCode.state);
+      formData.append('states', starterCode.state);
     }
 
     delete division.starterCode;
-
-    console.log(formData);
 
     return this.restService.put<DivisionModel>(this.endpoint, formData);
   }

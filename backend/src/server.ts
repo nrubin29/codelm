@@ -41,7 +41,7 @@ app.use(morgan('[:date[clf]] :method :url :status :response-time ms :remote-addr
 app.use(bodyParser.urlencoded({extended: true, limit: '5mb'})); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json({limit: '5mb'})); // parse application/json
 app.use(bodyParser.json({type: 'application/vnd.api+json', limit: '5mb'})); // Parse application/vnd.api+json as json
-app.use(fileUpload());
+app.use(fileUpload({createParentPath: true}));
 app.use('/api', apiRoutes);
 
 if (process.env.NODE_ENV == 'development') {

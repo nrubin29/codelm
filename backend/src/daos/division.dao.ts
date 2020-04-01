@@ -5,11 +5,10 @@ type DivisionDocumentType = DivisionModel & mongoose.Document;
 
 const StarterCode = new mongoose.Schema({
   state: String,
-  file: Buffer
+  file: String,
 });
 
 const DivisionSchema = new mongoose.Schema({
-  id: Number,
   name: String,
   type: {type: String, default: DivisionType.Competition},
   starterCode: [StarterCode]
