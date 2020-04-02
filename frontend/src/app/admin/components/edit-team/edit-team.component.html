@@ -1,6 +1,8 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <span>{{team ? 'Edit ' + team.username : 'Add Team'}}</span>
+    <span class="spacer"></span>
+    <a mat-raised-button color="accent" [routerLink]="['/admin', 'batch-add-teams']"><mat-icon>publish</mat-icon> Batch Add Teams</a>
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="container">

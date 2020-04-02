@@ -34,6 +34,7 @@ import {AllCodeComponent} from "./common/components/all-code/all-code.component"
 import {TitlePipe} from "./pipes/title.pipe";
 import {FaqComponent} from "./common/components/faq/faq.component";
 import {GameComponent} from './common/views/game/game.component';
+import {FileDropComponent} from './common/components/file-drop/file-drop.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {GameComponent} from './common/views/game/game.component';
     AllCodeComponent,
     FaqComponent,
     GameComponent,
+    FileDropComponent,
     PluralizePipe,
     TitlePipe,
   ],
@@ -108,6 +110,7 @@ import {GameComponent} from './common/views/game/game.component';
     MatCheckboxModule,
     MatExpansionModule,
     MatMenuModule,
+    FileDropComponent,
   ]
 })
 export class SharedModule { }

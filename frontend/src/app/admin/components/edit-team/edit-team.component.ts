@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TeamModel } from '../../../../../../common/src/models/team.model';
 import { TeamService } from '../../../services/team.service';
 import { Router } from '@angular/router';
-import {SettingsModel} from "../../../../../../common/src/models/settings.model";
 import {DialogResult} from "../edit-entity/edit-entity.component";
 
 @Component({
@@ -19,7 +18,7 @@ export class EditTeamComponent implements OnInit {
   ngOnInit() {
   }
 
-  action(result: [DialogResult, SettingsModel]) {
+  action(result: [DialogResult, TeamModel]) {
     if (result[0] === 'save') {
       this.teamService.addOrUpdate(result[1]).then(() => {
         alert('Added team');

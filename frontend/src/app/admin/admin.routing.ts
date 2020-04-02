@@ -15,6 +15,8 @@ import {GameComponent} from '../common/views/game/game.component';
 import {EntityGroupingComponent} from "./views/entity-grouping/entity-grouping.component";
 import {EntityServiceResolve} from "../resolves/entity-service.resolve";
 import {EntityListComponent} from "./views/entity-list/entity-list.component";
+import {BatchAddTeamsComponent} from './views/batch-add-teams/batch-add-teams.component';
+import {DivisionsResolve} from '../resolves/divisions.resolve';
 
 const routes: Routes = [
   {
@@ -31,6 +33,7 @@ const routes: Routes = [
         {path: 'problems', component: EntityGroupingComponent, canActivate: [SuperUserGuard], resolve: {entityService: EntityServiceResolve}},
         {path: 'admins', component: EntityListComponent, canActivate: [SuperUserGuard], resolve: {entityService: EntityServiceResolve}},
         {path: 'add-team', component: EditTeamComponent},
+        {path: 'batch-add-teams', component: BatchAddTeamsComponent, resolve: {divisions: DivisionsResolve}},
         {path: 'game/:gameType', component: GameComponent},
       ]
   }

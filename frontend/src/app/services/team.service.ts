@@ -45,7 +45,7 @@ export class TeamService extends EntityService<TeamModel> {
     return this.restService.get<TeamModel[]>(`${this.endpoint}/division/${divisionId}`);
   }
 
-  addOrUpdate(team: any): Promise<TeamModel> {
+  addOrUpdate(team: TeamModel): Promise<TeamModel> {
     return this.restService.put<TeamModel>(this.endpoint, team);
   }
 
