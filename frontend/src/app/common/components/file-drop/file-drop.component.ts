@@ -7,7 +7,8 @@ import {Component, EventEmitter, HostBinding, HostListener, Input, Output} from 
 })
 export class FileDropComponent {
   @Input() accept: string;
-  @Output() fileDropped = new EventEmitter<File>();
+  @Output() fileDropped = new EventEmitter<string>();
+  file: File;
 
   // @ViewChild('input') input: ElementRef;
   @HostBinding('style.background-color') private background = '#ffffff';
@@ -46,7 +47,16 @@ export class FileDropComponent {
       }
 
       else {
-        this.fileDropped.emit(file);
+        this.file = file;
+        this.background = '#00ff00';
+
+        const fileReader = new FileReader();
+
+        fileReader.addEventListener('load', event => {
+          this.fileDropped.emit(event.target.result as string);
+        });
+
+        fileReader.readAsText(this.file);
       }
     }
   }

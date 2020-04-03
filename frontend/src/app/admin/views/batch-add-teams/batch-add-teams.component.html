@@ -4,37 +4,76 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="container">
-  <app-file-drop accept="text/csv" (fileDropped)="handleFile($event)"></app-file-drop>
+  <app-file-drop *ngIf="!finished" accept="text/csv" (fileDropped)="handleFile($event)"></app-file-drop>
   <br/>
   <ng-container *ngIf="data">
-    <app-card title="Error" display="error" *ngIf="hasError; else: noError">
-      <p>One or more teams has an invalid division. Please ensure that the divisions in the CSV file match the divisions in the database.</p>
-    </app-card>
-    <ng-template #noError>
-      <app-card title="Ready to submit">
-        <p>There are {{data.length}} teams to add. If everything looks good, click the Upload button below.</p>
-        <br/>
-        <button mat-raised-button color="primary" (click)="upload()">Upload</button>
+    <ng-container *ngIf="!finished; else showFinished">
+      <app-card title="Error" display="error" *ngIf="hasError; else: noError">
+        <p>One or more teams has an invalid division. Please ensure that the divisions in the CSV file match the divisions in the database.</p>
       </app-card>
+      <ng-template #noError>
+        <app-card title="Ready to submit">
+          <p>There {{data.length | pluralizeSentence : 'is $$ team' : 'are $$ teams'}} to add. If everything looks good, click the Upload button below.</p>
+          <br/>
+          <button mat-raised-button color="primary" (click)="upload()">Upload</button>
+        </app-card>
+      </ng-template>
+      <mat-table [dataSource]="data">
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="school">
+          <mat-header-cell *matHeaderCellDef>School</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.school}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="division">
+          <mat-header-cell *matHeaderCellDef>Division</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{element.division ? element.division.name : ''}}
+            <span *ngIf="!element.division" style="color: red">{{element.divisionName}}</span>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['name', 'school', 'division']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['name', 'school', 'division'];"></mat-row>
+      </mat-table>
+    </ng-container>
+    <ng-template #showFinished>
+      <app-card title="Finished" display="info">
+        <p>{{successes.length | pluralizeSentence : '$$ team was' : '$$ teams were'}} successfully added! Click the button below to download a CSV file of their usernames and passwords.</p>
+        <br/>
+        <button mat-raised-button color="primary" (click)="download()">Download CSV</button>
+        <a #a download="teams.csv" hidden></a>
+      </app-card>
+      <ng-container *ngIf="errors.length > 0">
+        <app-card title="Error" display="error">
+          <p>One or more teams could not be created because they would have the same username as an existing team. Those teams are shown below.</p>
+        </app-card>
+        <mat-table [dataSource]="errors">
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="school">
+            <mat-header-cell *matHeaderCellDef>School</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.school}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="division">
+            <mat-header-cell *matHeaderCellDef>Division</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.division.name}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="username">
+            <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.username}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="password">
+            <mat-header-cell *matHeaderCellDef>Password</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.password}}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="['name', 'school', 'division', 'username', 'password']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['name', 'school', 'division', 'username', 'password'];"></mat-row>
+        </mat-table>
+      </ng-container>
     </ng-template>
-    <mat-table [dataSource]="data">
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="school">
-        <mat-header-cell *matHeaderCellDef>School</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.school}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="division">
-        <mat-header-cell *matHeaderCellDef>Division</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{element.division ? element.division.name : ''}}
-          <span *ngIf="!element.division" style="color: red">{{element.divisionName}}</span>
-        </mat-cell>
-      </ng-container>
-      <mat-header-row *matHeaderRowDef="['name', 'school', 'division']"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: ['name', 'school', 'division'];"></mat-row>
-    </mat-table>
   </ng-container>
 </div>

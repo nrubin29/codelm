@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DivisionModel} from '../../../../../../common/src/models/division.model';
 import {TeamService} from '../../../services/team.service';
+import {customAlphabet} from 'nanoid';
 
 interface TeamCsv {
   timestamp: string;
@@ -11,6 +12,8 @@ interface TeamCsv {
   year: string;
   division: DivisionModel;
   divisionName: string;
+  username?: string;
+  password?: string;
 }
 
 @Component({
@@ -22,41 +25,70 @@ export class BatchAddTeamsComponent implements OnInit {
   divisions: DivisionModel[];
   data: TeamCsv[];
 
+  successes: TeamCsv[];
+  errors: TeamCsv[];
+  finished = false;
+
+  @ViewChild('a') a: ElementRef;
+
   constructor(private activatedRoute: ActivatedRoute, private teamService: TeamService) { }
 
   ngOnInit() {
     this.divisions = this.activatedRoute.snapshot.data.divisions;
   }
 
-  handleFile(file: File) {
-    const fileReader = new FileReader();
+  handleFile(data: string) {
+    const rows = data.split('\n').map(row => row.trim().split(','));
+    const headerRow = rows.splice(0, 1)[0];
 
-    fileReader.addEventListener('load', event => {
-      const rows = (event.target.result as string).split('\n').map(row => row.trim().split(','));
-      const headerRow = rows.splice(0, 1)[0];
-
-      this.data = rows.map(row => ({
-        timestamp: row[headerRow.indexOf('Timestamp')],
-        school: row[headerRow.indexOf('School')],
-        name: row[headerRow.indexOf('Student\'s Full Name')],
-        email: row[headerRow.indexOf('Student\'s Email Address')],
-        year: row[headerRow.indexOf('Student\'s year')],
-        division: this.divisions.find(division => division.name === row[headerRow.indexOf('Division')]),
-        divisionName: row[headerRow.indexOf('Division')],
-      }));
-    });
-
-    fileReader.readAsText(file);
+    this.data = rows.map(row => ({
+      timestamp: row[headerRow.indexOf('Timestamp')],
+      school: row[headerRow.indexOf('School')],
+      name: row[headerRow.indexOf('Student\'s Full Name')],
+      email: row[headerRow.indexOf('Student\'s Email Address')],
+      year: row[headerRow.indexOf('Student\'s year')],
+      division: this.divisions.find(division => division.name === row[headerRow.indexOf('Division')]),
+      divisionName: row[headerRow.indexOf('Division')],
+    }));
   }
 
   async upload() {
-    // TODO: For each user, generate a username and password for them. Store this data and export it to a CSV file.
+    const generator = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 6);
+    this.errors = [];
+    this.successes = [];
+    const usernames = new Set<string>();
 
-    // for (const team of this.data) {
-    //   await this.teamService.addOrUpdate({
-    //
-    //   });
-    // }
+    for (const team of this.data) {
+      const name = team.name.trim().split(' ');
+      team.username = (name[0][0] + name[name.length - 1].substring(0, 6)).toLowerCase();
+      team.password = generator();
+
+      if (usernames.has(team.username)) {
+        this.errors.push(team);
+      }
+
+      else {
+        usernames.add(team.username);
+
+        await this.teamService.addOrUpdate({
+          username: team.username,
+          password: team.password,
+          members: team.name,
+          division: team.division,
+          salt: undefined,
+        });
+
+        this.successes.push(team);
+      }
+    }
+
+    this.finished = true;
+  }
+
+  download() {
+    const data = this.successes.map(team => Object.keys(team).filter(key => key !== 'division').map(key => team[key]).join(',')).join('\n');
+    this.a.nativeElement.href = 'data:application/octet-stream,' + encodeURIComponent(data);
+    this.a.nativeElement.click();
   }
 
   get hasError() {
