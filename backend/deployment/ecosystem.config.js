@@ -5,8 +5,9 @@ module.exports = {
    */
   apps : [
     {
-      name      : 'codelm',
-      script    : 'dist/bundle.js',
+      name: 'codelm',
+      script: 'dist/bundle.js',
+      args: '--debug', // Enable for debug mode (necessary for stress testing)
       env: {
       },
       env_production : {

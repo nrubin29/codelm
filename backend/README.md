@@ -23,11 +23,14 @@ The backend for CodeLM.
             sites_enabled
                 codelm (symlink via ln -s)
     
-    root
+    home
         codelm
             ecosystem.config.js
             update.sh
-            dist (production build directory)
+            files/ (where files are uploaded to)
+            dist/ (production build directory)
+
+    root
         certs
             newwavecomputers.com.key
             newwavecomputers.com.pem
