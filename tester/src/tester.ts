@@ -6,10 +6,11 @@ import {Action, ActionInvocation, TimeDelta} from './action';
 import {WaitAction} from './actions/wait.action';
 import {SubmitAction} from './actions/submit.action';
 import {LoginAction} from './actions/login.action';
+import {GetProblemAction} from './actions/get-problem.action';
 
 export class Tester extends SocketPacketManager<WebSocket> {
     history: ActionInvocation[] = [];
-    actions = [WaitAction, SubmitAction];
+    actions = [WaitAction, GetProblemAction, SubmitAction];
 
     constructor(public team: TeamModel) {
         super(() => new WebSocket(makeWebsocketURI()));
