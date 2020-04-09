@@ -1,37 +1,18 @@
 # codelm-backend
 
 The backend for CodeLM.
+See the `deployment` directory for information on deploying CodeLM.
 
-## Deployment instructions
+## Usage
 
-### Packages needed
-
-- nginx
-- MongoDB
-- [Node](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
-- [Docker](https://www.itzgeek.com/how-tos/linux/debian/how-to-install-docker-on-debian-9.html)
-- PM2 (`npm install -g pm2`)
-
-### File structure
-
+```shell script
+node bundle.js [--debug]
 ```
-/
-    etc
-        nginx
-            sites_available
-                codelm
-            sites_enabled
-                codelm (symlink via ln -s)
-    
-    home
-        codelm
-            ecosystem.config.js
-            update.sh
-            files/ (where files are uploaded to)
-            dist/ (production build directory)
 
-    root
-        certs
-            newwavecomputers.com.key
-            newwavecomputers.com.pem
-```
+If `--debug` is passed, the server will be run in debug mode.
+
+## Debug mode
+
+When the server is running in debug mode, the following changes take effect:
+- Teams can log in with any password.
+- The `/api/debug` endpoints used by the tester are enabled.
