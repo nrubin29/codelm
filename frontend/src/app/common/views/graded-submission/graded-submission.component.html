@@ -13,7 +13,7 @@
                 </mat-chip-list>
             </div>
         </app-card>
-        <app-card header="IO" [pad]="false" *ngIf="submission.testCases.length > 0">
+        <app-card header="Test Cases" [pad]="false" *ngIf="submission.testCases.length > 0">
             <mat-table #table [dataSource]="submission.testCases">
                 <ng-container matColumnDef="input">
                     <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>

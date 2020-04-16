@@ -16,7 +16,7 @@
       <p [innerHtml]="problem.description"></p>
     </app-card>
     <!-- TODO: Different card for open-ended problem. -->
-    <app-card header="IO" [pad]="false" *ngIf="isGraded">
+    <app-card header="Sample Test Cases" [pad]="false" *ngIf="isGraded">
       <mat-table #table [dataSource]="problem.testCases">
         <ng-container matColumnDef="input">
           <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
@@ -26,8 +26,14 @@
           <mat-header-cell *matHeaderCellDef>Output</mat-header-cell>
           <mat-cell *matCellDef="let element"><code>{{element.output}}</code></mat-cell>
         </ng-container>
-        <mat-header-row *matHeaderRowDef="['input', 'output']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['input', 'output'];"></mat-row>
+        <ng-container matColumnDef="explanation">
+          <mat-header-cell *matHeaderCellDef>Explanation</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-icon *ngIf="element.explanation" [matTooltip]="element.explanation" matTooltipClass="app-tooltip" style="cursor: pointer">info</mat-icon>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['input', 'output', 'explanation']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['input', 'output', 'explanation'];"></mat-row>
       </mat-table>
     </app-card>
   </div>

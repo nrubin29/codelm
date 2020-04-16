@@ -12,6 +12,7 @@ export interface TestCaseModel {
   hidden: boolean;
   input: string;
   output: string;
+  explanation?: string;
 }
 
 export enum TestCaseOutputMode {

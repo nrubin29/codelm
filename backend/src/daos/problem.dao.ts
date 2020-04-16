@@ -14,7 +14,8 @@ const ProblemDivisionSchema = new mongoose.Schema({
 const TestCaseSchema = new mongoose.Schema({
   hidden: Boolean,
   input: String,
-  output: String
+  output: String,
+  explanation: {type: String, default: undefined},
 });
 
 const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({

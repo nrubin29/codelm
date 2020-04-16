@@ -89,7 +89,10 @@ import {AlertComponent} from './common/components/alert/alert.component';
     UploadSubmissionComponent,
     CardComponent,
     CodeMirrorComponent,
+    FileDropComponent,
+    AlertComponent,
     PluralizePipe,
+    PluralizeSentencePipe,
     TitlePipe,
     CommonModule,
     FormsModule,
@@ -114,9 +117,8 @@ import {AlertComponent} from './common/components/alert/alert.component';
     MatCheckboxModule,
     MatExpansionModule,
     MatMenuModule,
-    FileDropComponent,
-    PluralizeSentencePipe,
-    AlertComponent,
+    MatRadioModule,
+    MatTooltipModule,
   ]
 })
 export class SharedModule { }
