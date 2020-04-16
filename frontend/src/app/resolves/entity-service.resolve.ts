@@ -9,6 +9,7 @@ import {StandingsService} from "../services/standings.service";
 import {TeamService} from "../services/team.service";
 import {SettingsService} from "../services/settings.service";
 import {SocketRestService} from "../services/socket-rest.service";
+import {AlertService} from '../services/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ import {SocketRestService} from "../services/socket-rest.service";
 export class EntityServiceResolve implements Resolve<EntityService<any>> {
   constructor(
     private adminService: AdminService,
+    private alertService: AlertService,
     private disputeService: DisputeService,
     private divisionService: DivisionService,
     private problemService: ProblemService,
@@ -29,6 +31,7 @@ export class EntityServiceResolve implements Resolve<EntityService<any>> {
     switch (route.url[0].path) {
       case 'add-team': return this.teamService;
       case 'admins': return this.adminService;
+      case 'alerts': return this.alertService;
       case 'disputes': return this.disputeService;
       case 'divisions': return this.divisionService;
       case 'problems': return this.problemService;

@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav mode="side" [opened]="true" [disableClose]="true" [fixedInViewport]="true">
+  <mat-sidenav mode="side" [opened]="true" [disableClose]="true" [fixedInViewport]="false">
     <a [routerLink]="['/admin']" class="logo"><img src="assets/logo-portrait.png"></a>
     <br>
     <h2 *ngIf="admin">{{admin.name}}</h2>
@@ -21,8 +21,12 @@
         <mat-icon mat-list-icon>settings</mat-icon>
         <p mat-line>Settings</p>
       </a>
+      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'alerts']">
+        <mat-icon mat-list-icon>announcement</mat-icon>
+        <p mat-line>Alerts</p>
+      </a>
       <a mat-list-item [routerLink]="['/admin', 'disputes']">
-        <mat-icon mat-list-icon>feedback</mat-icon>
+        <mat-icon mat-list-icon>contact_support</mat-icon>
         <p mat-line>Disputes</p>
       </a>
       <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'divisions']">

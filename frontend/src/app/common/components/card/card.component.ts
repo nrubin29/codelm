@@ -9,6 +9,7 @@ export class CardComponent implements OnInit {
   @Input() title: string;
   @Input() pad = true;
   @Input() display: 'normal' | 'info' | 'error' = 'normal';
+  @Input() small = false;
 
   constructor() { }
 

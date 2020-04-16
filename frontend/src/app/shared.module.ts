@@ -36,6 +36,7 @@ import {FaqComponent} from "./common/components/faq/faq.component";
 import {GameComponent} from './common/views/game/game.component';
 import {FileDropComponent} from './common/components/file-drop/file-drop.component';
 import {PluralizeSentencePipe} from './pipes/pluralize-sentence.pipe';
+import {AlertComponent} from './common/components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import {PluralizeSentencePipe} from './pipes/pluralize-sentence.pipe';
     FaqComponent,
     GameComponent,
     FileDropComponent,
+    AlertComponent,
     PluralizePipe,
     PluralizeSentencePipe,
     TitlePipe,
@@ -114,6 +116,7 @@ import {PluralizeSentencePipe} from './pipes/pluralize-sentence.pipe';
     MatMenuModule,
     FileDropComponent,
     PluralizeSentencePipe,
+    AlertComponent,
   ]
 })
 export class SharedModule { }

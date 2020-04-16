@@ -25,6 +25,7 @@ const routes: Routes = [
         {path: '', redirectTo: 'standings', pathMatch: 'full'},
         {path: 'standings', component: EntityGroupingComponent, resolve: {entityService: EntityServiceResolve}},
         {path: 'settings', component: SettingsComponent, canActivate: [SuperUserGuard]},
+        {path: 'alerts', component: EntityListComponent, resolve: {entityService: EntityServiceResolve}},
         {path: 'sockets', component: EntityGroupingComponent, resolve: {entityService: EntityServiceResolve}},
         {path: 'team/:id', component: TeamComponent, resolve: {team: TeamResolve, submissions: SubmissionsResolve}},
         {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}},
