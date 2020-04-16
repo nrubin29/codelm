@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./card.component.scss']
 })
 export class CardComponent implements OnInit {
-  @Input() title: string;
+  @Input() header: string; // The attribute `title` is used for alt tags.
   @Input() pad = true;
   @Input() display: 'normal' | 'info' | 'error' = 'normal';
   @Input() small = false;

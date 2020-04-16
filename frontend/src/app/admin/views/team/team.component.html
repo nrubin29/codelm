@@ -4,7 +4,7 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="container">
-  <app-card title="Team Info">
+  <app-card header="Team Info">
     <div class="container">
       <mat-table #table [dataSource]="[team]">
         <ng-container matColumnDef="id">
@@ -33,7 +33,7 @@
     </div>
   </app-card>
   <!-- TODO: Maybe use the same view as the standings page? -->
-  <app-card title="Submissions">
+  <app-card header="Submissions">
     <mat-accordion>
       <mat-expansion-panel *ngFor="let problem of problems; let i = index">
         <mat-expansion-panel-header>

@@ -1,6 +1,6 @@
 <div class="flex display-side container">
   <div class="fix-size">
-    <app-card title="Results">
+    <app-card header="Results">
       <ng-container *ngIf="submission.rubric.size !== 0">
         <mat-chip-list>
           <mat-chip color="accent" selected="true">{{submission.points}}
@@ -12,7 +12,7 @@
         <p>Your submission has been recorded.</p>
       </ng-container>
     </app-card>
-    <app-card title="Rubric">
+    <app-card header="Rubric">
       <mat-table [dataSource]="rubric" class="rubric-table">
         <ng-container matColumnDef="category">
           <mat-header-cell *matHeaderCellDef>Category</mat-header-cell>
@@ -37,7 +37,7 @@
         <button mat-raised-button color="accent" (click)="setScore()">Update</button>
       </div>
     </app-card>
-    <app-card title="Admin" *ngIf="admin">
+    <app-card header="Admin" *ngIf="admin">
       <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
       <button mat-raised-button color="accent" (click)="replay()">Replay Submission</button>
     </app-card>

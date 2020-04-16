@@ -8,11 +8,11 @@
   <br/>
   <ng-container *ngIf="data">
     <ng-container *ngIf="!finished; else showFinished">
-      <app-card title="Error" display="error" *ngIf="hasError; else: noError">
+      <app-card header="Error" display="error" *ngIf="hasError; else: noError">
         <p>One or more teams has an invalid division. Please ensure that the divisions in the CSV file match the divisions in the database.</p>
       </app-card>
       <ng-template #noError>
-        <app-card title="Ready to submit">
+        <app-card header="Ready to submit">
           <p>There {{data.length | pluralizeSentence : 'is $$ team' : 'are $$ teams'}} to add. If everything looks good, click the Upload button below.</p>
           <br/>
           <button mat-raised-button color="primary" (click)="upload()">Upload</button>
@@ -39,14 +39,14 @@
       </mat-table>
     </ng-container>
     <ng-template #showFinished>
-      <app-card title="Finished" display="info">
+      <app-card header="Finished" display="info">
         <p>{{successes.length | pluralizeSentence : '$$ team was' : '$$ teams were'}} successfully added! Click the button below to download a CSV file of their usernames and passwords.</p>
         <br/>
         <button mat-raised-button color="primary" (click)="download()">Download CSV</button>
         <a #a download="teams.csv" hidden></a>
       </app-card>
       <ng-container *ngIf="errors.length > 0">
-        <app-card title="Error" display="error">
+        <app-card header="Error" display="error">
           <p>One or more teams could not be created because they would have the same username as an existing team. Those teams are shown below.</p>
         </app-card>
         <mat-table [dataSource]="errors">

@@ -12,11 +12,11 @@
 </mat-toolbar>
 <div class="container">
   <div class="flex display-side">
-    <app-card title="Problem">
+    <app-card header="Problem">
       <p [innerHtml]="problem.description"></p>
     </app-card>
     <!-- TODO: Different card for open-ended problem. -->
-    <app-card title="IO" [pad]="false" *ngIf="isGraded">
+    <app-card header="IO" [pad]="false" *ngIf="isGraded">
       <mat-table #table [dataSource]="problem.testCases">
         <ng-container matColumnDef="input">
           <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
@@ -47,7 +47,7 @@
   <app-code-mirror mode="text/x-java" *ngIf="language === 'java'"></app-code-mirror>
   <app-code-mirror mode="text/x-c++src" *ngIf="language === 'cpp'"></app-code-mirror>
   <br>
-  <app-card title="Submissions" [pad]="false" *ngIf="isGraded && submissions.length > 0">
+  <app-card header="Submissions" [pad]="false" *ngIf="isGraded && submissions.length > 0">
     <mat-list>
       <mat-list-item *ngFor="let submission of submissions.slice().reverse()"><a
           [routerLink]="['/', 'dashboard', 'submission', submission._id]">{{submission.datetime|date:'shortTime'}} {{submission.test ? ' (Test)' : ''}}</a></mat-list-item>

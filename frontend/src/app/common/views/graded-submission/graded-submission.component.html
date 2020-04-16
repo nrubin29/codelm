@@ -1,6 +1,6 @@
 <div class="flex display-side container">
     <div class="fix-size">
-        <app-card title="Result">
+        <app-card header="Result">
             <div class="flex display-side horizontal">
                 <h2>{{submission.result}}</h2>
                 <mat-chip-list>
@@ -13,7 +13,7 @@
                 </mat-chip-list>
             </div>
         </app-card>
-        <app-card title="IO" [pad]="false" *ngIf="submission.testCases.length > 0">
+        <app-card header="IO" [pad]="false" *ngIf="submission.testCases.length > 0">
             <mat-table #table [dataSource]="submission.testCases">
                 <ng-container matColumnDef="input">
                     <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
@@ -37,10 +37,10 @@
                 <mat-row *matRowDef="let row; columns: ['input', 'correctOutput', 'yourOutput', 'status'];"></mat-row>
             </mat-table>
         </app-card>
-        <app-card title="Error" *ngIf="hasError">
+        <app-card header="Error" *ngIf="hasError">
             <code [innerHTML]="submissionError"></code>
         </app-card>
-        <app-card title="Dispute" *ngIf="submission.dispute || (submission.points === 0 && !admin)">
+        <app-card header="Dispute" *ngIf="submission.dispute || (submission.points === 0 && !admin)">
             <ng-container *ngIf="submission.dispute">
                 <h3>{{admin ? 'The' : 'Your'}} dispute {{submission.dispute.open ? 'is currently open' : 'has been resolved'}}.</h3>
                 <p>{{submission.dispute.message}}</p>
@@ -59,7 +59,7 @@
                 <button mat-raised-button color="accent" (click)="sendDispute()">Send Dispute</button>
             </ng-container>
         </app-card>
-        <app-card title="Admin" *ngIf="admin">
+        <app-card header="Admin" *ngIf="admin">
             <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
             <button mat-raised-button color="accent" (click)="overrideCorrect()">Toggle override correct</button>
         </app-card>

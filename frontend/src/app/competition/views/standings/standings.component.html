@@ -4,7 +4,7 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="main container">
-    <app-card title="Team Info" [pad]="false">
+    <app-card header="Team Info" [pad]="false">
         <div class="container">
             <mat-table #table [dataSource]="[team]">
                 <ng-container matColumnDef="username">
@@ -28,7 +28,7 @@
             </mat-table>
         </div>
     </app-card>
-    <app-card title="Starter Code" *ngIf="link">
+    <app-card header="Starter Code" *ngIf="link">
         <a mat-raised-button color="accent" [href]="link">Download Starter Code</a>
     </app-card>
 </div>

@@ -11,11 +11,11 @@
 </mat-toolbar>
 <div class="flex display-side container">
   <div class="fix-size">
-    <app-card title="Error" *ngIf="error; else: status">
+    <app-card header="Error" *ngIf="error; else: status">
       <code>{{error}}</code>
     </app-card>
     <ng-template #status>
-      <app-card title="Status">
+      <app-card header="Status">
         <p>{{status === 'Finished' ? 'Guesses: ' + score : status}}</p>
       </app-card>
     </ng-template>
