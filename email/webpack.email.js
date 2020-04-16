@@ -9,7 +9,8 @@ module.exports = {
             "window": JSON.stringify(false)
         }),
         new CopyPlugin([
-            { from: path.resolve(__dirname, 'mailgun.json'), to: path.resolve(__dirname, '..', 'dist') }
+            { from: path.resolve(__dirname, 'mailgun.json'), to: path.resolve(__dirname, '..', 'dist') },
+            { from: path.resolve(__dirname, 'data'), to: path.resolve(__dirname, '..', 'dist') }
         ]),
     ],
     entry: {

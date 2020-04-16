@@ -1,6 +1,7 @@
 import * as mailgun from 'mailgun-js';
 
-export type SendTemplateData = mailgun.messages.SendTemplateData & {
+export type SendTemplateData = mailgun.messages.SendData & {
+    template: string;
     'h:X-Mailgun-Variables': string;
 }
 
@@ -11,4 +12,9 @@ interface InfoTemplateData {
     password: string;
 }
 
-export type TemplateData = InfoTemplateData;
+interface InfoTeachersTemplateData {
+    templateName: 'info-teachers';
+    firstName: string;
+}
+
+export type TemplateData = InfoTemplateData | InfoTeachersTemplateData;
