@@ -15,7 +15,8 @@ All components are written in TypeScript and run either on Node.js or in the bro
 
 ## Previous versions of the CodeLM platform:
 
-- [codelm-2015](https://github.com/nrubin29/codelm-2015): Used in the first competition in 2015. Written in PHP/jQuery. I think that I used an improved version of the same codebase in the 2016 competition, but I guess I didn't upload it to GitHub.
+- [codelm-2015](https://github.com/nrubin29/codelm-2015): Used in the first competition in 2015. Written in PHP/jQuery.
+- [codelm-2016](https://github.com/nrubin29/codelm-2016): Used in the 2016 competition. An improved version of the 2015 codebase.
 - [codelm-2017](https://github.com/nrubin29/codelm-2017): Used in the 2017 competition. Written in Django.
 - [codelm-2018](https://github.com/nrubin29/codelm-2018): Used in the 2018 competition. Written in Express/Angular.
 - This repo: An improved version of the 2018 dashboard. Used in the 2019 competition and will be used in all future competitions. The commit history for this version prior to September 1, 2019 is in a private Bitbucket project.
