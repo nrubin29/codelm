@@ -9,10 +9,13 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class EndComponent implements OnInit {
   settings: SettingsModel;
+  year: number;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
+    this.year = new Date().getFullYear();
+
     this.activatedRoute.data.subscribe(data => {
       this.settings = data['settings'];
     });
