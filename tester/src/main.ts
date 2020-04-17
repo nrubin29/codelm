@@ -19,7 +19,7 @@ export function makeWebsocketURI() {
 
 let testers: Tester[];
 
-fetchHttp.default(makeURL('/api/debug/init?num_accounts=50'))
+fetchHttp.default(makeURL('/api/debug/init?num_accounts=275'))
     .then(resp => resp.json())
     .catch(e => {
         console.error('Initialization failed. Is the server running?', e);

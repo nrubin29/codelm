@@ -4,11 +4,37 @@ import {ClientProblemSubmission} from "../../common/src/problem-submission";
 
 export const PROBLEM_SUBMISSIONS = Object.freeze({
     'basketball': {
-        'python': {
-            problemId: '5c9d3df5d0563d63039f09ae', // 5ad60bb0271402062867ee94 in the local database
-            language: 'python',
-            code: `print(int(input()) % 2 == 0)`,
-            test: true,
-        } as ClientProblemSubmission,
+        'correct': {
+            'python': {
+                problemId: '5c9d3df5d0563d63039f09ae', // 5ad60bb0271402062867ee94 in the local database
+                language: 'python',
+                code: `print(int(input()) % 2 == 0)`,
+                test: false,
+            } as ClientProblemSubmission,
+        },
+        'incorrect': {
+            'python': {
+                problemId: '5c9d3df5d0563d63039f09ae',
+                language: 'python',
+                code: `print(int(input()) % 2 != 0)`,
+                test: false,
+            } as ClientProblemSubmission,
+        },
+        // 'spin': {
+        //     'python': {
+        //         problemId: '5c9d3df5d0563d63039f09ae',
+        //         language: 'python',
+        //         code: `while True:\n\tpass`,
+        //         test: false,
+        //     } as ClientProblemSubmission,
+        // },
+        'divide_by_zero': {
+            'python': {
+                problemId: '5c9d3df5d0563d63039f09ae',
+                language: 'python',
+                code: `print(int(input()) / 0)`,
+                test: false,
+            } as ClientProblemSubmission,
+        },
     },
 });
