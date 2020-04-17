@@ -40,9 +40,9 @@ export class CodeSaverService {
 
   getDocumentation() {
     return {
-      python: 'https://docs.python.org/3.5/index.html',
-      java: 'https://docs.oracle.com/javase/8/docs/api/',
-      cpp: 'http://www.cplusplus.com/reference/'
+      python: 'https://docs.python.org/3.6/index.html',
+      java: 'https://docs.oracle.com/en/java/javase/11/docs/api/',
+      cpp: 'http://www.cplusplus.com/reference/',
     }[this.language];
   }
 }
