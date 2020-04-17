@@ -56,7 +56,7 @@ export class FaqComponent {
         'used in last year\'s competition, so you can expect a similar format and level of difficulty in this ' +
         'year\'s problem set.',
       'What if I run into an issue?': 'First, check this FAQ again to see if an update has been posted. If not, send ' +
-        'an email to nrubin29@gmail.com describing your issue.',
+        'an email to team@newwavecomputers.com describing your issue.',
     },
   });
 }

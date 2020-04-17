@@ -1,8 +1,8 @@
 <app-card>
   <img src="assets/logo.png">
-  <app-card display="info">
-    <p>Welcome to the CodeLM 2020 dashboard! <a href="javascript:void(0)" (click)="showFaq()">Click here</a> to learn more.</p>
-  </app-card>
+<!--  <app-card display="info">-->
+<!--    <p>Welcome to the CodeLM 2020 dashboard! <a href="javascript:void(0)" (click)="showFaq()">Click here</a> to learn more.</p>-->
+<!--  </app-card>-->
   <form #loginForm="ngForm" [formGroup]="formGroup" (submit)="login(loginForm)" onsubmit="return false">
     <mat-form-field color="accent">
       <input matInput name="username" formControlName="username" type="text" placeholder="Username">

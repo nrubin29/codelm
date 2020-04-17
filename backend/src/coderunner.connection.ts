@@ -8,7 +8,7 @@ import {
     CompilationResultPacket, DockerKilledPacket, GameOutputPacket,
     RunTestCaseResultPacket
 } from '../../common/src/packets/coderunner.packet';
-import {StdioPacketManager} from "../../common/src/packet.manager";
+import {StdioPacketManager} from '../../common/src/packet.manager';
 import {Game} from './games/game';
 import {Observable} from 'rxjs';
 import {UnexpectedDataPacket} from '../../common/src/packets/packet';
@@ -19,12 +19,12 @@ const dockerArgs = [
     '--rm',           // Delete container after exit
     '--cap-drop=ALL', // Remove all capabilities
     '--net=none',     // Disable networking
-    '--memory=256M',  // Cap memory at 256 MB
+    '--memory=256m',  // Cap memory at 256 MB
     '--cpus=1.0',     // Cap number of CPUs at 1
     'coderunner'
 ];
 
-// TODO: Rename this class.
+// TODO: Refactor this class to use Observables(?)
 export class CodeRunnerConnection extends StdioPacketManager {
     private handle: ChildProcessWithoutNullStreams;
 

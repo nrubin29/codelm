@@ -14,13 +14,15 @@ import apiRoutes from './routes/route';
 
 export const DEBUG = process.argv.includes('--debug');
 
-process.on('uncaughtException', (e: Error) => {
-  console.error('uncaughtException:', e);
-});
+if (!DEBUG) {
+  process.on('uncaughtException', (e: Error) => {
+    console.error('uncaughtException:', e);
+  });
 
-process.on('unhandledRejection', (reason: object) => {
-  console.error('unhandledRejection:', reason);
-});
+  process.on('unhandledRejection', (reason: object) => {
+    console.error('unhandledRejection:', reason);
+  });
+}
 
 const app = express();
 app.set('trust proxy', true);
