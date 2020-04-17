@@ -17,4 +17,9 @@ interface InfoTeachersTemplateData {
     firstName: string;
 }
 
-export type TemplateData = InfoTemplateData | InfoTeachersTemplateData;
+interface ReminderTemplateData {
+    templateName: 'reminder';
+    firstName: string;
+}
+
+export type TemplateData = InfoTemplateData | InfoTeachersTemplateData | ReminderTemplateData;

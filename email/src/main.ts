@@ -14,11 +14,16 @@ async function sendStudentEmails() {
     for (const student of students) {
         console.log(student[2].split(' ')?.[0] ?? '', student[3], student[6], student[7]);
 
-        console.log(await send(student[3], '[Please read] Important information for CodeLM 2020', {
-            templateName: 'info',
+        // console.log(await send(student[3], '[Please read] Important information for CodeLM 2020', {
+        //     templateName: 'info',
+        //     firstName: student[2].split(' ')?.[0] ?? '',
+        //     username: student[6],
+        //     password: student[7],
+        // }));
+
+        console.log(await send(student[3], '[Reminder] CodeLM 2020', {
+            templateName: 'reminder',
             firstName: student[2].split(' ')?.[0] ?? '',
-            username: student[6],
-            password: student[7],
         }));
     }
 }
