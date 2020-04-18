@@ -19,4 +19,5 @@ All components are written in TypeScript and run either on Node.js or in the bro
 - [codelm-2016](https://github.com/nrubin29/codelm-2016): Used in the 2016 competition. An improved version of the 2015 codebase.
 - [codelm-2017](https://github.com/nrubin29/codelm-2017): Used in the 2017 competition. Written in Django.
 - [codelm-2018](https://github.com/nrubin29/codelm-2018): Used in the 2018 competition. Written in Express/Angular.
-- This repo: An improved version of the 2018 dashboard. Used in the 2019 competition and will be used in all future competitions. The commit history for this version prior to September 1, 2019 is in a private Bitbucket project.
+- [codelm-2019](https://github.com/nrubin29/codelm-2019): Used in the 2019 competition. An improved version of the 2018 codebase.
+- This repo: Used in the 2020 competition and will be used in all future competitions. An improved version of the 2019 codebase.
