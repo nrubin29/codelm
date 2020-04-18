@@ -21,8 +21,13 @@ async function sendStudentEmails() {
         //     password: student[7],
         // }));
 
-        console.log(await send(student[3], '[Reminder] CodeLM 2020', {
-            templateName: 'reminder',
+        // console.log(await send(student[3], '[Reminder] CodeLM 2020', {
+        //     templateName: 'reminder',
+        //     firstName: student[2].split(' ')?.[0] ?? '',
+        // }));
+
+        console.log(await send(student[3], 'CodeLM 2020 Wrap-up', {
+            templateName: 'wrapup',
             firstName: student[2].split(' ')?.[0] ?? '',
         }));
     }

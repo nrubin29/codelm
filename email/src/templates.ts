@@ -22,4 +22,9 @@ interface ReminderTemplateData {
     firstName: string;
 }
 
-export type TemplateData = InfoTemplateData | InfoTeachersTemplateData | ReminderTemplateData;
+interface WrapupTemplateData {
+    templateName: 'wrapup';
+    firstName: string;
+}
+
+export type TemplateData = InfoTemplateData | InfoTeachersTemplateData | ReminderTemplateData | WrapupTemplateData;
