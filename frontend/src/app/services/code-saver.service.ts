@@ -40,7 +40,7 @@ export class CodeSaverService {
 
   getDocumentation() {
     return {
-      python: 'https://docs.python.org/3.6/index.html',
+      python: 'https://docs.python.org/3.8/index.html',
       java: 'https://docs.oracle.com/en/java/javase/11/docs/api/',
       cpp: 'http://www.cplusplus.com/reference/',
     }[this.language];
