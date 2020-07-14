@@ -1,20 +1,31 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {isGradedProblem, OpenEndedProblemModel, ProblemModel} from '../../../../../../common/src/models/problem.model';
-import {ProblemService} from '../../../services/problem.service';
-import {SubmissionModel} from '../../../../../../common/src/models/submission.model';
-import {TeamService} from '../../../services/team.service';
-import {TeamModel} from '../../../../../../common/src/models/team.model';
-import {CodeSaverService} from '../../../services/code-saver.service';
-import {ProblemUtil} from '../../../../../../common/src/utils/problem.util';
-import {CodeMirrorComponent} from "../../../common/components/code-mirror/code-mirror.component";
-import {debounceTime} from "rxjs/operators";
-import {MatSelectChange} from "@angular/material/select";
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  isGradedProblem,
+  OpenEndedProblemModel,
+  ProblemModel,
+} from '../../../../../../common/src/models/problem.model';
+import { ProblemService } from '../../../services/problem.service';
+import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
+import { TeamService } from '../../../services/team.service';
+import { TeamModel } from '../../../../../../common/src/models/team.model';
+import { CodeSaverService } from '../../../services/code-saver.service';
+import { ProblemUtil } from '../../../../../../common/src/utils/problem.util';
+import { CodeMirrorComponent } from '../../../common/components/code-mirror/code-mirror.component';
+import { debounceTime } from 'rxjs/operators';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
-  styleUrls: ['./problem.component.scss']
+  styleUrls: ['./problem.component.scss'],
 })
 export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   team: TeamModel;
@@ -24,14 +35,22 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   problemNumber: number;
   problemPoints: number;
 
-  @ViewChildren(CodeMirrorComponent) codeMirrors: QueryList<CodeMirrorComponent>;
+  @ViewChildren(CodeMirrorComponent) codeMirrors: QueryList<
+    CodeMirrorComponent
+  >;
   language: string;
   documentation: string;
 
-  constructor(private problemService: ProblemService, private teamService: TeamService, private codeSaverService: CodeSaverService, private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private problemService: ProblemService,
+    private teamService: TeamService,
+    private codeSaverService: CodeSaverService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.teamService.team.subscribe(team => this.team = team);
+    this.teamService.team.subscribe(team => (this.team = team));
 
     this.activatedRoute.data.subscribe(data => {
       if (this.codeMirrors !== undefined) {
@@ -45,8 +64,13 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.problem = data.problem;
-      this.submissions = data.submissions.filter(submission => submission.problem._id === this.problem._id);
-      this.problemNumber = ProblemUtil.getProblemNumberForTeam(this.problem, this.team);
+      this.submissions = data.submissions.filter(
+        submission => submission.problem._id === this.problem._id
+      );
+      this.problemNumber = ProblemUtil.getProblemNumberForTeam(
+        this.problem,
+        this.team
+      );
       this.problemPoints = ProblemUtil.getPoints(this.problem, this.team);
       this.documentation = this.codeSaverService.getDocumentation();
 
@@ -61,13 +85,17 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.subscribeTo(this.codeMirrors.first);
 
-    this.codeMirrors.changes.subscribe((codeMirrors: QueryList<CodeMirrorComponent>) => {
-      codeMirrors.forEach(cm => this.subscribeTo(cm));
-    });
+    this.codeMirrors.changes.subscribe(
+      (codeMirrors: QueryList<CodeMirrorComponent>) => {
+        codeMirrors.forEach(cm => this.subscribeTo(cm));
+      }
+    );
   }
 
   private subscribeTo(codeMirror: CodeMirrorComponent) {
-    codeMirror.writeValue(this.codeSaverService.get(this.problem._id, codeMirror.mode));
+    codeMirror.writeValue(
+      this.codeSaverService.get(this.problem._id, codeMirror.mode)
+    );
     codeMirror.change.pipe(debounceTime(5000)).subscribe(() => {
       this.saveCode();
     });
@@ -88,7 +116,11 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   saveCode() {
-    this.codeSaverService.save(this.problem._id, this.codeMirrors.first.mode, this.codeMirrors.first.value);
+    this.codeSaverService.save(
+      this.problem._id,
+      this.codeMirrors.first.mode,
+      this.codeMirrors.first.value
+    );
   }
 
   submitClicked(test: boolean) {
@@ -98,15 +130,17 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
       problemId: this.problem._id,
       language: this.language,
       code: this.codeMirrors.first.value,
-      test: test
+      test: test,
     };
 
     if (!test || isGradedProblem(this.problem)) {
       this.router.navigate(['dashboard', 'submit']);
-    }
-
-    else {
-      this.router.navigate(['dashboard', 'game', (this.problem as OpenEndedProblemModel).gameType]);
+    } else {
+      this.router.navigate([
+        'dashboard',
+        'game',
+        (this.problem as OpenEndedProblemModel).gameType,
+      ]);
     }
   }
 }

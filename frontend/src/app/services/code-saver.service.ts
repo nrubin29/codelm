@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CodeSaverService {
   language: string;
@@ -34,7 +34,7 @@ export class CodeSaverService {
     return {
       python: 'text/x-python',
       java: 'text/x-java',
-      cpp: 'text/x-c++src'
+      cpp: 'text/x-c++src',
     }[language];
   }
 

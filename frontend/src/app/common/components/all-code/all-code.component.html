@@ -1,6 +1,11 @@
 <h2 mat-dialog-title>All Code</h2>
 <mat-dialog-content>
   <app-card *ngFor="let problemId of problemIds" [header]="problemId">
-    <app-code-mirror *ngFor="let entry of code[problemId]" [value]="entry.code" [mode]="entry.mode" [readOnly]="true"></app-code-mirror>
+    <app-code-mirror
+      *ngFor="let entry of code[problemId]"
+      [value]="entry.code"
+      [mode]="entry.mode"
+      [readOnly]="true"
+    ></app-code-mirror>
   </app-card>
 </mat-dialog-content>

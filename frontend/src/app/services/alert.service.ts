@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import {SingleEntityService} from "./entity.service";
-import {AlertModel} from '../../../../common/src/models/alert.model';
+import { SingleEntityService } from './entity.service';
+import { AlertModel } from '../../../../common/src/models/alert.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService extends SingleEntityService<AlertModel> {
   private endpoint = 'alerts';
@@ -12,12 +12,10 @@ export class AlertService extends SingleEntityService<AlertModel> {
   constructor(private restService: RestService) {
     super({
       entityName: 'alert',
-      columns: [
-        {name: 'message', isEditColumn: true},
-      ],
+      columns: [{ name: 'message', isEditColumn: true }],
       attributes: [
-        {name: '_id', readonly: true, optional: true},
-        {name: 'message'},
+        { name: '_id', readonly: true, optional: true },
+        { name: 'message' },
       ],
       editable: true,
     });

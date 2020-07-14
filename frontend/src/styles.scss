@@ -35,7 +35,8 @@ app-root {
   max-height: 100vh;
 }
 
-app-dashboard, app-admin {
+app-dashboard,
+app-admin {
   display: flex;
   flex: 1;
 
@@ -50,7 +51,8 @@ app-dashboard, app-admin {
       display: flex;
     }
 
-    & > *, & > app-card > mat-card {
+    & > *,
+    & > app-card > mat-card {
       flex: 1;
     }
 
@@ -94,11 +96,17 @@ mat-sidenav-content {
   height: 100vh;
 }
 
-.mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
+.mat-expansion-panel-header-description,
+.mat-expansion-panel-header-title {
   flex-basis: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: normal;
 }
 
@@ -106,7 +114,8 @@ h1, h2, h3, h4, h5, h6 {
   flex: 1 1 auto;
 }
 
-mat-toolbar-row .mat-button:not(:last-child), mat-toolbar-row .mat-raised-button:not(:last-child) {
+mat-toolbar-row .mat-button:not(:last-child),
+mat-toolbar-row .mat-raised-button:not(:last-child) {
   margin-right: 1em !important;
 }
 

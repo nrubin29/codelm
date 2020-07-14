@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import {SingleEntityService} from "./entity.service";
-import {GroupModel} from '../../../../common/src/models/group.model';
+import { SingleEntityService } from './entity.service';
+import { GroupModel } from '../../../../common/src/models/group.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GroupService extends SingleEntityService<GroupModel> {
   private endpoint = 'groups';
@@ -12,12 +12,10 @@ export class GroupService extends SingleEntityService<GroupModel> {
   constructor(private restService: RestService) {
     super({
       entityName: 'group',
-      columns: [
-        {name: 'name', isEditColumn: true},
-      ],
+      columns: [{ name: 'name', isEditColumn: true }],
       attributes: [
-        {name: '_id', readonly: true, optional: true},
-        {name: 'name'},
+        { name: '_id', readonly: true, optional: true },
+        { name: 'name' },
       ],
       editable: true,
     });

@@ -4,7 +4,7 @@ import { DivisionModel } from '../../../../common/src/models/division.model';
 import { DivisionService } from '../services/division.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DivisionsResolve implements Resolve<DivisionModel[]> {
   constructor(private divisionService: DivisionService) {}

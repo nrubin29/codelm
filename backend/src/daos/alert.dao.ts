@@ -1,5 +1,5 @@
 import mongoose = require('mongoose');
-import {AlertModel} from '../../../common/src/models/alert.model';
+import { AlertModel } from '../../../common/src/models/alert.model';
 
 type AlertType = AlertModel & mongoose.Document;
 
@@ -21,14 +21,14 @@ export class AlertDao {
   static async addOrUpdateAlert(alert: AlertModel): Promise<AlertModel> {
     if (!alert._id) {
       return (await Alert.create(alert)).toObject();
-    }
-
-    else {
-      return (await Alert.findByIdAndUpdate(alert._id, alert, {new: true}).exec()).toObject();
+    } else {
+      return (
+        await Alert.findByIdAndUpdate(alert._id, alert, { new: true }).exec()
+      ).toObject();
     }
   }
 
   static deleteAlert(_id: string): Promise<any> {
-    return Alert.deleteOne({_id}).exec();
+    return Alert.deleteOne({ _id }).exec();
   }
 }

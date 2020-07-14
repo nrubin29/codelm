@@ -1,10 +1,20 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>{{team ? 'Edit ' + team.username : 'Add Team'}}</span>
+    <span>{{ team ? 'Edit ' + team.username : 'Add Team' }}</span>
     <span class="spacer"></span>
-    <a mat-raised-button color="accent" [routerLink]="['/admin', 'batch-add-teams']"><mat-icon>publish</mat-icon> Batch Add Teams</a>
+    <a
+      mat-raised-button
+      color="accent"
+      [routerLink]="['/admin', 'batch-add-teams']"
+      ><mat-icon>publish</mat-icon> Batch Add Teams</a
+    >
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="container">
-  <app-edit-entity [entity]="team" [entityService]="teamService" [isModal]="false" (action)="action($event)"></app-edit-entity>
+  <app-edit-entity
+    [entity]="team"
+    [entityService]="teamService"
+    [isModal]="false"
+    (action)="action($event)"
+  ></app-edit-entity>
 </div>

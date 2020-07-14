@@ -1,9 +1,16 @@
-<mat-card class="mat-elevation-z0" [class.small]="small" [class.info]="display === 'info'" [class.error]="display === 'error'">
+<mat-card
+  class="mat-elevation-z0"
+  [class.small]="small"
+  [class.info]="display === 'info'"
+  [class.error]="display === 'error'"
+>
   <mat-card-header *ngIf="!small">
-    <mat-card-title *ngIf="header">{{header}}</mat-card-title>
+    <mat-card-title *ngIf="header">{{ header }}</mat-card-title>
   </mat-card-header>
   <mat-card-content [class.pad-card]="pad">
-    <ng-container *ngIf="small"><b>{{header}}: </b></ng-container>
+    <ng-container *ngIf="small"
+      ><b>{{ header }}: </b></ng-container
+    >
     <ng-content></ng-content>
   </mat-card-content>
 </mat-card>

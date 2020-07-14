@@ -1,27 +1,46 @@
 <mat-sidenav-container>
-  <mat-sidenav mode="side" [opened]="true" [disableClose]="true" [fixedInViewport]="false">
-    <a [routerLink]="['/admin']" class="logo"><img src="assets/logo-portrait.png"></a>
-    <br>
-    <h2 *ngIf="admin">{{admin.name}}</h2>
+  <mat-sidenav
+    mode="side"
+    [opened]="true"
+    [disableClose]="true"
+    [fixedInViewport]="false"
+  >
+    <a [routerLink]="['/admin']" class="logo"
+      ><img src="assets/logo-portrait.png"
+    /></a>
+    <br />
+    <h2 *ngIf="admin">{{ admin.name }}</h2>
     <h3>Judging Dashboard</h3>
     <h4>For official use only</h4>
-    <br>
+    <br />
     <mat-divider></mat-divider>
-    <br>
+    <br />
     <mat-nav-list *ngIf="admin">
       <a mat-list-item [routerLink]="['/admin', 'standings']">
         <mat-icon mat-list-icon>bar_chart</mat-icon>
         <p mat-line>Standings</p>
       </a>
-      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'sockets']">
+      <a
+        mat-list-item
+        *ngIf="admin.superUser"
+        [routerLink]="['/admin', 'sockets']"
+      >
         <mat-icon mat-list-icon>settings_ethernet</mat-icon>
         <p mat-line>Sockets</p>
       </a>
-      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'settings']">
+      <a
+        mat-list-item
+        *ngIf="admin.superUser"
+        [routerLink]="['/admin', 'settings']"
+      >
         <mat-icon mat-list-icon>settings</mat-icon>
         <p mat-line>Settings</p>
       </a>
-      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'alerts']">
+      <a
+        mat-list-item
+        *ngIf="admin.superUser"
+        [routerLink]="['/admin', 'alerts']"
+      >
         <mat-icon mat-list-icon>announcement</mat-icon>
         <p mat-line>Alerts</p>
       </a>
@@ -29,11 +48,19 @@
         <mat-icon mat-list-icon>contact_support</mat-icon>
         <p mat-line>Disputes</p>
       </a>
-      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'divisions']">
+      <a
+        mat-list-item
+        *ngIf="admin.superUser"
+        [routerLink]="['/admin', 'divisions']"
+      >
         <mat-icon mat-list-icon>view_list</mat-icon>
         <p mat-line>Divisions</p>
       </a>
-      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'problems']">
+      <a
+        mat-list-item
+        *ngIf="admin.superUser"
+        [routerLink]="['/admin', 'problems']"
+      >
         <mat-icon mat-list-icon>insert_drive_file</mat-icon>
         <p mat-line>Problems</p>
       </a>
@@ -45,7 +72,11 @@
         <mat-icon mat-list-icon>person</mat-icon>
         <p mat-line>People</p>
       </a>
-      <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'admins']">
+      <a
+        mat-list-item
+        *ngIf="admin.superUser"
+        [routerLink]="['/admin', 'admins']"
+      >
         <mat-icon mat-list-icon>assignment_ind</mat-icon>
         <p mat-line>Admins</p>
       </a>

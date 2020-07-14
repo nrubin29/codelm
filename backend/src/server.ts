@@ -1,5 +1,5 @@
 import express = require('express');
-import {Router} from 'express';
+import { Router } from 'express';
 import morgan = require('morgan');
 import bodyParser = require('body-parser');
 import path = require('path');
@@ -8,7 +8,7 @@ import mongoose = require('mongoose');
 import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
 import { VERSION } from '../../common/version';
-import {objectFromEntries} from "../../common/src/utils/submission.util";
+import { objectFromEntries } from '../../common/src/utils/submission.util';
 import './daos/dao';
 import apiRoutes from './routes/route';
 
@@ -39,35 +39,48 @@ app.set('json replacer', (key: string, value: any) => {
 
 const expressWs = require('express-ws')(app);
 
-app.use(morgan('[:date[clf]] :method :url :status :response-time ms :remote-addr'));
-app.use(bodyParser.urlencoded({extended: true, limit: '5mb'})); // parse application/x-www-form-urlencoded
-app.use(bodyParser.json({limit: '5mb'})); // parse application/json
-app.use(bodyParser.json({type: 'application/vnd.api+json', limit: '5mb'})); // Parse application/vnd.api+json as json
-app.use(fileUpload({createParentPath: true}));
+app.use(
+  morgan('[:date[clf]] :method :url :status :response-time ms :remote-addr')
+);
+app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' })); // parse application/x-www-form-urlencoded
+app.use(bodyParser.json({ limit: '5mb' })); // parse application/json
+app.use(bodyParser.json({ type: 'application/vnd.api+json', limit: '5mb' })); // Parse application/vnd.api+json as json
+app.use(fileUpload({ createParentPath: true }));
 app.use('/api', apiRoutes);
 
 if (process.env.NODE_ENV == 'development') {
   app.use(express.static(path.join('.', 'dist', 'frontend')));
+} else {
+  app.use(
+    '/',
+    Router().get('/', (req, res) => res.redirect('/index.html'))
+  );
 }
 
-else {
-  app.use('/', Router().get('/', (req, res) => res.redirect('/index.html')));
-}
-
-console.log(`Starting CodeLM server build ${VERSION}${DEBUG ? ' in debug mode' : ''}`);
+console.log(
+  `Starting CodeLM server build ${VERSION}${DEBUG ? ' in debug mode' : ''}`
+);
 
 mongoose.set('useFindAndModify', false);
-mongoose.connect('mongodb://localhost/codelm', {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
-  console.log('Connected to MongoDB');
+mongoose
+  .connect('mongodb://localhost/codelm', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Connected to MongoDB');
 
-  SettingsDao.getSettings().then(settings => {
-    console.log('Scheduled ' + SettingsDao.scheduleJobs(settings) + ' events');
+    SettingsDao.getSettings().then(settings => {
+      console.log(
+        'Scheduled ' + SettingsDao.scheduleJobs(settings) + ' events'
+      );
 
-    SocketManager.init(app);
-    console.log('Set up socket manager');
+      SocketManager.init(app);
+      console.log('Set up socket manager');
 
-    app.listen(8080, () => {
-      console.log('Listening on http://localhost:8080');
+      app.listen(8080, () => {
+        console.log('Listening on http://localhost:8080');
+      });
     });
-  });
-}).catch(console.error);
+  })
+  .catch(console.error);

@@ -1,18 +1,26 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import {SocketPacketManager} from "../../../../common/src/packet.manager";
-import {skipWhile} from "rxjs/operators";
-import {Observable} from "rxjs";
+import { SocketPacketManager } from '../../../../common/src/packet.manager';
+import { skipWhile } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SocketService extends SocketPacketManager<WebSocket> {
   listening = false;
 
   constructor(private router: Router) {
-    super(() => new WebSocket(environment.wsProtocol + '://' + location.hostname + environment.socketSuffix));
+    super(
+      () =>
+        new WebSocket(
+          environment.wsProtocol +
+            '://' +
+            location.hostname +
+            environment.socketSuffix
+        )
+    );
   }
 
   /**
@@ -25,7 +33,11 @@ export class SocketService extends SocketPacketManager<WebSocket> {
   connect(): Promise<void> {
     return super.connect().then(() => {
       // TODO: Remove the type conversion once I fix the problem with onDisconnect().
-      (this.onDisconnect() as Observable<void>).pipe(skipWhile(() => !this.listening)).subscribe(() => { this.router.navigate(['/disconnected']) });
+      (this.onDisconnect() as Observable<void>)
+        .pipe(skipWhile(() => !this.listening))
+        .subscribe(() => {
+          this.router.navigate(['/disconnected']);
+        });
     });
   }
 }

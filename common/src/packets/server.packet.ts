@@ -1,8 +1,8 @@
-import {TeamModel} from "../models/team.model";
-import {AdminModel} from "../models/admin.model";
-import {SettingsState} from "../models/settings.model";
-import {SubmissionModel} from "../models/submission.model";
-import {GameExtras} from '../models/game.model';
+import { TeamModel } from '../models/team.model';
+import { AdminModel } from '../models/admin.model';
+import { SettingsState } from '../models/settings.model';
+import { SubmissionModel } from '../models/submission.model';
+import { GameExtras } from '../models/game.model';
 
 export const enum LoginResponse {
   SuccessTeam = 'Success Team',
@@ -56,5 +56,11 @@ export interface UpdateTeamPacket {
   name: 'updateTeam';
 }
 
-export type ServerPacket = LoginResponsePacket | StateSwitchPacket | SubmissionCompletedPacket | GameExtrasPacket |
-    SubmissionStatusPacket | UpdateSettingsPacket | UpdateTeamPacket;
+export type ServerPacket =
+  | LoginResponsePacket
+  | StateSwitchPacket
+  | SubmissionCompletedPacket
+  | GameExtrasPacket
+  | SubmissionStatusPacket
+  | UpdateSettingsPacket
+  | UpdateTeamPacket;

@@ -1,20 +1,33 @@
 import { Injectable } from '@angular/core';
-import {Column, SingleEntityService} from "./entity.service";
-import {SubmissionService} from "./submission.service";
-import {GradedSubmissionModel} from "../../../../common/src/models/submission.model";
+import { Column, SingleEntityService } from './entity.service';
+import { SubmissionService } from './submission.service';
+import { GradedSubmissionModel } from '../../../../common/src/models/submission.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DisputeService extends SingleEntityService<GradedSubmissionModel> {
-
   constructor(private submissionService: SubmissionService) {
     super({
       entityName: 'dispute',
       columns: [
-        {name: 'team', link: (entity: GradedSubmissionModel) => ['/admin', 'team', entity.team._id]},
-        {name: 'problem'},
-        {name: 'submission', link: (entity: GradedSubmissionModel) => ['/admin', 'submission', entity._id]},
+        {
+          name: 'team',
+          link: (entity: GradedSubmissionModel) => [
+            '/admin',
+            'team',
+            entity.team._id,
+          ],
+        },
+        { name: 'problem' },
+        {
+          name: 'submission',
+          link: (entity: GradedSubmissionModel) => [
+            '/admin',
+            'submission',
+            entity._id,
+          ],
+        },
       ],
       editable: false,
     });
@@ -27,9 +40,7 @@ export class DisputeService extends SingleEntityService<GradedSubmissionModel> {
   getData(column: Column, value: GradedSubmissionModel): any | undefined {
     if (column.name === 'team') {
       return value.team.username;
-    }
-
-    else if (column.name === 'problem') {
+    } else if (column.name === 'problem') {
       return value.problem.title;
     }
 
@@ -37,6 +48,8 @@ export class DisputeService extends SingleEntityService<GradedSubmissionModel> {
   }
 
   getName(entity: Partial<GradedSubmissionModel>) {
-    return entity.problem && entity.team ? `Dispute for ${entity.problem.title} by ${entity.team.username}` : 'Dispute';
+    return entity.problem && entity.team
+      ? `Dispute for ${entity.problem.title} by ${entity.team.username}`
+      : 'Dispute';
   }
 }

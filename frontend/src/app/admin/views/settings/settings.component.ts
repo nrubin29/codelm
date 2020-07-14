@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsModel } from '../../../../../../common/src/models/settings.model';
 import { SettingsService } from '../../../services/settings.service';
-import {DialogResult} from "../../components/edit-entity/edit-entity.component";
+import { DialogResult } from '../../components/edit-entity/edit-entity.component';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent implements OnInit {
   settings: SettingsModel;
 
-  constructor(public settingsService: SettingsService) { }
+  constructor(public settingsService: SettingsService) {}
 
   ngOnInit() {
     this.settingsService.getSettings().then(settings => {
@@ -21,18 +21,22 @@ export class SettingsComponent implements OnInit {
 
   action(result: [DialogResult, SettingsModel]) {
     if (result[0] === 'save') {
-      this.settingsService.addOrUpdate(result[1]).then(() => {
-        alert('Updated');
-      }).catch(alert);
-    }
-
-    else if (result[0] === 'delete') {
-      this.settingsService.delete().then(() => {
-        alert('Reset');
-        this.settingsService.getSettings().then(settings => {
-          this.settings = settings;
-        });
-      }).catch(alert);
+      this.settingsService
+        .addOrUpdate(result[1])
+        .then(() => {
+          alert('Updated');
+        })
+        .catch(alert);
+    } else if (result[0] === 'delete') {
+      this.settingsService
+        .delete()
+        .then(() => {
+          alert('Reset');
+          this.settingsService.getSettings().then(settings => {
+            this.settings = settings;
+          });
+        })
+        .catch(alert);
     }
   }
 }

@@ -1,11 +1,11 @@
-import {NextFunction, Request, Response} from 'express';
-import {TeamDao} from './daos/team.dao';
-import {AdminDao} from './daos/admin.dao';
-import {TeamModel} from '../../common/src/models/team.model';
-import {SettingsDao} from './daos/settings.dao';
-import {SettingsState} from '../../common/src/models/settings.model';
-import {DivisionType} from '../../common/src/models/division.model';
-import {DEBUG} from "./server";
+import { NextFunction, Request, Response } from 'express';
+import { TeamDao } from './daos/team.dao';
+import { AdminDao } from './daos/admin.dao';
+import { TeamModel } from '../../common/src/models/team.model';
+import { SettingsDao } from './daos/settings.dao';
+import { SettingsState } from '../../common/src/models/settings.model';
+import { DivisionType } from '../../common/src/models/division.model';
+import { DEBUG } from './server';
 
 export class PermissionsUtil {
   static async canRegister(): Promise<boolean> {
@@ -14,21 +14,27 @@ export class PermissionsUtil {
 
     const settings = await SettingsDao.getSettings();
 
-    return settings.state === SettingsState.Debug || (
-      settings.registration &&
-      (settings.state === SettingsState.Graded || settings.state === SettingsState.Upload)
+    return (
+      settings.state === SettingsState.Debug ||
+      (settings.registration &&
+        (settings.state === SettingsState.Graded ||
+          settings.state === SettingsState.Upload))
     );
   }
 
   static async hasAccess(team: TeamModel): Promise<boolean> {
     const settings = await SettingsDao.getSettings();
 
-    return team.division.type === DivisionType.Special ||
+    return (
+      team.division.type === DivisionType.Special ||
       settings.state === SettingsState.Debug ||
-      (settings.state === SettingsState.Graded || settings.state === SettingsState.Upload) && (
-        (!settings.preliminaries && team.division.type === DivisionType.Competition) ||
-        (settings.preliminaries && team.division.type === DivisionType.Preliminaries)
-      );
+      ((settings.state === SettingsState.Graded ||
+        settings.state === SettingsState.Upload) &&
+        ((!settings.preliminaries &&
+          team.division.type === DivisionType.Competition) ||
+          (settings.preliminaries &&
+            team.division.type === DivisionType.Preliminaries)))
+    );
   }
 
   static async requireTeam(req: Request, res: Response, next: NextFunction) {
@@ -37,13 +43,13 @@ export class PermissionsUtil {
       return;
     }
 
-    req.params.team = await TeamDao.getTeam(req.headers.authorization.split(' ')[1]);
+    req.params.team = await TeamDao.getTeam(
+      req.headers.authorization.split(' ')[1]
+    );
 
     if (req.params.team) {
       next();
-    }
-
-    else {
+    } else {
       next(new Error('No team found for given authorization.'));
     }
   }
@@ -51,14 +57,10 @@ export class PermissionsUtil {
   static async requireAccess(req: Request, res: Response, next: NextFunction) {
     if (!req.params.team) {
       next(new Error('No team found. Did you forget to use requireTeam?'));
-    }
-
-    else {
+    } else {
       if (await PermissionsUtil.hasAccess(req.params.team)) {
         next();
-      }
-
-      else {
+      } else {
         next(new Error('Team does not have access.'));
       }
     }
@@ -70,14 +72,14 @@ export class PermissionsUtil {
       return;
     }
 
-    req.params.admin = await AdminDao.getAdmin(req.headers.authorization.split(' ')[1]);
+    req.params.admin = await AdminDao.getAdmin(
+      req.headers.authorization.split(' ')[1]
+    );
 
     if (req.params.admin) {
       next();
-    }
-
-    else {
-        next(new Error('No admin found for given authorization.'));
+    } else {
+      next(new Error('No admin found for given authorization.'));
     }
   }
 
@@ -103,17 +105,19 @@ export class PermissionsUtil {
     next();
   }
 
-  static async requireSuperUser(req: Request, res: Response, next: NextFunction) {
-    await PermissionsUtil.requireAdmin(req, res, (err) => {
+  static async requireSuperUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    await PermissionsUtil.requireAdmin(req, res, err => {
       if (err) {
         throw err;
       }
 
       if (req.params.admin.superUser) {
         next();
-      }
-
-      else {
+      } else {
         next(new Error('Admin does not have superuser permissions.'));
       }
     });
@@ -130,15 +134,11 @@ export class PermissionsUtil {
     if (team) {
       req.params.team = team;
       next();
-    }
-
-    else {
+    } else {
       await PermissionsUtil.requestAdmin(req, res, () => {
         if (req.params.admin) {
           next();
-        }
-
-        else {
+        } else {
           next(new Error('No authentication.'));
         }
       });
@@ -148,9 +148,7 @@ export class PermissionsUtil {
   static requireDebugMode(req: Request, res: Response, next: NextFunction) {
     if (DEBUG) {
       next();
-    }
-
-    else {
+    } else {
       next(new Error('Debug mode is disabled.'));
     }
   }

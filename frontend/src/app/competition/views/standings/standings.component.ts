@@ -6,14 +6,16 @@ import { SettingsService } from '../../../services/settings.service';
 @Component({
   selector: 'app-standings',
   templateUrl: './standings.component.html',
-  styleUrls: ['./standings.component.scss']
+  styleUrls: ['./standings.component.scss'],
 })
 export class StandingsComponent implements OnInit {
   team: TeamModel;
   link: string;
 
-  constructor(private teamService: TeamService, private settingsService: SettingsService) {
-  }
+  constructor(
+    private teamService: TeamService,
+    private settingsService: SettingsService
+  ) {}
 
   ngOnInit() {
     this.teamService.team.subscribe(team => {

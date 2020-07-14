@@ -13,23 +13,39 @@ import { SubmissionComponent } from '../common/views/submission/submission.compo
 import { SubmissionResolve } from '../resolves/submission.resolve';
 import { NgModule } from '@angular/core';
 import { SubmittingGuard } from '../guards/submitting.guard';
-import {GameComponent} from '../common/views/game/game.component';
+import { GameComponent } from '../common/views/game/game.component';
 
 const routes: Routes = [
   {
-    path: '', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard, IsNotEndGuard], children:
-      [
-        {path: '', component: StandingsComponent},
-        {path: 'problem/:id', component: ProblemComponent, canActivate: [ProblemGuard], resolve: {problem: ProblemResolve, submissions: SubmissionsResolve}},
-        {path: 'submit', component: SubmitComponent, canActivate: [SubmittingGuard], canDeactivate: [SubmittingGuard]},
-        {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}},
-        {path: 'game/:gameType', component: GameComponent},
-      ]
-  }
+    path: '',
+    component: DashboardComponent,
+    canActivate: [SocketGuard, TeamGuard, IsNotEndGuard],
+    children: [
+      { path: '', component: StandingsComponent },
+      {
+        path: 'problem/:id',
+        component: ProblemComponent,
+        canActivate: [ProblemGuard],
+        resolve: { problem: ProblemResolve, submissions: SubmissionsResolve },
+      },
+      {
+        path: 'submit',
+        component: SubmitComponent,
+        canActivate: [SubmittingGuard],
+        canDeactivate: [SubmittingGuard],
+      },
+      {
+        path: 'submission/:id',
+        component: SubmissionComponent,
+        resolve: { submission: SubmissionResolve },
+      },
+      { path: 'game/:gameType', component: GameComponent },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [ RouterModule.forChild(routes) ],
-  exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
 export class CompetitionRoutingModule {}

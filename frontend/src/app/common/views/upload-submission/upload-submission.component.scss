@@ -21,7 +21,8 @@ button:not(:last-child) {
 }
 
 .rubric-table {
-  & .mat-cell:not(:first-of-type), & .mat-header-cell:not(:first-of-type) {
+  & .mat-cell:not(:first-of-type),
+  & .mat-header-cell:not(:first-of-type) {
     justify-content: center;
   }
 }

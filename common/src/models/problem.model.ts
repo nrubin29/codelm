@@ -1,5 +1,5 @@
 import { DivisionModel } from './division.model';
-import {GameType} from "./game.model";
+import { GameType } from './game.model';
 
 export interface ProblemDivision {
   _id?: string;
@@ -19,12 +19,12 @@ export enum TestCaseOutputMode {
   CaseSensitive = 'Case Sensitive',
   CaseInsensitive = 'Case Insensitive',
   Number = 'Number',
-  Boolean = 'Boolean'
+  Boolean = 'Boolean',
 }
 
 export enum ProblemType {
   Graded = 'Graded',
-  OpenEnded = 'OpenEnded'
+  OpenEnded = 'OpenEnded',
 }
 
 export interface ProblemModel {
@@ -40,7 +40,9 @@ export interface GradedProblemModel extends ProblemModel {
   testCases: TestCaseModel[];
 }
 
-export function isGradedProblem(problem: ProblemModel): problem is GradedProblemModel {
+export function isGradedProblem(
+  problem: ProblemModel
+): problem is GradedProblemModel {
   return problem.type === ProblemType.Graded;
 }
 
@@ -49,6 +51,8 @@ export interface OpenEndedProblemModel extends ProblemModel {
   extras?: any;
 }
 
-export function isOpenEndedProblem(problem: ProblemModel): problem is OpenEndedProblemModel {
+export function isOpenEndedProblem(
+  problem: ProblemModel
+): problem is OpenEndedProblemModel {
   return problem.type === ProblemType.OpenEnded;
 }

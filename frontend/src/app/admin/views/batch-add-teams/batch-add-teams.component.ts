@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {DivisionModel} from '../../../../../../common/src/models/division.model';
-import {TeamService} from '../../../services/team.service';
-import {customAlphabet} from 'nanoid';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DivisionModel } from '../../../../../../common/src/models/division.model';
+import { TeamService } from '../../../services/team.service';
+import { customAlphabet } from 'nanoid';
 
 interface TeamCsv {
   timestamp: string;
@@ -20,7 +20,7 @@ interface TeamCsv {
 @Component({
   selector: 'app-batch-add-teams',
   templateUrl: './batch-add-teams.component.html',
-  styleUrls: ['./batch-add-teams.component.scss']
+  styleUrls: ['./batch-add-teams.component.scss'],
 })
 export class BatchAddTeamsComponent implements OnInit {
   divisions: DivisionModel[];
@@ -32,7 +32,10 @@ export class BatchAddTeamsComponent implements OnInit {
 
   @ViewChild('a') a: ElementRef;
 
-  constructor(private activatedRoute: ActivatedRoute, private teamService: TeamService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private teamService: TeamService
+  ) {}
 
   ngOnInit() {
     this.divisions = this.activatedRoute.snapshot.data.divisions;
@@ -45,30 +48,35 @@ export class BatchAddTeamsComponent implements OnInit {
     this.data = rows.map(row => ({
       timestamp: row[headerRow.indexOf('Timestamp')],
       school: row[headerRow.indexOf('School')],
-      name: row[headerRow.indexOf('Student\'s Full Name')],
-      email: row[headerRow.indexOf('Student\'s Email Address')],
-      year: row[headerRow.indexOf('Student\'s year')],
-      division: this.divisions.find(division => division.name === row[headerRow.indexOf('Division')]),
+      name: row[headerRow.indexOf("Student's Full Name")],
+      email: row[headerRow.indexOf("Student's Email Address")],
+      year: row[headerRow.indexOf("Student's year")],
+      division: this.divisions.find(
+        division => division.name === row[headerRow.indexOf('Division')]
+      ),
       divisionName: row[headerRow.indexOf('Division')],
     }));
   }
 
   async upload() {
-    const generator = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 6);
+    const generator = customAlphabet(
+      '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+      6
+    );
     this.errors = [];
     this.successes = [];
     const usernames = new Set<string>();
 
     for (const team of this.data) {
       const name = team.name.trim().split(' ');
-      team.username = (name[0][0] + name[name.length - 1].substring(0, 6)).toLowerCase();
+      team.username = (
+        name[0][0] + name[name.length - 1].substring(0, 6)
+      ).toLowerCase();
       team.password = generator();
 
       if (usernames.has(team.username)) {
         this.errors.push(team);
-      }
-
-      else {
+      } else {
         usernames.add(team.username);
 
         await this.teamService.addOrUpdate({
@@ -87,8 +95,16 @@ export class BatchAddTeamsComponent implements OnInit {
   }
 
   download() {
-    const data = this.successes.map(team => Object.keys(team).filter(key => key !== 'division').map(key => team[key]).join(',')).join('\n');
-    this.a.nativeElement.href = 'data:application/octet-stream,' + encodeURIComponent(data);
+    const data = this.successes
+      .map(team =>
+        Object.keys(team)
+          .filter(key => key !== 'division')
+          .map(key => team[key])
+          .join(',')
+      )
+      .join('\n');
+    this.a.nativeElement.href =
+      'data:application/octet-stream,' + encodeURIComponent(data);
     this.a.nativeElement.click();
   }
 

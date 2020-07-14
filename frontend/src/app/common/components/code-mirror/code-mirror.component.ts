@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import * as CodeMirror from 'codemirror';
 import 'codemirror/mode/python/python';
 import 'codemirror/mode/clike/clike';
@@ -7,7 +15,7 @@ import { EditorFromTextArea } from 'codemirror';
 @Component({
   selector: 'app-code-mirror',
   templateUrl: './code-mirror.component.html',
-  styleUrls: ['./code-mirror.component.scss']
+  styleUrls: ['./code-mirror.component.scss'],
 })
 export class CodeMirrorComponent implements AfterViewInit {
   @ViewChild('host') host: ElementRef;
@@ -18,7 +26,9 @@ export class CodeMirrorComponent implements AfterViewInit {
 
   private _value = '';
 
-  get value() { return this._value; }
+  get value() {
+    return this._value;
+  }
 
   @Input() set value(v) {
     if (v !== this._value) {
@@ -31,7 +41,7 @@ export class CodeMirrorComponent implements AfterViewInit {
       lineNumbers: true,
       lineWrapping: true,
       mode: this.mode,
-      readOnly: this.readOnly
+      readOnly: this.readOnly,
     });
     this.instance.setValue(this._value);
 

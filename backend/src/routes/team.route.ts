@@ -8,21 +8,37 @@ router.get('/', PermissionsUtil.requireTeam, (req: Request, res: Response) => {
   res.json(sanitizeTeam(req.params.team));
 });
 
-router.get('/:id', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
-  res.json(await TeamDao.getTeam(req.params.id));
-});
+router.get(
+  '/:id',
+  PermissionsUtil.requireAdmin,
+  async (req: Request, res: Response) => {
+    res.json(await TeamDao.getTeam(req.params.id));
+  }
+);
 
-router.put('/', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
-  res.json(await TeamDao.addOrUpdateTeam(req.body));
-});
+router.put(
+  '/',
+  PermissionsUtil.requireAdmin,
+  async (req: Request, res: Response) => {
+    res.json(await TeamDao.addOrUpdateTeam(req.body));
+  }
+);
 
-router.delete('/:id', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
-  await TeamDao.deleteTeam(req.params.id);
-  res.json(true);
-});
+router.delete(
+  '/:id',
+  PermissionsUtil.requireAdmin,
+  async (req: Request, res: Response) => {
+    await TeamDao.deleteTeam(req.params.id);
+    res.json(true);
+  }
+);
 
-router.get('/division/:id', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
-  res.json(await TeamDao.getTeamsForDivision(req.params.id));
-});
+router.get(
+  '/division/:id',
+  PermissionsUtil.requireAdmin,
+  async (req: Request, res: Response) => {
+    res.json(await TeamDao.getTeamsForDivision(req.params.id));
+  }
+);
 
-export default router
+export default router;

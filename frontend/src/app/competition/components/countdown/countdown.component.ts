@@ -8,7 +8,7 @@ import { SettingsModel } from '../../../../../../common/src/models/settings.mode
 @Component({
   selector: 'app-countdown',
   templateUrl: './countdown.component.html',
-  styleUrls: ['./countdown.component.scss']
+  styleUrls: ['./countdown.component.scss'],
 })
 export class CountdownComponent implements OnInit {
   private settings: SettingsModel;
@@ -17,7 +17,10 @@ export class CountdownComponent implements OnInit {
   end: Moment;
   countdown: string;
 
-  constructor(private socketService: SocketService, private settingsService: SettingsService) { }
+  constructor(
+    private socketService: SocketService,
+    private settingsService: SettingsService
+  ) {}
 
   ngOnInit() {
     this.socketService.on('updateSettings', () => {
@@ -38,7 +41,9 @@ export class CountdownComponent implements OnInit {
       clearInterval(this.interval);
     }
 
-    const schedule = this.settings.schedule.filter(schedule => moment().isBefore(moment(schedule.when))).sort(schedule => moment(schedule.when).unix());
+    const schedule = this.settings.schedule
+      .filter(schedule => moment().isBefore(moment(schedule.when)))
+      .sort(schedule => moment(schedule.when).unix());
 
     const tick = () => {
       if (!this.end) {
@@ -48,14 +53,12 @@ export class CountdownComponent implements OnInit {
       if (moment().isAfter(this.end)) {
         clearInterval(this.interval);
         this.countdown = '00:00:00';
-      }
-
-      else {
+      } else {
         // TODO: Only display days if > 1 day remains.
         const diff = moment.duration(this.end.diff(moment()));
-        this.countdown = [
-          diff.hours(), diff.minutes(), diff.seconds()
-        ].map(x => this.pad(x)).join(':');
+        this.countdown = [diff.hours(), diff.minutes(), diff.seconds()]
+          .map(x => this.pad(x))
+          .join(':');
       }
     };
 

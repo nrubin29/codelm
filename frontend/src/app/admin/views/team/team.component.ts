@@ -10,23 +10,29 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-team',
   templateUrl: './team.component.html',
-  styleUrls: ['./team.component.scss']
+  styleUrls: ['./team.component.scss'],
 })
 export class TeamComponent implements OnInit {
   team: TeamModel;
   problems: ProblemModel[] = [];
-  problemSubmissions: {[problemId: string]: SubmissionModel[]} = {};
+  problemSubmissions: { [problemId: string]: SubmissionModel[] } = {};
 
   // TODO: Change/reset password
 
-  constructor(private teamService: TeamService, private problemService: ProblemService, private activatedRoute: ActivatedRoute) { }
+  constructor(
+    private teamService: TeamService,
+    private problemService: ProblemService,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       [this.team, this.problems] = data['team'];
       const submissions = data['submissions'];
       for (let problem of this.problems) {
-        this.problemSubmissions[problem._id] = submissions.filter(submission => submission.problem._id === problem._id);
+        this.problemSubmissions[problem._id] = submissions.filter(
+          submission => submission.problem._id === problem._id
+        );
       }
     });
   }

@@ -1,8 +1,14 @@
 <mat-toolbar color="primary">
-    <mat-toolbar-row>
-        <span>Settings</span>
-    </mat-toolbar-row>
+  <mat-toolbar-row>
+    <span>Settings</span>
+  </mat-toolbar-row>
 </mat-toolbar>
 <div class="container">
-  <app-edit-entity *ngIf="settings" [entity]="settings" [entityService]="settingsService" [isModal]="false" (action)="action($event)"></app-edit-entity>
+  <app-edit-entity
+    *ngIf="settings"
+    [entity]="settings"
+    [entityService]="settingsService"
+    [isModal]="false"
+    (action)="action($event)"
+  ></app-edit-entity>
 </div>

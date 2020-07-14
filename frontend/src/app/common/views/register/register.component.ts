@@ -8,20 +8,24 @@ import { DivisionModel } from '../../../../../../common/src/models/division.mode
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   divisions: DivisionModel[];
   formGroup: FormGroup;
 
-  constructor(private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.formGroup = new FormGroup({
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
       members: new FormControl('', Validators.required),
-      division: new FormControl(undefined, Validators.required)
+      division: new FormControl(undefined, Validators.required),
     });
 
     this.activatedRoute.data.subscribe(data => {
@@ -35,13 +39,16 @@ export class RegisterComponent implements OnInit {
       alert('Please enter a username and password');
     }
 
-    this.authService.register(form.value).then((response: LoginResponse) => {
-      if (response === LoginResponse.SuccessTeam) {
-        this.router.navigate(['dashboard']);
-      }
-    }).catch((response: LoginResponse | Error) => {
-      alert(response);
-    });
+    this.authService
+      .register(form.value)
+      .then((response: LoginResponse) => {
+        if (response === LoginResponse.SuccessTeam) {
+          this.router.navigate(['dashboard']);
+        }
+      })
+      .catch((response: LoginResponse | Error) => {
+        alert(response);
+      });
   }
 
   login() {

@@ -4,23 +4,27 @@ import { CodeMirrorComponent } from '../../components/code-mirror/code-mirror.co
 import { SubmissionService } from '../../../services/submission.service';
 import { CodeSaverService } from '../../../services/code-saver.service';
 import { SubmissionComponent } from '../submission/submission.component';
-import {SubmissionUtil} from "../../../../../../common/src/utils/submission.util";
+import { SubmissionUtil } from '../../../../../../common/src/utils/submission.util';
 
 @Component({
   selector: 'app-graded-submission',
   templateUrl: './graded-submission.component.html',
-  styleUrls: ['./graded-submission.component.scss']
+  styleUrls: ['./graded-submission.component.scss'],
 })
 export class GradedSubmissionComponent implements OnInit {
   @Input() submission: GradedSubmissionModel;
 
   mode: string;
-  @ViewChild(CodeMirrorComponent, {static: true}) codeMirror: CodeMirrorComponent;
+  @ViewChild(CodeMirrorComponent, { static: true })
+  codeMirror: CodeMirrorComponent;
 
   disputeMessage: string;
 
-  constructor(private submissionComponent: SubmissionComponent, private submissionService: SubmissionService, private codeSaverService: CodeSaverService) {
-  }
+  constructor(
+    private submissionComponent: SubmissionComponent,
+    private submissionService: SubmissionService,
+    private codeSaverService: CodeSaverService
+  ) {}
 
   ngOnInit() {
     this.mode = this.codeSaverService.getMode(this.submission.language);
@@ -32,16 +36,22 @@ export class GradedSubmissionComponent implements OnInit {
   }
 
   get submissionError() {
-    const error = this.submission.compilationError ?? this.submission.testCases.find(testCase => testCase.error !== undefined).error;
+    const error =
+      this.submission.compilationError ??
+      this.submission.testCases.find(testCase => testCase.error !== undefined)
+        .error;
     return error.replace(/\n/g, '<br />');
   }
 
   overrideCorrect() {
-    const submission = {...this.submission} as GradedSubmissionModel;
+    const submission = { ...this.submission } as GradedSubmissionModel;
     submission.overrideCorrect = !submission.overrideCorrect;
-    this.submissionService.updateSubmission(submission).then(s => {
-      this.submission = <GradedSubmissionModel>s;
-    }).catch(alert);
+    this.submissionService
+      .updateSubmission(submission)
+      .then(s => {
+        this.submission = <GradedSubmissionModel>s;
+      })
+      .catch(alert);
   }
 
   sendDispute() {
@@ -49,24 +59,30 @@ export class GradedSubmissionComponent implements OnInit {
       alert('Please provide a message explaining your dispute.');
     }
 
-    const submission = {...this.submission} as GradedSubmissionModel;
+    const submission = { ...this.submission } as GradedSubmissionModel;
     submission.dispute = {
       open: true,
-      message: this.disputeMessage
+      message: this.disputeMessage,
     };
 
-    this.submissionService.updateSubmission(submission).then(s => {
-      this.submission = <GradedSubmissionModel>s;
-    }).catch(alert);
+    this.submissionService
+      .updateSubmission(submission)
+      .then(s => {
+        this.submission = <GradedSubmissionModel>s;
+      })
+      .catch(alert);
   }
 
   resolveDispute() {
-    const submission = {...this.submission} as GradedSubmissionModel;
+    const submission = { ...this.submission } as GradedSubmissionModel;
     submission.dispute.open = false;
 
-    this.submissionService.updateSubmission(submission).then(s => {
-      this.submission = <GradedSubmissionModel>s;
-    }).catch(alert);
+    this.submissionService
+      .updateSubmission(submission)
+      .then(s => {
+        this.submission = <GradedSubmissionModel>s;
+      })
+      .catch(alert);
   }
 
   delete() {

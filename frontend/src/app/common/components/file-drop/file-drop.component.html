@@ -1,6 +1,7 @@
 <mat-icon>insert_drive_file</mat-icon>
-<p *ngIf="file; else: noFile">{{file.name}}</p>
+<p *ngIf="file; else noFile">{{ file.name }}</p>
 <ng-template #noFile>
-  <p>Drag a file here</p> <!-- or click to select -->
+  <p>Drag a file here</p>
+  <!-- or click to select -->
 </ng-template>
 <!--<input type="file" #input [accept]="accept" (change)="onManual($event.target.files)" hidden>-->

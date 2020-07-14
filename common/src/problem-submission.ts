@@ -1,5 +1,5 @@
-import {ProblemType, TestCaseModel} from './models/problem.model';
-import {GameType} from "./models/game.model";
+import { ProblemType, TestCaseModel } from './models/problem.model';
+import { GameType } from './models/game.model';
 
 export interface ClientReplayRequest {
   _id: string;

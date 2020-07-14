@@ -1,6 +1,6 @@
-import {TestCaseSubmissionModel} from "../models/submission.model";
-import {ServerProblemSubmission} from "../problem-submission";
-import {TestCaseModel} from "../models/problem.model";
+import { TestCaseSubmissionModel } from '../models/submission.model';
+import { ServerProblemSubmission } from '../problem-submission';
+import { TestCaseModel } from '../models/problem.model';
 
 export interface ServerProblemSubmissionPacket {
   name: 'serverProblemSubmission';
@@ -49,5 +49,12 @@ export interface DockerKilledPacket {
   reason: DockerKilledReason;
 }
 
-export type CodeRunnerPacket = ServerProblemSubmissionPacket | CompilationResultPacket | RunTestCasePacket |
-    RunTestCaseResultPacket | RunGamePacket | GameOutputPacket | GameTurnPacket | DockerKilledPacket;
+export type CodeRunnerPacket =
+  | ServerProblemSubmissionPacket
+  | CompilationResultPacket
+  | RunTestCasePacket
+  | RunTestCaseResultPacket
+  | RunGamePacket
+  | GameOutputPacket
+  | GameTurnPacket
+  | DockerKilledPacket;

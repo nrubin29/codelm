@@ -1,23 +1,22 @@
 import { execFile, spawn } from 'child_process';
 import { TestCaseModel } from '../../common/src/models/problem.model';
 import { TestCaseSubmissionModel } from '../../common/src/models/submission.model';
-import {Language, languages} from "./language";
-import {CodeFile, FOLDER} from "./codefile";
-import * as fs from "fs-extra";
+import { Language, languages } from './language';
+import { CodeFile, FOLDER } from './codefile';
+import * as fs from 'fs-extra';
 import {
-  CompilationResultPacket, GameOutputPacket,
+  CompilationResultPacket,
+  GameOutputPacket,
   RunGamePacket,
   RunTestCasePacket,
-  ServerProblemSubmissionPacket
+  ServerProblemSubmissionPacket,
 } from '../../common/src/packets/coderunner.packet';
-import {StdioPacketManager} from "../../common/src/packet.manager";
+import { StdioPacketManager } from '../../common/src/packet.manager';
 
 process.on('uncaughtException', (e: Error) => {
   if (!e) {
     console.error('uncaughtException:thisisbad: ' + JSON.stringify(e));
-  }
-
-  else {
+  } else {
     process.stdout.write(JSON.stringify(e) + '\n');
     process.exit(1);
   }
@@ -26,9 +25,7 @@ process.on('uncaughtException', (e: Error) => {
 process.on('unhandledRejection', (reason: object, p: Promise<any>) => {
   if (!reason) {
     console.error('unhandledRejection:thisisbad: ' + JSON.stringify(reason));
-  }
-
-  else {
+  } else {
     process.stdout.write(JSON.stringify(reason) + '\n');
     process.exit(1);
   }
@@ -48,41 +45,59 @@ export class CodeRunner extends StdioPacketManager {
   constructor() {
     super(process.stdin, process.stdout);
 
-    this.once<ServerProblemSubmissionPacket>('serverProblemSubmission', async packet => {
-      const submission = packet.serverProblemSubmission;
-      this.language = languages[submission.language];
-      this.files = [
-        new CodeFile(
-          submission.problemTitle.replace(/[ \W]/g, '') + '.' + this.language.extension,
+    this.once<ServerProblemSubmissionPacket>(
+      'serverProblemSubmission',
+      async packet => {
+        const submission = packet.serverProblemSubmission;
+        this.language = languages[submission.language];
+        this.files = [
+          new CodeFile(
+            submission.problemTitle.replace(/[ \W]/g, '') +
+              '.' +
+              this.language.extension,
             submission.code
-        ),
-        ...(this.language.files ?? [])
-      ];
+          ),
+          ...(this.language.files ?? []),
+        ];
 
-      await this.setup();
-      this.emit(await this.compile());
-    });
+        await this.setup();
+        this.emit(await this.compile());
+      }
+    );
 
     this.on<RunTestCasePacket>('runTestCase', async packet => {
-      this.emit({name: 'runTestCaseResult', testCase: await this.runTestCase(packet.testCase)});
+      this.emit({
+        name: 'runTestCaseResult',
+        testCase: await this.runTestCase(packet.testCase),
+      });
     });
 
     this.once<RunGamePacket>('runGame', async () => {
       await this.runGame();
-    })
+    });
   }
 
-  private runProcessSync(cmd: string, args: string[], input?: string): Promise<ProcessRunResult> {
+  private runProcessSync(
+    cmd: string,
+    args: string[],
+    input?: string
+  ): Promise<ProcessRunResult> {
     return new Promise<ProcessRunResult>((resolve, reject) => {
-      const process = execFile(cmd, args, { cwd: FOLDER, timeout: TIMEOUT }, (err: Error & {signal: string}, stdout, stderr) => {
-        if (err && err.signal === 'SIGTERM') {
-          reject({error: 'Timed out'});
+      const process = execFile(
+        cmd,
+        args,
+        { cwd: FOLDER, timeout: TIMEOUT },
+        (err: Error & { signal: string }, stdout, stderr) => {
+          if (err && err.signal === 'SIGTERM') {
+            reject({ error: 'Timed out' });
+          } else {
+            resolve({
+              output: stdout.replace(/^\s+|\s+$/g, ''),
+              error: stderr.replace(/^\s+|\s+$/g, ''),
+            });
+          }
         }
-
-        else {
-          resolve({output: stdout.replace(/^\s+|\s+$/g, ''), error: stderr.replace(/^\s+|\s+$/g, '')});
-        }
-      });
+      );
 
       if (input) {
         process.stdin.write(input + '\n');
@@ -91,17 +106,20 @@ export class CodeRunner extends StdioPacketManager {
     });
   }
 
-  protected runProcessAsync(cmd: string, args: ReadonlyArray<string>): Promise<void> {
+  protected runProcessAsync(
+    cmd: string,
+    args: ReadonlyArray<string>
+  ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // TODO: If no output, event never triggers.
-      const proc = spawn(cmd, args, {cwd: FOLDER});
+      const proc = spawn(cmd, args, { cwd: FOLDER });
 
       const timeout = setTimeout(() => {
         // process.kill(-proc.pid, 'SIGKILL');
         proc.kill();
         proc.stdout.removeAllListeners('data');
         proc.stderr.removeAllListeners('data');
-        reject({error: 'Timed out'});
+        reject({ error: 'Timed out' });
       }, TIMEOUT);
 
       this.on<GameOutputPacket>('gameOutput', packet => {
@@ -119,7 +137,7 @@ export class CodeRunner extends StdioPacketManager {
         }
 
         if (guess) {
-          this.emit({name: 'gameOutput', output: guess});
+          this.emit({ name: 'gameOutput', output: guess });
         }
       });
 
@@ -130,7 +148,7 @@ export class CodeRunner extends StdioPacketManager {
         proc.kill();
         proc.stdout.removeAllListeners('data');
         proc.stderr.removeAllListeners('data');
-        reject({error: data.toString()});
+        reject({ error: data.toString() });
       });
 
       // proc.on('exit', () => {
@@ -141,20 +159,29 @@ export class CodeRunner extends StdioPacketManager {
 
   protected async compile(): Promise<CompilationResultPacket> {
     const compileCmd = this.language.compile(this.files.map(file => file.name));
-    const {error} = await this.runProcessSync(compileCmd[0], compileCmd.slice(1));
-    return {name: 'compilationResult', success: !error, error: error};
+    const { error } = await this.runProcessSync(
+      compileCmd[0],
+      compileCmd.slice(1)
+    );
+    return { name: 'compilationResult', success: !error, error: error };
   }
 
-  protected async runTestCase(testCase: TestCaseModel): Promise<TestCaseSubmissionModel> {
+  protected async runTestCase(
+    testCase: TestCaseModel
+  ): Promise<TestCaseSubmissionModel> {
     const runCmd = this.language.run(this.files.map(file => file.name));
-    const {output, error} = await this.runProcessSync(runCmd[0], runCmd.slice(1), testCase.input);
+    const { output, error } = await this.runProcessSync(
+      runCmd[0],
+      runCmd.slice(1),
+      testCase.input
+    );
 
     return {
       hidden: testCase.hidden,
       input: testCase.input,
       output,
       correctOutput: testCase.output,
-      error: error || undefined // If there's no error, error='', so we don't want it in our TestCaseSubmissionModel.
+      error: error || undefined, // If there's no error, error='', so we don't want it in our TestCaseSubmissionModel.
     };
   }
 
@@ -165,7 +192,7 @@ export class CodeRunner extends StdioPacketManager {
 
   async runGame(): Promise<void> {
     const runCmd = this.language.run(this.files.map(file => file.name));
-    await this.runProcessAsync(runCmd[0], runCmd.slice(1),);
+    await this.runProcessAsync(runCmd[0], runCmd.slice(1));
   }
 }
 

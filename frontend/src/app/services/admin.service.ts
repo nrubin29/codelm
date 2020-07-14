@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { BehaviorSubject } from 'rxjs';
 import { AdminModel } from '../../../../common/src/models/admin.model';
-import {SingleEntityService} from "./entity.service";
+import { SingleEntityService } from './entity.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminService extends SingleEntityService<AdminModel> {
   private endpoint = 'admins';
@@ -15,16 +15,16 @@ export class AdminService extends SingleEntityService<AdminModel> {
     super({
       entityName: 'admin',
       columns: [
-        {name: 'username', isEditColumn: true},
-        {name: 'name'},
-        {name: 'superUser', display: 'boolean'}
+        { name: 'username', isEditColumn: true },
+        { name: 'name' },
+        { name: 'superUser', display: 'boolean' },
       ],
       attributes: [
-        {name: '_id', readonly: true, optional: true},
-        {name: 'username'},
-        {name: 'password', type: 'password', optional: true},
-        {name: 'name'},
-        {name: 'superUser', type: 'boolean', optional: true},
+        { name: '_id', readonly: true, optional: true },
+        { name: 'username' },
+        { name: 'password', type: 'password', optional: true },
+        { name: 'name' },
+        { name: 'superUser', type: 'boolean', optional: true },
       ],
       editable: true,
     });

@@ -8,14 +8,14 @@ import { SocketService } from '../../../services/socket.service';
 import { SubmissionUtil } from '../../../../../../common/src/utils/submission.util';
 import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
-import {StateSwitchPacket} from "../../../../../../common/src/packets/server.packet";
-import {SettingsState} from "../../../../../../common/src/models/settings.model";
-import {Router} from "@angular/router";
+import { StateSwitchPacket } from '../../../../../../common/src/packets/server.packet';
+import { SettingsState } from '../../../../../../common/src/models/settings.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   team: TeamModel;
@@ -24,7 +24,13 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild(MatSidenav) private sideNav: MatSidenav;
 
-  constructor(private problemService: ProblemService, private teamService: TeamService, private submissionService: SubmissionService, private socketService: SocketService, private router: Router) { }
+  constructor(
+    private problemService: ProblemService,
+    private teamService: TeamService,
+    private submissionService: SubmissionService,
+    private socketService: SocketService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.socketService.on('updateTeam', () => this.teamService.refreshTeam());
@@ -35,9 +41,11 @@ export class DashboardComponent implements OnInit {
       this.submissionService.getSubmissions().then(submissions => {
         this.submissions = submissions;
 
-        this.problemService.getProblems(this.team.division._id).then(problems => {
-          this.problems = problems;
-        });
+        this.problemService
+          .getProblems(this.team.division._id)
+          .then(problems => {
+            this.problems = problems;
+          });
       });
     });
 

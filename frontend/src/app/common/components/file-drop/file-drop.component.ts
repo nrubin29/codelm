@@ -1,9 +1,16 @@
-import {Component, EventEmitter, HostBinding, HostListener, Input, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 
 @Component({
   selector: 'app-file-drop',
   templateUrl: './file-drop.component.html',
-  styleUrls: ['./file-drop.component.scss']
+  styleUrls: ['./file-drop.component.scss'],
 })
 export class FileDropComponent {
   @Input() accept: string;
@@ -44,9 +51,7 @@ export class FileDropComponent {
 
       if (file.type !== this.accept) {
         this.background = '#ff0000';
-      }
-
-      else {
+      } else {
         this.file = file;
         this.background = '#00ff00';
 
@@ -66,5 +71,4 @@ export class FileDropComponent {
   //     this.fileDropped.emit(files.item(0));
   //   }
   // }
-
 }

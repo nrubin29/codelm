@@ -1,6 +1,6 @@
-import {Component, forwardRef, Input, OnInit} from '@angular/core';
-import {Attribute, Option} from "../../../services/entity.service";
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Attribute, Option } from '../../../services/entity.service';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-dynamic-form-field',
@@ -10,9 +10,9 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DynamicFormFieldComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   @Input() attribute: Attribute;
@@ -34,15 +34,18 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
     this.onTouched();
   }
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     if (this.attribute.options) {
       if (Array.isArray(this.attribute.options)) {
-        this.options = Promise.resolve(this.attribute.options.map(option => ({name: option, value: option})));
-      }
-
-      else {
+        this.options = Promise.resolve(
+          this.attribute.options.map(option => ({
+            name: option,
+            value: option,
+          }))
+        );
+      } else {
         this.options = this.attribute.options();
       }
     }
@@ -65,5 +68,4 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
       this.value = value;
     }
   }
-
 }

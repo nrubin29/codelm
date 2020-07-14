@@ -1,4 +1,4 @@
-import {Type} from "@angular/core";
+import { Type } from '@angular/core';
 
 export interface Entity {
   _id?: string;
@@ -16,7 +16,14 @@ export interface Attribute {
    * The type of the attribute. This determines what control is used in the edit form. By default, we treat the input
    * like a string and display a basic <input>.
    */
-  type?: 'wysiwyg' | 'multiline' | 'password' | 'file' | 'boolean' | 'select' | 'table';
+  type?:
+    | 'wysiwyg'
+    | 'multiline'
+    | 'password'
+    | 'file'
+    | 'boolean'
+    | 'select'
+    | 'table';
 
   optional?: boolean;
   readonly?: boolean;
@@ -55,7 +62,7 @@ export interface Column {
   /**
    * If display=button, this is the icon used as the button.
    */
-  icon?: string;  // For display=button
+  icon?: string; // For display=button
 
   /**
    * If display=button, this function is called when a button is clicked.
@@ -98,7 +105,8 @@ export abstract class EntityService<T> {
 
   abstract getName(entity: Partial<T>);
 
-  addOrUpdate(entity: T): Promise<any> { // TODO: Should this be void?
+  addOrUpdate(entity: T): Promise<any> {
+    // TODO: Should this be void?
     return Promise.resolve();
   }
 
@@ -107,7 +115,8 @@ export abstract class EntityService<T> {
   }
 }
 
-export interface ListEntityServiceConfiguration extends EntityServiceConfiguration {
+export interface ListEntityServiceConfiguration
+  extends EntityServiceConfiguration {
   /**
    * The columns that should be displayed in the table of entities.
    */
@@ -148,14 +157,20 @@ export abstract class ListEntityService<T, P> extends EntityService<T> {
 /**
  * Represents entities that are not grouped (like admins)
  */
-export abstract class SingleEntityService<T> extends ListEntityService<T, never> {
+export abstract class SingleEntityService<T> extends ListEntityService<
+  T,
+  never
+> {
   abstract getAll(): Promise<T[]>;
 }
 
 /**
  * Represents entities that are grouped (like problems, grouped by division)
  */
-export abstract class GroupedEntityService<T, P> extends ListEntityService<T, P> {
+export abstract class GroupedEntityService<T, P> extends ListEntityService<
+  T,
+  P
+> {
   abstract getParents(): Promise<P[]>;
   abstract getChildren(parent: P): Promise<T[]>;
   abstract getGroupLabel(parent: P): string;

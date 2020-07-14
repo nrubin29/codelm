@@ -15,14 +15,14 @@ import { EndComponent } from './common/views/end/end.component';
     LoginComponent,
     DisconnectedComponent,
     RegisterComponent,
-    EndComponent
+    EndComponent,
   ],
   imports: [
     SharedModule,
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

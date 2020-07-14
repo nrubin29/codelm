@@ -1,38 +1,64 @@
 <mat-toolbar color="primary" *ngIf="type === 'single'">
   <mat-toolbar-row>
-    <span>{{entityName | title | pluralize}}</span>
+    <span>{{ entityName | title | pluralize }}</span>
     <ng-container *ngIf="editable">
       <span class="spacer"></span>
-      <button mat-raised-button color="accent" (click)="openEditComponent(null)"><mat-icon>add</mat-icon></button>
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="openEditComponent(null)"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
     </ng-container>
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="container">
-  <mat-table [dataSource]="entities" *ngIf="entities; else: loading">
+  <mat-table [dataSource]="entities" *ngIf="entities; else loading">
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.name">
-      <mat-header-cell *matHeaderCellDef>{{column.name | title}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{
+        column.name | title
+      }}</mat-header-cell>
       <mat-cell *matCellDef="let element">
         <ng-container [ngSwitch]="column.display">
           <ng-container *ngSwitchCase="'boolean'">
-            <mat-checkbox color="accent" [checked]="getData(column, element)" disabled=""></mat-checkbox>
+            <mat-checkbox
+              color="accent"
+              [checked]="getData(column, element)"
+              disabled=""
+            ></mat-checkbox>
           </ng-container>
           <ng-container *ngSwitchCase="'button'">
-            <button mat-icon-button (click)="column.action(element)"><mat-icon>{{column.icon}}</mat-icon></button>
+            <button mat-icon-button (click)="column.action(element)">
+              <mat-icon>{{ column.icon }}</mat-icon>
+            </button>
           </ng-container>
           <ng-container *ngSwitchCase="'custom'">
             <!-- TODO: Dynamically instantiate custom components if we need more than one type -->
-            <app-leaderboard-cell [element]="element" [problem]="column.value"></app-leaderboard-cell>
+            <app-leaderboard-cell
+              [element]="element"
+              [problem]="column.value"
+            ></app-leaderboard-cell>
           </ng-container>
           <ng-container *ngSwitchDefault>
-            <a *ngIf="column.link" [routerLink]="column.link(element)">{{getData(column, element)}}</a>
-            <a *ngIf="column.isEditColumn" (click)="openEditComponent(element)" href="javascript:void(0)">{{getData(column, element)}}</a>
-            <ng-container *ngIf="!column.link && !column.isEditColumn">{{getData(column, element)}}</ng-container>
+            <a *ngIf="column.link" [routerLink]="column.link(element)">{{
+              getData(column, element)
+            }}</a>
+            <a
+              *ngIf="column.isEditColumn"
+              (click)="openEditComponent(element)"
+              href="javascript:void(0)"
+              >{{ getData(column, element) }}</a
+            >
+            <ng-container *ngIf="!column.link && !column.isEditColumn">{{
+              getData(column, element)
+            }}</ng-container>
           </ng-container>
         </ng-container>
       </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="columnNames"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: columnNames;"></mat-row>
+    <mat-row *matRowDef="let row; columns: columnNames"></mat-row>
   </mat-table>
   <ng-template #loading>
     <p>Loading...</p>

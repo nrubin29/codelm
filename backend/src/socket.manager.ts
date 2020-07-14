@@ -1,29 +1,48 @@
-import {isClientPacket, LoginPacket, RegisterPacket, ReplayPacket, SubmissionPacket} from '../../common/src/packets/client.packet';
-import {sanitizeTeam, TeamDao} from './daos/team.dao';
-import {AdminDao} from './daos/admin.dao';
-import {Packet} from '../../common/src/packets/packet';
-import {PermissionsUtil} from './permissions.util';
-import {LoginResponse, SubmissionStatus} from '../../common/src/packets/server.packet';
-import {VERSION} from '../../common/version';
-import {ServerProblemSubmission} from '../../common/src/problem-submission';
-import {ProblemDao} from './daos/problem.dao';
-import {isGradedProblem, isOpenEndedProblem, OpenEndedProblemModel, ProblemType} from '../../common/src/models/problem.model';
-import {isFalse, isTestCaseSubmissionCorrect, SubmissionDao, submissionResult} from './daos/submission.dao';
+import {
+  isClientPacket,
+  LoginPacket,
+  RegisterPacket,
+  ReplayPacket,
+  SubmissionPacket,
+} from '../../common/src/packets/client.packet';
+import { sanitizeTeam, TeamDao } from './daos/team.dao';
+import { AdminDao } from './daos/admin.dao';
+import { Packet } from '../../common/src/packets/packet';
+import { PermissionsUtil } from './permissions.util';
+import {
+  LoginResponse,
+  SubmissionStatus,
+} from '../../common/src/packets/server.packet';
+import { VERSION } from '../../common/version';
+import { ServerProblemSubmission } from '../../common/src/problem-submission';
+import { ProblemDao } from './daos/problem.dao';
+import {
+  isGradedProblem,
+  isOpenEndedProblem,
+  OpenEndedProblemModel,
+  ProblemType,
+} from '../../common/src/models/problem.model';
+import {
+  isFalse,
+  isTestCaseSubmissionCorrect,
+  SubmissionDao,
+  submissionResult,
+} from './daos/submission.dao';
 import {
   GradedSubmissionModel,
   isGradedSubmission,
   SubmissionModel,
-  TestCaseSubmissionModel
+  TestCaseSubmissionModel,
 } from '../../common/src/models/submission.model';
 import * as WebSocket from 'ws';
-import {Express} from 'express';
-import {WithWebsocketMethod} from 'express-ws';
-import {CodeRunnerConnection} from './coderunner.connection';
-import {GameType} from '../../common/src/models/game.model';
-import {Timesweeper} from './games/timesweeper';
-import {HighLow} from './games/high-low';
-import {CodeRunnerPacket} from '../../common/src/packets/coderunner.packet';
-import {Observable} from 'rxjs';
+import { Express } from 'express';
+import { WithWebsocketMethod } from 'express-ws';
+import { CodeRunnerConnection } from './coderunner.connection';
+import { GameType } from '../../common/src/models/game.model';
+import { Timesweeper } from './games/timesweeper';
+import { HighLow } from './games/high-low';
+import { CodeRunnerPacket } from '../../common/src/packets/coderunner.packet';
+import { Observable } from 'rxjs';
 
 export class SocketManager {
   private static _instance: SocketManager;
@@ -49,16 +68,14 @@ export class SocketManager {
 
   public emit(teamId: string, packet: Packet) {
     if (this.teamSockets.has(teamId)) {
-      this.emitToSocket(packet, this.teamSockets.get(teamId))
+      this.emitToSocket(packet, this.teamSockets.get(teamId));
     }
   }
 
   public emitToSocket(packet: Packet, socket: WebSocket) {
     if (socket.readyState !== WebSocket.OPEN) {
       console.error('Bad socket');
-    }
-
-    else {
+    } else {
       socket.send(JSON.stringify(packet));
     }
   }
@@ -94,9 +111,7 @@ export class SocketManager {
       this.teamSockets.forEach((socket, id) => {
         if (socket.readyState === WebSocket.OPEN) {
           socket.ping();
-        }
-
-        else {
+        } else {
           // TODO: Maybe collect all of the ids to be deleted and then delete them afterwards.
           this.teamSockets.delete(id);
         }
@@ -105,38 +120,54 @@ export class SocketManager {
       this.adminSockets.forEach((socket, id) => {
         if (socket.readyState === WebSocket.OPEN) {
           socket.ping();
-        }
-
-        else {
+        } else {
           this.adminSockets.delete(id);
         }
       });
     }, 15 * 1000);
 
-    (app as any as WithWebsocketMethod).ws('/', socket => {
+    ((app as any) as WithWebsocketMethod).ws('/', socket => {
       let _id: string;
 
-      socket.onmessage = (data) => {
+      socket.onmessage = data => {
         const packet = JSON.parse(<string>data.data);
 
         if (isClientPacket(packet) && packet.version !== VERSION) {
-          this.emitToSocket({name: 'loginResponse', response: LoginResponse.OutdatedClient}, socket);
+          this.emitToSocket(
+            { name: 'loginResponse', response: LoginResponse.OutdatedClient },
+            socket
+          );
           socket.close();
-        }
-
-        else {
+        } else {
           socket.listeners(packet.name).map(listener => listener(packet));
         }
       };
 
-      socket.on('login', packet => this.onLoginPacket(packet as LoginPacket, socket).then(__id => _id = __id));
-      socket.on('register', packet => this.onRegisterPacket(packet as RegisterPacket, socket).then(__id => _id = __id));
-      socket.on('submission', packet => this.onSubmissionPacket(packet as SubmissionPacket, socket));
-      socket.on('replay', packet => this.onReplayPacket(packet as ReplayPacket, socket));
+      socket.on('login', packet =>
+        this.onLoginPacket(packet as LoginPacket, socket).then(
+          __id => (_id = __id)
+        )
+      );
+      socket.on('register', packet =>
+        this.onRegisterPacket(packet as RegisterPacket, socket).then(
+          __id => (_id = __id)
+        )
+      );
+      socket.on('submission', packet =>
+        this.onSubmissionPacket(packet as SubmissionPacket, socket)
+      );
+      socket.on('replay', packet =>
+        this.onReplayPacket(packet as ReplayPacket, socket)
+      );
 
       socket.onclose = event => {
         if (!event.wasClean) {
-          console.error('Socket closed not clean', _id, event.code, event.reason);
+          console.error(
+            'Socket closed not clean',
+            _id,
+            event.code,
+            event.reason
+          );
         }
 
         if (_id) {
@@ -149,72 +180,110 @@ export class SocketManager {
 
   onLoginPacket(loginPacket: LoginPacket, socket: WebSocket): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      TeamDao.login(loginPacket.username, loginPacket.password).then(team => {
-        if (this.teamSockets.has(team._id.toString())) {
-          this.emitToSocket({name: 'loginResponse', response: LoginResponse.AlreadyConnected}, socket);
-          socket.close();
-          reject();
-        }
+      TeamDao.login(loginPacket.username, loginPacket.password)
+        .then(team => {
+          if (this.teamSockets.has(team._id.toString())) {
+            this.emitToSocket(
+              {
+                name: 'loginResponse',
+                response: LoginResponse.AlreadyConnected,
+              },
+              socket
+            );
+            socket.close();
+            reject();
+          } else {
+            PermissionsUtil.hasAccess(team).then(access => {
+              const response = access
+                ? LoginResponse.SuccessTeam
+                : LoginResponse.Closed;
+              this.emitToSocket(
+                {
+                  name: 'loginResponse',
+                  response,
+                  team:
+                    response === LoginResponse.SuccessTeam
+                      ? sanitizeTeam(team)
+                      : undefined,
+                },
+                socket
+              );
 
-        else {
-          PermissionsUtil.hasAccess(team).then(access => {
-            const response = access ? LoginResponse.SuccessTeam : LoginResponse.Closed;
-            this.emitToSocket({name: 'loginResponse', response, team: response === LoginResponse.SuccessTeam ? sanitizeTeam(team) : undefined}, socket);
+              if (response === LoginResponse.SuccessTeam) {
+                this.teamSockets.set(team._id.toString(), socket);
+                resolve(team._id.toString());
+              } else {
+                socket.close();
+                reject();
+              }
+            });
+          }
+        })
+        .catch((response: LoginResponse | Error) => {
+          if (response === LoginResponse.NotFound) {
+            AdminDao.login(loginPacket.username, loginPacket.password)
+              .then(admin => {
+                if (this.adminSockets.has(admin._id.toString())) {
+                  this.emitToSocket(
+                    {
+                      name: 'loginResponse',
+                      response: LoginResponse.AlreadyConnected,
+                    },
+                    socket
+                  );
+                  socket.close();
+                  reject();
+                } else {
+                  this.adminSockets.set(admin._id.toString(), socket);
+                  this.emitToSocket(
+                    {
+                      name: 'loginResponse',
+                      response: LoginResponse.SuccessAdmin,
+                      admin,
+                    },
+                    socket
+                  );
+                  resolve(admin._id.toString());
+                }
+              })
+              .catch((response: LoginResponse | Error) => {
+                if ((response as any).stack !== undefined) {
+                  console.error(response);
+                  this.emitToSocket(
+                    { name: 'loginResponse', response: LoginResponse.Error },
+                    socket
+                  );
+                } else {
+                  this.emitToSocket(
+                    {
+                      name: 'loginResponse',
+                      response: response as LoginResponse,
+                    },
+                    socket
+                  );
+                }
 
-            if (response === LoginResponse.SuccessTeam) {
-              this.teamSockets.set(team._id.toString(), socket);
-              resolve(team._id.toString());
-            }
-
-            else {
-              socket.close();
-              reject();
-            }
-          });
-        }
-      }).catch((response: LoginResponse | Error) => {
-        if (response === LoginResponse.NotFound) {
-          AdminDao.login(loginPacket.username, loginPacket.password).then(admin => {
-            if (this.adminSockets.has(admin._id.toString())) {
-              this.emitToSocket({name: 'loginResponse', response: LoginResponse.AlreadyConnected}, socket);
-              socket.close();
-              reject();
-            }
-
-            else {
-              this.adminSockets.set(admin._id.toString(), socket);
-              this.emitToSocket({name: 'loginResponse', response: LoginResponse.SuccessAdmin, admin}, socket);
-              resolve(admin._id.toString());
-            }
-          }).catch((response: LoginResponse | Error) => {
+                socket.close();
+                reject();
+              });
+          } else {
             if ((response as any).stack !== undefined) {
               console.error(response);
-              this.emitToSocket({name: 'loginResponse', response: LoginResponse.Error}, socket);
-            }
-
-            else {
-              this.emitToSocket({name: 'loginResponse', response: response as LoginResponse}, socket);
+              this.emitToSocket(
+                { name: 'loginResponse', response: LoginResponse.Error },
+                socket
+              );
+            } else {
+              this.emitToSocket(
+                { name: 'loginResponse', response: response as LoginResponse },
+                socket
+              );
             }
 
             socket.close();
             reject();
-          });
-        }
-
-        else {
-          if ((response as any).stack !== undefined) {
-            console.error(response);
-            this.emitToSocket({name: 'loginResponse', response: LoginResponse.Error}, socket);
           }
-
-          else {
-            this.emitToSocket({name: 'loginResponse', response: response as LoginResponse}, socket);
-          }
-
-          socket.close();
-          reject();
-        }
-      });
+        });
     });
   }
 
@@ -223,27 +292,44 @@ export class SocketManager {
       const registerPacket = packet as RegisterPacket;
       PermissionsUtil.canRegister().then(canRegister => {
         if (canRegister) {
-          TeamDao.register(registerPacket.teamData).then(team => {
-            this.emitToSocket({name: 'loginResponse', response: LoginResponse.SuccessTeam, team: sanitizeTeam(team)}, socket);
-            this.teamSockets.set(team._id.toString(), socket);
-            resolve(team._id);
-          }).catch((response: LoginResponse | Error) => {
-            if ((response as any).stack !== undefined) {
-              console.error(response);
-              this.emitToSocket({name: 'loginResponse', response: LoginResponse.Error}, socket);
-            }
+          TeamDao.register(registerPacket.teamData)
+            .then(team => {
+              this.emitToSocket(
+                {
+                  name: 'loginResponse',
+                  response: LoginResponse.SuccessTeam,
+                  team: sanitizeTeam(team),
+                },
+                socket
+              );
+              this.teamSockets.set(team._id.toString(), socket);
+              resolve(team._id);
+            })
+            .catch((response: LoginResponse | Error) => {
+              if ((response as any).stack !== undefined) {
+                console.error(response);
+                this.emitToSocket(
+                  { name: 'loginResponse', response: LoginResponse.Error },
+                  socket
+                );
+              } else {
+                this.emitToSocket(
+                  {
+                    name: 'loginResponse',
+                    response: response as LoginResponse,
+                  },
+                  socket
+                );
+              }
 
-            else {
-              this.emitToSocket({name: 'loginResponse', response: response as LoginResponse}, socket);
-            }
-
-            socket.close();
-            reject();
-          });
-        }
-
-        else {
-          this.emitToSocket({name: 'loginResponse', response: LoginResponse.Closed}, socket);
+              socket.close();
+              reject();
+            });
+        } else {
+          this.emitToSocket(
+            { name: 'loginResponse', response: LoginResponse.Closed },
+            socket
+          );
           socket.close();
           reject();
         }
@@ -260,19 +346,23 @@ export class SocketManager {
       problemTitle: problem.title,
       type: problem.type,
       language: problemSubmission.language,
-      code: problemSubmission.code
+      code: problemSubmission.code,
     };
 
     if (isGradedProblem(problem)) {
-      serverProblemSubmission.testCases = problem.testCases.filter(testCase => isFalse(problemSubmission.test.toString()) || !testCase.hidden);
-    }
-
-    else if (isOpenEndedProblem(problem)) {
+      serverProblemSubmission.testCases = problem.testCases.filter(
+        testCase =>
+          isFalse(problemSubmission.test.toString()) || !testCase.hidden
+      );
+    } else if (isOpenEndedProblem(problem)) {
       serverProblemSubmission.gameType = problem.gameType;
       serverProblemSubmission.problemExtras = problem.extras;
     }
 
-    const {testCases, compilationError} = await this.runSubmission(serverProblemSubmission, socket);
+    const { testCases, compilationError } = await this.runSubmission(
+      serverProblemSubmission,
+      socket
+    );
 
     let submission: SubmissionModel = {
       type: isGradedProblem(problem) ? 'graded' : 'upload',
@@ -282,7 +372,7 @@ export class SocketManager {
       code: problemSubmission.code,
       testCases: testCases ?? [],
       compilationError,
-      test: problemSubmission.test
+      test: problemSubmission.test,
     } as GradedSubmissionModel;
 
     if (problemSubmission.test) {
@@ -293,24 +383,24 @@ export class SocketManager {
           testCase.correct = isTestCaseSubmissionCorrect(testCase, problem);
         }
       }
-    }
-
-    else {
+    } else {
       submission = await SubmissionDao.addSubmission(submission);
     }
 
-    this.emitToSocket({name: 'submissionCompleted', submission}, socket);
+    this.emitToSocket({ name: 'submissionCompleted', submission }, socket);
   }
 
   // TODO: Combine this with onSubmissionPacket
   async onReplayPacket(packet: ReplayPacket, socket: WebSocket) {
-    const submission = await SubmissionDao.getSubmission(packet.replayRequest._id);
+    const submission = await SubmissionDao.getSubmission(
+      packet.replayRequest._id
+    );
 
     const serverProblemSubmission: ServerProblemSubmission = {
       problemTitle: submission.problem.title,
       type: submission.problem.type,
       language: submission.language,
-      code: submission.code
+      code: submission.code,
     };
 
     const problem = submission.problem as OpenEndedProblemModel;
@@ -318,10 +408,13 @@ export class SocketManager {
     serverProblemSubmission.problemExtras = problem.extras;
 
     await this.runSubmission(serverProblemSubmission, socket);
-    this.emitToSocket({name: 'submissionCompleted', submission}, socket);
+    this.emitToSocket({ name: 'submissionCompleted', submission }, socket);
   }
 
-  private async runGradedSubmission(serverProblemSubmission: ServerProblemSubmission, connection: CodeRunnerConnection): Promise<{testCases: TestCaseSubmissionModel[]}> {
+  private async runGradedSubmission(
+    serverProblemSubmission: ServerProblemSubmission,
+    connection: CodeRunnerConnection
+  ): Promise<{ testCases: TestCaseSubmissionModel[] }> {
     const testCases: TestCaseSubmissionModel[] = [];
 
     for (let testCase of serverProblemSubmission.testCases) {
@@ -329,9 +422,7 @@ export class SocketManager {
 
       try {
         testCaseSubmission = await connection.runTestCase(testCase);
-      }
-
-      catch (e) {
+      } catch (e) {
         connection.kill();
 
         testCaseSubmission = {
@@ -343,14 +434,14 @@ export class SocketManager {
 
         if (e.name === 'dockerKilled') {
           testCaseSubmission.error = e.reason;
-        }
-
-        else if (e.name === 'unexpectedData') {
-          testCaseSubmission.error = 'An unexpected error occurred. Maybe the server is overloaded? Please send the following error to a judge: ' + e.data;
-        }
-
-        else {
-          testCaseSubmission.error = 'An unknown error occurred. Please send the following error to a judge: ' + JSON.stringify(e);
+        } else if (e.name === 'unexpectedData') {
+          testCaseSubmission.error =
+            'An unexpected error occurred. Maybe the server is overloaded? Please send the following error to a judge: ' +
+            e.data;
+        } else {
+          testCaseSubmission.error =
+            'An unknown error occurred. Please send the following error to a judge: ' +
+            JSON.stringify(e);
         }
       }
 
@@ -359,15 +450,19 @@ export class SocketManager {
       if (testCaseSubmission.error) {
         // Stop running test cases if a test case gives an error.
         connection.kill();
-        return {testCases};
+        return { testCases };
       }
     }
 
     connection.kill();
-    return {testCases};
+    return { testCases };
   }
 
-  private runOpenEndedSubmission(serverProblemSubmission: ServerProblemSubmission, connection: CodeRunnerConnection, socket: WebSocket): Promise<{}> {
+  private runOpenEndedSubmission(
+    serverProblemSubmission: ServerProblemSubmission,
+    connection: CodeRunnerConnection,
+    socket: WebSocket
+  ): Promise<{}> {
     return new Promise<{}>(resolve => {
       let packetStream: Observable<CodeRunnerPacket>;
 
@@ -377,7 +472,9 @@ export class SocketManager {
           break;
         }
         case GameType.Timesweeper: {
-          packetStream = connection.runGame(new Timesweeper(serverProblemSubmission.problemExtras));
+          packetStream = connection.runGame(
+            new Timesweeper(serverProblemSubmission.problemExtras)
+          );
           break;
         }
       }
@@ -387,7 +484,7 @@ export class SocketManager {
           this.emitToSocket(value, socket);
         },
         error => {
-            this.emitToSocket(error, socket);
+          this.emitToSocket(error, socket);
         },
         () => {
           resolve({});
@@ -396,53 +493,85 @@ export class SocketManager {
     });
   }
 
-  private async runSubmission(serverProblemSubmission: ServerProblemSubmission, socket: WebSocket): Promise<{testCases?: TestCaseSubmissionModel[], compilationError?: string}> {
-    this.emitToSocket({name: 'submissionExtras', extras: serverProblemSubmission.problemExtras}, socket);
+  private async runSubmission(
+    serverProblemSubmission: ServerProblemSubmission,
+    socket: WebSocket
+  ): Promise<{
+    testCases?: TestCaseSubmissionModel[];
+    compilationError?: string;
+  }> {
+    this.emitToSocket(
+      {
+        name: 'submissionExtras',
+        extras: serverProblemSubmission.problemExtras,
+      },
+      socket
+    );
 
     let connection: CodeRunnerConnection;
 
     try {
       connection = new CodeRunnerConnection();
-    }
-
-    catch (e) {
-      return {compilationError: 'The server is overloaded. Please send the following error to a judge: ' + JSON.stringify(e)};
+    } catch (e) {
+      return {
+        compilationError:
+          'The server is overloaded. Please send the following error to a judge: ' +
+          JSON.stringify(e),
+      };
     }
 
     try {
-      this.emitToSocket({name: 'submissionStatus', status: SubmissionStatus.Compiling}, socket);
-      const compilationResult = await connection.compile(serverProblemSubmission);
+      this.emitToSocket(
+        { name: 'submissionStatus', status: SubmissionStatus.Compiling },
+        socket
+      );
+      const compilationResult = await connection.compile(
+        serverProblemSubmission
+      );
 
       if (!compilationResult.success) {
         connection.kill();
-        return {compilationError: compilationResult.error};
+        return { compilationError: compilationResult.error };
       }
-    }
-
-    catch (e) {
+    } catch (e) {
       connection.kill();
 
       if (e.name === 'dockerKilled') {
-        return {compilationError: 'Your code could not compile. Maybe the server is overloaded?'};
-      }
-
-      else if (e.name === 'unexpectedData') {
-        return {compilationError: 'An unexpected error occurred. Maybe the server is overloaded? Please send the following error to a judge: ' + e.data};
-      }
-
-      else {
-        return {compilationError: 'An unknown occurred. Please send the following error to a judge: ' + JSON.stringify(e)};
+        return {
+          compilationError:
+            'Your code could not compile. Maybe the server is overloaded?',
+        };
+      } else if (e.name === 'unexpectedData') {
+        return {
+          compilationError:
+            'An unexpected error occurred. Maybe the server is overloaded? Please send the following error to a judge: ' +
+            e.data,
+        };
+      } else {
+        return {
+          compilationError:
+            'An unknown occurred. Please send the following error to a judge: ' +
+            JSON.stringify(e),
+        };
       }
     }
 
-    this.emitToSocket({name: 'submissionStatus', status: SubmissionStatus.Running}, socket);
+    this.emitToSocket(
+      { name: 'submissionStatus', status: SubmissionStatus.Running },
+      socket
+    );
 
     if (serverProblemSubmission.type === ProblemType.Graded) {
-      return await this.runGradedSubmission(serverProblemSubmission, connection);
-    }
-
-    else {
-      return await this.runOpenEndedSubmission(serverProblemSubmission, connection, socket);
+      return await this.runGradedSubmission(
+        serverProblemSubmission,
+        connection
+      );
+    } else {
+      return await this.runOpenEndedSubmission(
+        serverProblemSubmission,
+        connection,
+        socket
+      );
     }
   }
 }

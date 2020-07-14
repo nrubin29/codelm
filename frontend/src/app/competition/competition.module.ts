@@ -13,11 +13,8 @@ import { CompetitionRoutingModule } from './competition.routing';
     DashboardComponent,
     ProblemComponent,
     StandingsComponent,
-    SubmitComponent
+    SubmitComponent,
   ],
-  imports: [
-    SharedModule,
-    CompetitionRoutingModule
-  ]
+  imports: [SharedModule, CompetitionRoutingModule],
 })
-export class CompetitionModule { }
+export class CompetitionModule {}

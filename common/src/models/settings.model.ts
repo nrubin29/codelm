@@ -3,7 +3,7 @@ export enum SettingsState {
   Upload = 'Upload',
   Closed = 'Closed',
   End = 'End',
-  Debug = 'Debug'
+  Debug = 'Debug',
 }
 
 export interface ScheduleModel {
@@ -24,5 +24,5 @@ export const defaultSettingsModel: SettingsModel = Object.freeze({
   schedule: [],
   preliminaries: false,
   registration: false,
-  endSurveyLink: '#'
+  endSurveyLink: '#',
 });

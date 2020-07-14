@@ -3,8 +3,9 @@
     <app-card header="Results">
       <ng-container *ngIf="submission.rubric.size !== 0">
         <mat-chip-list>
-          <mat-chip color="accent" selected="true">{{submission.points}}
-            {{'WaveCoin'|pluralize:submission.points}}
+          <mat-chip color="accent" selected="true"
+            >{{ submission.points }}
+            {{ 'WaveCoin' | pluralize: submission.points }}
           </mat-chip>
         </mat-chip-list>
       </ng-container>
@@ -16,30 +17,64 @@
       <mat-table [dataSource]="rubric" class="rubric-table">
         <ng-container matColumnDef="category">
           <mat-header-cell *matHeaderCellDef>Category</mat-header-cell>
-          <mat-cell *matCellDef="let element">{{element.category}}</mat-cell>
+          <mat-cell *matCellDef="let element">{{ element.category }}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="0">
           <mat-header-cell *matHeaderCellDef>0 points</mat-header-cell>
-          <mat-cell *matCellDef="let element"><mat-radio-button [name]="element.category" [matTooltip]="element['0']" matTooltipClass="app-tooltip" [value]="0" [disabled]="!admin"></mat-radio-button></mat-cell>
+          <mat-cell *matCellDef="let element"
+            ><mat-radio-button
+              [name]="element.category"
+              [matTooltip]="element['0']"
+              matTooltipClass="app-tooltip"
+              [value]="0"
+              [disabled]="!admin"
+            ></mat-radio-button
+          ></mat-cell>
         </ng-container>
         <ng-container matColumnDef="1">
           <mat-header-cell *matHeaderCellDef>1 point</mat-header-cell>
-          <mat-cell *matCellDef="let element"><mat-radio-button [name]="element.category" [matTooltip]="element['1']" matTooltipClass="app-tooltip" [value]="1" [disabled]="!admin"></mat-radio-button></mat-cell>
+          <mat-cell *matCellDef="let element"
+            ><mat-radio-button
+              [name]="element.category"
+              [matTooltip]="element['1']"
+              matTooltipClass="app-tooltip"
+              [value]="1"
+              [disabled]="!admin"
+            ></mat-radio-button
+          ></mat-cell>
         </ng-container>
         <ng-container matColumnDef="2">
           <mat-header-cell *matHeaderCellDef>2 points</mat-header-cell>
-          <mat-cell *matCellDef="let element"><mat-radio-button [name]="element.category" [matTooltip]="element['2']" matTooltipClass="app-tooltip" [value]="2" [disabled]="!admin"></mat-radio-button></mat-cell>
+          <mat-cell *matCellDef="let element"
+            ><mat-radio-button
+              [name]="element.category"
+              [matTooltip]="element['2']"
+              matTooltipClass="app-tooltip"
+              [value]="2"
+              [disabled]="!admin"
+            ></mat-radio-button
+          ></mat-cell>
         </ng-container>
-        <mat-header-row *matHeaderRowDef="['category', '0', '1', '2']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['category', '0', '1', '2'];"></mat-row>
+        <mat-header-row
+          *matHeaderRowDef="['category', '0', '1', '2']"
+        ></mat-header-row>
+        <mat-row
+          *matRowDef="let row; columns: ['category', '0', '1', '2']"
+        ></mat-row>
       </mat-table>
-      <div *ngIf="admin" style="margin-top: 1em">
-        <button mat-raised-button color="accent" (click)="setScore()">Update</button>
+      <div *ngIf="admin" style="margin-top: 1em;">
+        <button mat-raised-button color="accent" (click)="setScore()">
+          Update
+        </button>
       </div>
     </app-card>
     <app-card header="Admin" *ngIf="admin">
-      <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
-      <button mat-raised-button color="accent" (click)="replay()">Replay Submission</button>
+      <button mat-raised-button color="accent" (click)="delete()">
+        Delete Submission
+      </button>
+      <button mat-raised-button color="accent" (click)="replay()">
+        Replay Submission
+      </button>
     </app-card>
   </div>
   <app-code-mirror [mode]="mode" [readOnly]="true"></app-code-mirror>

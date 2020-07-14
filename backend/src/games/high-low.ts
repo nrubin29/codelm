@@ -1,4 +1,4 @@
-import {Game, GameResult} from "./game";
+import { Game, GameResult } from './game';
 
 export class HighLow implements Game {
   answer: number;
@@ -16,18 +16,12 @@ export class HighLow implements Game {
     const guess = parseInt(data);
 
     if (isNaN(guess)) {
-      return {error: 'invalid guess'};
-    }
-
-    else if (guess > this.answer) {
+      return { error: 'invalid guess' };
+    } else if (guess > this.answer) {
       return '1';
-    }
-
-    else if (guess < this.answer) {
+    } else if (guess < this.answer) {
       return '-1';
-    }
-
-    else {
+    } else {
       this.finished = true;
       return '0';
       // return {score: this.guesses};
@@ -39,6 +33,6 @@ export class HighLow implements Game {
   }
 
   getResult(): GameResult {
-    return {score: this.guesses};
+    return { score: this.guesses };
   }
 }

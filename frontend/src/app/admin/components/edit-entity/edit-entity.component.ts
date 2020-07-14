@@ -1,8 +1,20 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Optional, Output} from '@angular/core';
-import {Attribute, Entity, EntityService} from "../../../services/entity.service";
-import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ActivatedRoute} from "@angular/router";
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+} from '@angular/core';
+import {
+  Attribute,
+  Entity,
+  EntityService,
+} from '../../../services/entity.service';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 
 /*
 TODO:
@@ -15,7 +27,7 @@ export type DialogResult = 'save' | 'delete' | 'close';
 @Component({
   selector: 'app-edit-entity',
   templateUrl: './edit-entity.component.html',
-  styleUrls: ['./edit-entity.component.scss']
+  styleUrls: ['./edit-entity.component.scss'],
 })
 export class EditEntityComponent implements OnInit {
   @Input() entity: Entity;
@@ -26,34 +38,68 @@ export class EditEntityComponent implements OnInit {
   attributes: Attribute[];
 
   formGroup: FormGroup;
-  formArrays: {[name: string]: FormArray};
+  formArrays: { [name: string]: FormArray };
   hasError = false;
 
-  constructor(private route: ActivatedRoute, @Optional() private dialogRef?: MatDialogRef<EditEntityComponent>, @Optional() @Inject(MAT_DIALOG_DATA) private data?: {entity: Entity, entityService: EntityService<any>}) { }
+  constructor(
+    private route: ActivatedRoute,
+    @Optional() private dialogRef?: MatDialogRef<EditEntityComponent>,
+    @Optional()
+    @Inject(MAT_DIALOG_DATA)
+    private data?: { entity: Entity; entityService: EntityService<any> }
+  ) {}
 
   ngOnInit() {
     this.entity = this.entity ?? this.data?.entity ?? {};
     this.entityService = this.entityService ?? this.data.entityService;
     this.attributes = this.entityService.config.attributes;
 
-    this.formArrays = Object.assign({}, ...this.attributes.filter(attr => attr.type === 'table').map(attr => ({[attr.name]: new FormArray((this.entity[attr.name] ?? []).map(obj => new FormGroup(this.createFormControls(attr.columns, obj))))})));
-    this.formGroup = new FormGroup(Object.assign(
+    this.formArrays = Object.assign(
       {},
-      this.createFormControls(this.attributes, this.entity),
-      this.formArrays
-    ));
+      ...this.attributes
+        .filter(attr => attr.type === 'table')
+        .map(attr => ({
+          [attr.name]: new FormArray(
+            (this.entity[attr.name] ?? []).map(
+              obj => new FormGroup(this.createFormControls(attr.columns, obj))
+            )
+          ),
+        }))
+    );
+    this.formGroup = new FormGroup(
+      Object.assign(
+        {},
+        this.createFormControls(this.attributes, this.entity),
+        this.formArrays
+      )
+    );
   }
 
   get title() {
-    return this.entityService.getName(this.entity) ?? `New ${this.entityService.config.entityName}`;
+    return (
+      this.entityService.getName(this.entity) ??
+      `New ${this.entityService.config.entityName}`
+    );
   }
 
   createFormControls(attributes: Attribute[], entity: Entity | object) {
-    return Object.assign({}, ...attributes.map(attribute => ({[attribute.name]: new FormControl(attribute.type === 'password' ? '' : attribute.transform?.(entity) ?? entity[attribute.name], attribute.optional ? [] : [Validators.required])})));
+    return Object.assign(
+      {},
+      ...attributes.map(attribute => ({
+        [attribute.name]: new FormControl(
+          attribute.type === 'password'
+            ? ''
+            : attribute.transform?.(entity) ?? entity[attribute.name],
+          attribute.optional ? [] : [Validators.required]
+        ),
+      }))
+    );
   }
 
   addRow(attribute: Attribute, entity: Entity = {}) {
-    this.formArrays[attribute.name].push(new FormGroup(this.createFormControls(attribute.columns, entity)));
+    this.formArrays[attribute.name].push(
+      new FormGroup(this.createFormControls(attribute.columns, entity))
+    );
   }
 
   deleteRow(attribute: Attribute, index: number) {
@@ -67,13 +113,9 @@ export class EditEntityComponent implements OnInit {
   onButtonClick(action: DialogResult) {
     if (action === 'save' && this.formGroup.invalid) {
       this.hasError = true;
-    }
-
-    else if (this.dialogRef) {
+    } else if (this.dialogRef) {
       this.dialogRef.close([action, this.formGroup.value]);
-    }
-
-    else {
+    } else {
       this.action.emit([action, this.formGroup.value]);
       this.hasError = false;
     }

@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {SettingsModel} from "../../../../../../common/src/models/settings.model";
-import {ActivatedRoute, Router} from "@angular/router";
+import { SettingsModel } from '../../../../../../common/src/models/settings.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-end',
   templateUrl: './end.component.html',
-  styleUrls: ['./end.component.scss']
+  styleUrls: ['./end.component.scss'],
 })
 export class EndComponent implements OnInit {
   settings: SettingsModel;
   year: number;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.year = new Date().getFullYear();
@@ -22,6 +22,6 @@ export class EndComponent implements OnInit {
   }
 
   adminLogIn() {
-    this.router.navigate(['/login'], {state: {force: true}});
+    this.router.navigate(['/login'], { state: { force: true } });
   }
 }

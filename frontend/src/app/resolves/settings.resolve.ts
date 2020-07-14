@@ -4,7 +4,7 @@ import { SettingsService } from '../services/settings.service';
 import { SettingsModel } from '../../../../common/src/models/settings.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SettingsResolve implements Resolve<SettingsModel> {
   constructor(private settingsService: SettingsService) {}

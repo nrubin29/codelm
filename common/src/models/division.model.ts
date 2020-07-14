@@ -1,9 +1,9 @@
-import {SettingsState} from "./settings.model";
+import { SettingsState } from './settings.model';
 
 export enum DivisionType {
   Competition = 'Competition',
   Preliminaries = 'Preliminaries',
-  Special = 'Special'
+  Special = 'Special',
 }
 
 export interface StarterCode {

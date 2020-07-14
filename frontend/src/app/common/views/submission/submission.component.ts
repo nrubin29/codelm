@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isGradedSubmission, SubmissionModel } from '../../../../../../common/src/models/submission.model';
+import {
+  isGradedSubmission,
+  SubmissionModel,
+} from '../../../../../../common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
 import { TeamService } from '../../../services/team.service';
 import { ProblemUtil } from '../../../../../../common/src/utils/problem.util';
@@ -8,19 +11,26 @@ import { ProblemUtil } from '../../../../../../common/src/utils/problem.util';
 @Component({
   selector: 'app-result',
   templateUrl: './submission.component.html',
-  styleUrls: ['./submission.component.scss']
+  styleUrls: ['./submission.component.scss'],
 })
 export class SubmissionComponent implements OnInit {
   submission: SubmissionModel;
   problemNumber: number;
 
-  constructor(private submissionService: SubmissionService, private teamService: TeamService, private router: Router, private activatedRoute: ActivatedRoute) {
-  }
+  constructor(
+    private submissionService: SubmissionService,
+    private teamService: TeamService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       this.submission = data['submission'];
-      this.problemNumber = ProblemUtil.getProblemNumberForTeam(this.submission.problem, this.submission.team);
+      this.problemNumber = ProblemUtil.getProblemNumberForTeam(
+        this.submission.problem,
+        this.submission.team
+      );
     });
   }
 
@@ -29,9 +39,12 @@ export class SubmissionComponent implements OnInit {
   }
 
   delete() {
-    this.submissionService.deleteSubmission(this.submission._id).then(() => {
-      this.router.navigate(['/admin', 'team', this.submission.team._id]);
-    }).catch(alert);
+    this.submissionService
+      .deleteSubmission(this.submission._id)
+      .then(() => {
+        this.router.navigate(['/admin', 'team', this.submission.team._id]);
+      })
+      .catch(alert);
   }
 
   get admin() {
@@ -41,13 +54,9 @@ export class SubmissionComponent implements OnInit {
   get showBackButton() {
     if (this.admin) {
       return false;
-    }
-
-    else if (this.submission.test) {
+    } else if (this.submission.test) {
       return true;
-    }
-
-    else if (this.submission.type === 'graded') {
+    } else if (this.submission.type === 'graded') {
       return this.submission.points === 0;
     }
   }

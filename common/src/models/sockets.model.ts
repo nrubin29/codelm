@@ -1,3 +1,3 @@
 export interface SocketConnection {
-    _id: string;
+  _id: string;
 }

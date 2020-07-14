@@ -1,5 +1,8 @@
-import {Game, GameResult} from "./game";
-import {TimesweeperExtras, TimesweeperOutputType} from "../../../common/src/models/game.model";
+import { Game, GameResult } from './game';
+import {
+  TimesweeperExtras,
+  TimesweeperOutputType,
+} from '../../../common/src/models/game.model';
 
 const PERSON = 9;
 
@@ -31,29 +34,32 @@ export class Timesweeper implements Game {
       this.fullBoard[row][col] = PERSON;
     }
 
-    const isPerson = x => x === PERSON ? 1 : 0;
+    const isPerson = x => (x === PERSON ? 1 : 0);
 
     const countNeighbors = (row, col) => {
       let sum = 0;
 
       if (this.fullBoard[row - 1]) {
-        sum += isPerson(this.fullBoard[row - 1][col - 1]) +
+        sum +=
+          isPerson(this.fullBoard[row - 1][col - 1]) +
           isPerson(this.fullBoard[row - 1][col]) +
           isPerson(this.fullBoard[row - 1][col + 1]);
       }
 
       if (this.fullBoard[row]) {
-        sum += isPerson(this.fullBoard[row][col + 1]) +
-          isPerson(this.fullBoard[row][col - 1])
+        sum +=
+          isPerson(this.fullBoard[row][col + 1]) +
+          isPerson(this.fullBoard[row][col - 1]);
       }
 
       if (this.fullBoard[row + 1]) {
-        sum += isPerson(this.fullBoard[row + 1][col + 1]) +
+        sum +=
+          isPerson(this.fullBoard[row + 1][col + 1]) +
           isPerson(this.fullBoard[row + 1][col]) +
-          isPerson(this.fullBoard[row + 1][col - 1])
+          isPerson(this.fullBoard[row + 1][col - 1]);
       }
 
-      return sum
+      return sum;
     };
 
     // Fill in numbers
@@ -76,10 +82,13 @@ export class Timesweeper implements Game {
     return false;
   }
 
-  private uncover(row, col, base=true, visited=[]) {
+  private uncover(row, col, base = true, visited = []) {
     visited.push([row, col]);
 
-    if (this.playerBoard[row] !== undefined && this.playerBoard[row][col] !== undefined) {
+    if (
+      this.playerBoard[row] !== undefined &&
+      this.playerBoard[row][col] !== undefined
+    ) {
       if (base || this.fullBoard[row][col] !== PERSON) {
         this.playerBoard[row][col] = this.fullBoard[row][col];
       }
@@ -113,38 +122,37 @@ export class Timesweeper implements Game {
   onInput(data: string): string | GameResult {
     this.guesses++;
 
-    const split = data.split(' ').filter(x => x.length > 0).map(x => parseInt(x));
+    const split = data
+      .split(' ')
+      .filter(x => x.length > 0)
+      .map(x => parseInt(x));
 
     if (split.findIndex(isNaN) !== -1) {
-      return {error: 'invalid guess'};
+      return { error: 'invalid guess' };
     }
 
     let res;
 
     if (this.extras.outputType === TimesweeperOutputType.FullBoard) {
       if (split.length !== 2) {
-        return {error: 'invalid guess'};
+        return { error: 'invalid guess' };
+      } else if (split.findIndex(x => x < 0 || x > 9) !== -1) {
+        return { error: 'invalid guess' };
       }
 
-      else if (split.findIndex(x => x < 0 || x > 9) !== -1) {
-          return {error: 'invalid guess'};
-      }
-
-      const row = split[0], col = split[1];
+      const row = split[0],
+        col = split[1];
       this.uncover(row, col);
       res = this.playerBoard.map(r => r.join(' ')).join(' ');
-    }
-
-    else if (this.extras.outputType === TimesweeperOutputType.GuessResult) {
+    } else if (this.extras.outputType === TimesweeperOutputType.GuessResult) {
       if (split.length !== 1) {
-        return {error: 'invalid guess'};
+        return { error: 'invalid guess' };
+      } else if (split[0] < 0 || split[0] > 24) {
+        return { error: 'invalid guess' };
       }
 
-      else if (split[0] < 0 || split[0] > 24) {
-          return {error: 'invalid guess'};
-      }
-
-      const row = Math.floor(split[0] / this.extras.boardSize), col = split[0] % this.extras.boardSize;
+      const row = Math.floor(split[0] / this.extras.boardSize),
+        col = split[0] % this.extras.boardSize;
       this.uncover(row, col);
       res = this.playerBoard[row][col].toString();
     }
@@ -161,6 +169,6 @@ export class Timesweeper implements Game {
   }
 
   getResult(): GameResult {
-    return {score: this.guesses};
+    return { score: this.guesses };
   }
 }

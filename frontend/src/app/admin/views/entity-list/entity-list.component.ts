@@ -1,20 +1,24 @@
-import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   Column,
   Entity,
-  GroupedEntityService, ListEntityService,
-  SingleEntityService
-} from "../../../services/entity.service";
-import {MatDialog} from "@angular/material/dialog";
-import {ActivatedRoute} from "@angular/router";
-import {DialogResult, EditEntityComponent} from "../../components/edit-entity/edit-entity.component";
+  GroupedEntityService,
+  ListEntityService,
+  SingleEntityService,
+} from '../../../services/entity.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import {
+  DialogResult,
+  EditEntityComponent,
+} from '../../components/edit-entity/edit-entity.component';
 
 // TODO: Add searching
 
 @Component({
   selector: 'app-entity-list',
   templateUrl: './entity-list.component.html',
-  styleUrls: ['./entity-list.component.scss']
+  styleUrls: ['./entity-list.component.scss'],
 })
 export class EntityListComponent implements OnInit, OnDestroy {
   private entityService: ListEntityService<Entity, Entity>;
@@ -25,18 +29,24 @@ export class EntityListComponent implements OnInit, OnDestroy {
 
   intervalHandle: number;
 
-  constructor(private route: ActivatedRoute, private dialog: MatDialog) { }
+  constructor(private route: ActivatedRoute, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.entityService = this.route.snapshot.data.entityService;
-    console.assert(!(this.entityService instanceof GroupedEntityService && !this.parent), 'EntityListComponent with GroupedEntityService doesn\'t have parent set. Did you mean to use EntityGroupingComponent in the route config?');
+    console.assert(
+      !(this.entityService instanceof GroupedEntityService && !this.parent),
+      "EntityListComponent with GroupedEntityService doesn't have parent set. Did you mean to use EntityGroupingComponent in the route config?"
+    );
 
     this.entityService.getColumns(this.parent).then(columns => {
       this.columns = columns;
       this.refreshData();
 
       if (this.entityService.config.refresh) {
-        this.intervalHandle = setInterval(this.refreshData.bind(this), 30 * 1000);
+        this.intervalHandle = setInterval(
+          this.refreshData.bind(this),
+          30 * 1000
+        );
       }
     });
   }
@@ -52,9 +62,7 @@ export class EntityListComponent implements OnInit, OnDestroy {
       this.entityService.getAll().then(entities => {
         this.entities = entities;
       });
-    }
-
-    else if (this.entityService instanceof GroupedEntityService) {
+    } else if (this.entityService instanceof GroupedEntityService) {
       this.entityService.getChildren(this.parent).then(entities => {
         this.entities = entities;
       });
@@ -62,7 +70,9 @@ export class EntityListComponent implements OnInit, OnDestroy {
   }
 
   get type() {
-    return this.entityService instanceof SingleEntityService ? 'single' : 'grouped';
+    return this.entityService instanceof SingleEntityService
+      ? 'single'
+      : 'grouped';
   }
 
   get entityName() {
@@ -78,13 +88,16 @@ export class EntityListComponent implements OnInit, OnDestroy {
   }
 
   getData(column: Column, value: Entity) {
-    return this.entityService.getData(column, value, this.parent) ?? value[column.name];
+    return (
+      this.entityService.getData(column, value, this.parent) ??
+      value[column.name]
+    );
   }
 
   openEditComponent(entity: Entity | null) {
     const ref = this.dialog.open(EditEntityComponent, {
-      data: {entity, entityService: this.entityService},
-      disableClose: true
+      data: { entity, entityService: this.entityService },
+      disableClose: true,
     });
 
     ref.afterClosed().subscribe((r?: [DialogResult, any]) => {
@@ -93,18 +106,22 @@ export class EntityListComponent implements OnInit, OnDestroy {
         const data: Entity = r[1];
 
         if (result === 'save') {
-          this.entityService.addOrUpdate(data).then(response => {
-            // TODO: If this is an error, display it.
-            console.log(response);
-            this.refreshData();
-          }).catch(alert);
-        }
-
-        else if (result === 'delete') {
-          if (confirm('Are you sure you want to delete this?')) {
-            this.entityService.delete(data).then(() => {
+          this.entityService
+            .addOrUpdate(data)
+            .then(response => {
+              // TODO: If this is an error, display it.
+              console.log(response);
               this.refreshData();
-            }).catch(alert);
+            })
+            .catch(alert);
+        } else if (result === 'delete') {
+          if (confirm('Are you sure you want to delete this?')) {
+            this.entityService
+              .delete(data)
+              .then(() => {
+                this.refreshData();
+              })
+              .catch(alert);
           }
         }
       }

@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-all-code',
   templateUrl: './all-code.component.html',
-  styleUrls: ['./all-code.component.scss']
+  styleUrls: ['./all-code.component.scss'],
 })
 export class AllCodeComponent implements OnInit {
   problemIds: string[];
-  code: {[problemId: string]: {mode: string, code: string}[]};
+  code: { [problemId: string]: { mode: string; code: string }[] };
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.code = {};
@@ -25,12 +25,11 @@ export class AllCodeComponent implements OnInit {
             this.code[problem] = [];
           }
 
-          this.code[problem].push({mode, code});
+          this.code[problem].push({ mode, code });
         }
       }
     }
 
     this.problemIds = Object.keys(this.code);
   }
-
 }

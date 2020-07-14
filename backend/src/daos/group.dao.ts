@@ -1,5 +1,5 @@
 import mongoose = require('mongoose');
-import {GroupModel} from '../../../common/src/models/group.model';
+import { GroupModel } from '../../../common/src/models/group.model';
 
 type GroupType = GroupModel & mongoose.Document;
 
@@ -21,14 +21,14 @@ export class GroupDao {
   static async addOrUpdateGroup(group: GroupModel): Promise<GroupModel> {
     if (!group._id) {
       return (await Group.create(group)).toObject();
-    }
-
-    else {
-      return (await Group.findByIdAndUpdate(group._id, group, {new: true}).exec()).toObject();
+    } else {
+      return (
+        await Group.findByIdAndUpdate(group._id, group, { new: true }).exec()
+      ).toObject();
     }
   }
 
   static deleteGroup(_id: string): Promise<any> {
-    return Group.deleteOne({_id}).exec();
+    return Group.deleteOne({ _id }).exec();
   }
 }

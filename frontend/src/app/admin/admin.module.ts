@@ -5,7 +5,7 @@ import { SettingsComponent } from './views/settings/settings.component';
 import { TeamComponent } from './views/team/team.component';
 import { SharedModule } from '../shared.module';
 import { AdminRoutingModule } from './admin.routing';
-import {AngularEditorModule} from "@kolkov/angular-editor";
+import { AngularEditorModule } from '@kolkov/angular-editor';
 import { ViewSubmissionsComponent } from './components/view-submissions/view-submissions.component';
 import { EntityGroupingComponent } from './views/entity-grouping/entity-grouping.component';
 import { EntityListComponent } from './views/entity-list/entity-list.component';
@@ -28,10 +28,6 @@ import { BatchAddTeamsComponent } from './views/batch-add-teams/batch-add-teams.
     DynamicFormFieldComponent,
     BatchAddTeamsComponent,
   ],
-  imports: [
-    SharedModule,
-    AdminRoutingModule,
-    AngularEditorModule
-  ],
+  imports: [SharedModule, AdminRoutingModule, AngularEditorModule],
 })
-export class AdminModule { }
+export class AdminModule {}

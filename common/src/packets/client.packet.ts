@@ -1,6 +1,9 @@
 import { Packet } from './packet';
-import {ClientProblemSubmission, ClientReplayRequest} from "../problem-submission";
-import {TeamModel} from "../models/team.model";
+import {
+  ClientProblemSubmission,
+  ClientReplayRequest,
+} from '../problem-submission';
+import { TeamModel } from '../models/team.model';
 
 interface IClientPacket {
   version: string;
@@ -36,7 +39,11 @@ export interface SubmissionPacket extends IClientPacket {
   team: TeamModel;
 }
 
-export type ClientPacket = LoginPacket | RegisterPacket | ReplayPacket | SubmissionPacket;
+export type ClientPacket =
+  | LoginPacket
+  | RegisterPacket
+  | ReplayPacket
+  | SubmissionPacket;
 
 export function isClientPacket(packet: Packet): packet is ClientPacket {
   return (packet as ClientPacket).version !== undefined;

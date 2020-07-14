@@ -1,22 +1,32 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import {SocketConnection} from "../../../../common/src/models/sockets.model";
-import {Column, GroupedEntityService} from "./entity.service";
+import { SocketConnection } from '../../../../common/src/models/sockets.model';
+import { Column, GroupedEntityService } from './entity.service';
 
 // TODO: Refresh when action button is clicked.
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class SocketRestService extends GroupedEntityService<SocketConnection, string> {
+export class SocketRestService extends GroupedEntityService<
+  SocketConnection,
+  string
+> {
   private endpoint = 'sockets';
 
   constructor(private restService: RestService) {
     super({
       entityName: 'socket',
       columns: [
-        {name: '_id'},
-        {name: 'kick', display: 'button', icon: 'close', action: (connection: SocketConnection) => { this.delete(connection); }} as Column
+        { name: '_id' },
+        {
+          name: 'kick',
+          display: 'button',
+          icon: 'close',
+          action: (connection: SocketConnection) => {
+            this.delete(connection);
+          },
+        } as Column,
       ],
       refresh: true,
     });
@@ -31,7 +41,9 @@ export class SocketRestService extends GroupedEntityService<SocketConnection, st
   }
 
   getChildren(parent: string): Promise<SocketConnection[]> {
-    return this.restService.get<SocketConnection[]>(`${this.endpoint}/${parent}`);
+    return this.restService.get<SocketConnection[]>(
+      `${this.endpoint}/${parent}`
+    );
   }
 
   getGroupLabel(parent: string): string {

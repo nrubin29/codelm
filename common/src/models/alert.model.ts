@@ -1,4 +1,4 @@
 export interface AlertModel {
-    _id?: string;
-    message: string;
+  _id?: string;
+  message: string;
 }

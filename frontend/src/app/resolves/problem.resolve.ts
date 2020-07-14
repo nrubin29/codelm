@@ -4,7 +4,7 @@ import { ProblemService } from '../services/problem.service';
 import { ProblemModel } from '../../../../common/src/models/problem.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProblemResolve implements Resolve<ProblemModel> {
   constructor(private problemService: ProblemService) {}

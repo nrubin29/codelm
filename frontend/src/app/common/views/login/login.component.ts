@@ -5,20 +5,25 @@ import { LoginResponse } from '../../../../../../common/src/packets/server.packe
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { SettingsModel } from '../../../../../../common/src/models/settings.model';
 import { VERSION } from '../../../../../../common/version';
-import {MatDialog} from "@angular/material/dialog";
-import {AllCodeComponent} from "../../components/all-code/all-code.component";
-import {FaqComponent} from "../../components/faq/faq.component";
+import { MatDialog } from '@angular/material/dialog';
+import { AllCodeComponent } from '../../components/all-code/all-code.component';
+import { FaqComponent } from '../../components/faq/faq.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   formGroup: FormGroup;
   settings: SettingsModel;
 
-  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router, private dialog: MatDialog) { }
+  constructor(
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.formGroup = new FormGroup({
@@ -37,17 +42,18 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.authService.login(form.value.username, form.value.password).then((response: LoginResponse) => {
-      if (response === LoginResponse.SuccessAdmin) {
-        this.router.navigate(['admin']);
-      }
-
-      else if (response === LoginResponse.SuccessTeam) {
-        this.router.navigate(['dashboard']);
-      }
-    }).catch((response: LoginResponse | Error) => {
-      alert(response);
-    });
+    this.authService
+      .login(form.value.username, form.value.password)
+      .then((response: LoginResponse) => {
+        if (response === LoginResponse.SuccessAdmin) {
+          this.router.navigate(['admin']);
+        } else if (response === LoginResponse.SuccessTeam) {
+          this.router.navigate(['dashboard']);
+        }
+      })
+      .catch((response: LoginResponse | Error) => {
+        alert(response);
+      });
   }
 
   register() {
@@ -57,14 +63,14 @@ export class LoginComponent implements OnInit {
   showFaq() {
     this.dialog.open(FaqComponent, {
       width: '90vw',
-      height: '90vh'
+      height: '90vh',
     });
   }
 
   showAllCode() {
     this.dialog.open(AllCodeComponent, {
       width: '90vw',
-      height: '90vh'
+      height: '90vh',
     });
   }
 

@@ -4,21 +4,24 @@ import {
   ProblemDivision,
   ProblemModel,
   ProblemType,
-  TestCaseOutputMode
+  TestCaseOutputMode,
 } from '../../../../common/src/models/problem.model';
 import {
   ClientProblemSubmission,
-  ClientReplayRequest
+  ClientReplayRequest,
 } from '../../../../common/src/problem-submission';
-import {DivisionModel} from "../../../../common/src/models/division.model";
-import {DivisionService} from "./division.service";
-import {Column, GroupedEntityService} from "./entity.service";
-import {ProblemUtil} from "../../../../common/src/utils/problem.util";
+import { DivisionModel } from '../../../../common/src/models/division.model';
+import { DivisionService } from './division.service';
+import { Column, GroupedEntityService } from './entity.service';
+import { ProblemUtil } from '../../../../common/src/utils/problem.util';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class ProblemService extends GroupedEntityService<ProblemModel, DivisionModel> {
+export class ProblemService extends GroupedEntityService<
+  ProblemModel,
+  DivisionModel
+> {
   private endpoint = 'problems';
 
   // This holds a ClientProblemSubmission from problem.component and gives it to submit.component.
@@ -55,31 +58,61 @@ export class ProblemService extends GroupedEntityService<ProblemModel, DivisionM
     this._replayRequest = value;
   }
 
-  constructor(private restService: RestService, private divisionService: DivisionService) {
+  constructor(
+    private restService: RestService,
+    private divisionService: DivisionService
+  ) {
     super({
       entityName: 'problem',
-      columns: [
-        {name: 'number'},
-        {name: 'title', isEditColumn: true},
-      ],
+      columns: [{ name: 'number' }, { name: 'title', isEditColumn: true }],
       attributes: [
-        {name: '_id', optional: true, readonly: true},
-        {name: 'title'},
-        {name: 'description', type: 'wysiwyg'},
-        {name: 'type', type: 'select', options: Object.keys(ProblemType).map(type => ProblemType[type])},
-        {name: 'divisions', type: 'table', columns: [
-          {name: 'division', type: 'select', options: () => this.divisionService.getAll().then(divisions => divisions.map(division => ({name: division.name, value: division._id.toString()}))), transform: (value?: Partial<ProblemDivision>) => value?.division?._id},
-          {name: 'problemNumber'},
-          {name: 'points'},
-        ]},
+        { name: '_id', optional: true, readonly: true },
+        { name: 'title' },
+        { name: 'description', type: 'wysiwyg' },
+        {
+          name: 'type',
+          type: 'select',
+          options: Object.keys(ProblemType).map(type => ProblemType[type]),
+        },
+        {
+          name: 'divisions',
+          type: 'table',
+          columns: [
+            {
+              name: 'division',
+              type: 'select',
+              options: () =>
+                this.divisionService.getAll().then(divisions =>
+                  divisions.map(division => ({
+                    name: division.name,
+                    value: division._id.toString(),
+                  }))
+                ),
+              transform: (value?: Partial<ProblemDivision>) =>
+                value?.division?._id,
+            },
+            { name: 'problemNumber' },
+            { name: 'points' },
+          ],
+        },
         // TODO: Support open-ended questions. Should just have a drop-down with options as Game enum values.
-        {name: 'testCases', type: 'table', columns: [
-          {name: 'input', type: 'multiline'},
-          {name: 'output', type: 'multiline'},
-          {name: 'explanation', type: 'multiline', optional: true},
-          {name: 'hidden', type: 'boolean', optional: true}
-        ]},
-        {name: 'testCaseOutputMode', type: 'select', options: Object.keys(TestCaseOutputMode).map(mode => TestCaseOutputMode[mode])},
+        {
+          name: 'testCases',
+          type: 'table',
+          columns: [
+            { name: 'input', type: 'multiline' },
+            { name: 'output', type: 'multiline' },
+            { name: 'explanation', type: 'multiline', optional: true },
+            { name: 'hidden', type: 'boolean', optional: true },
+          ],
+        },
+        {
+          name: 'testCaseOutputMode',
+          type: 'select',
+          options: Object.keys(TestCaseOutputMode).map(
+            mode => TestCaseOutputMode[mode]
+          ),
+        },
       ],
       editable: true,
     });
@@ -90,7 +123,9 @@ export class ProblemService extends GroupedEntityService<ProblemModel, DivisionM
   }
 
   getProblems(divisionId: string): Promise<ProblemModel[]> {
-    return this.restService.get<ProblemModel[]>(`${this.endpoint}/division/${divisionId}`);
+    return this.restService.get<ProblemModel[]>(
+      `${this.endpoint}/division/${divisionId}`
+    );
   }
 
   addOrUpdate(problem: any): Promise<ProblemModel> {
@@ -112,7 +147,11 @@ export class ProblemService extends GroupedEntityService<ProblemModel, DivisionM
     return this.getProblems(parent._id.toString());
   }
 
-  getData(column: Column, value: ProblemModel, parent: DivisionModel): any | undefined {
+  getData(
+    column: Column,
+    value: ProblemModel,
+    parent: DivisionModel
+  ): any | undefined {
     if (column.name === 'number') {
       return ProblemUtil.getProblemNumberForDivision(value, parent);
     }

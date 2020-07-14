@@ -1,4 +1,4 @@
 export interface GroupModel {
-    _id?: string;
-    name: string;
+  _id?: string;
+  name: string;
 }
