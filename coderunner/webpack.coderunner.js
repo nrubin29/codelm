@@ -8,12 +8,14 @@ module.exports = {
       'typeof window': JSON.stringify('object'),
       window: JSON.stringify(false),
     }),
-    new CopyPlugin([
-      {
-        from: path.resolve(__dirname, 'Dockerfile'),
-        to: path.resolve(__dirname, '..', 'dist', 'coderunner'),
-      },
-    ]),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'Dockerfile'),
+          to: path.resolve(__dirname, '..', 'dist', 'coderunner'),
+        },
+      ],
+    }),
   ],
   entry: {
     coderunner: './src/coderunner.ts',

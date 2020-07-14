@@ -1,4 +1,4 @@
-import { execFile, spawn } from 'child_process';
+import { ExecException, execFile, spawn } from 'child_process';
 import { TestCaseModel } from '../../common/src/models/problem.model';
 import { TestCaseSubmissionModel } from '../../common/src/models/submission.model';
 import { Language, languages } from './language';
@@ -87,7 +87,7 @@ export class CodeRunner extends StdioPacketManager {
         cmd,
         args,
         { cwd: FOLDER, timeout: TIMEOUT },
-        (err: Error & { signal: string }, stdout, stderr) => {
+        (err: ExecException, stdout, stderr) => {
           if (err && err.signal === 'SIGTERM') {
             reject({ error: 'Timed out' });
           } else {

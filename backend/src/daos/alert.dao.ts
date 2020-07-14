@@ -1,4 +1,4 @@
-import mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 import { AlertModel } from '../../../common/src/models/alert.model';
 
 type AlertType = AlertModel & mongoose.Document;

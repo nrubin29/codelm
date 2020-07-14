@@ -1,7 +1,7 @@
 import * as _ from 'mocha';
 import { CodeRunner } from './coderunner';
-import chai = require('chai');
-import chaiAsPromised = require('chai-as-promised');
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import { languages } from './language';
 import { CodeFile } from './codefile';
 import { HighLow } from '../../backend/src/games/high-low';

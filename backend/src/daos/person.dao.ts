@@ -1,6 +1,5 @@
-import mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 import { PersonModel } from '../../../common/src/models/person.model';
-import { GroupModel } from '../../../common/src/models/group.model';
 
 type PersonType = PersonModel & mongoose.Document;
 

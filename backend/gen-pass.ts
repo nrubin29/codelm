@@ -1,4 +1,4 @@
-import crypto = require('crypto');
+import * as crypto from 'crypto';
 
 process.stdin.once('data', data => {
   const password = data.toString().trim();

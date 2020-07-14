@@ -1,5 +1,5 @@
-import mongoose = require('mongoose');
-import crypto = require('crypto');
+import * as mongoose from 'mongoose';
+import * as crypto from 'crypto';
 import { TeamModel } from '../../../common/src/models/team.model';
 import { LoginResponse } from '../../../common/src/packets/server.packet';
 import { SubmissionDao } from './submission.dao';

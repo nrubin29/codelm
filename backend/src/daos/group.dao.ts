@@ -1,4 +1,4 @@
-import mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 import { GroupModel } from '../../../common/src/models/group.model';
 
 type GroupType = GroupModel & mongoose.Document;

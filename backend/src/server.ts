@@ -1,10 +1,10 @@
-import express = require('express');
+import * as express from 'express';
 import { Router } from 'express';
-import morgan = require('morgan');
-import bodyParser = require('body-parser');
-import path = require('path');
-import fileUpload = require('express-fileupload');
-import mongoose = require('mongoose');
+import * as morgan from 'morgan';
+import * as bodyParser from 'body-parser';
+import * as path from 'path';
+import * as fileUpload from 'express-fileupload';
+import * as mongoose from 'mongoose';
 import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
 import { VERSION } from '../../common/version';

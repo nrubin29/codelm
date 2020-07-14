@@ -1,5 +1,5 @@
-import mongoose = require('mongoose');
-import crypto = require('crypto');
+import * as mongoose from 'mongoose';
+import * as crypto from 'crypto';
 import { AdminModel } from '../../../common/src/models/admin.model';
 import { LoginResponse } from '../../../common/src/packets/server.packet';
 
