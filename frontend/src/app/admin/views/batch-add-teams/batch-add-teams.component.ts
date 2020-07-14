@@ -16,6 +16,7 @@ interface TeamCsv {
   password?: string;
 }
 
+// TODO: This component is not compatible with the Person/Group update and can probably be deleted.
 @Component({
   selector: 'app-batch-add-teams',
   templateUrl: './batch-add-teams.component.html',
@@ -73,7 +74,7 @@ export class BatchAddTeamsComponent implements OnInit {
         await this.teamService.addOrUpdate({
           username: team.username,
           password: team.password,
-          members: team.name,
+          members: undefined, // was team.name
           division: team.division,
           salt: undefined,
         });

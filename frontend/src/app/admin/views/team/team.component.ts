@@ -31,6 +31,10 @@ export class TeamComponent implements OnInit {
     });
   }
 
+  get members() {
+    return this.team.members.map(member => member.name).join(', ');
+  }
+
   asMoment(date: Date): moment.Moment {
     return moment(date);
   }

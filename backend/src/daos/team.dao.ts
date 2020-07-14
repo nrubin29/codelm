@@ -11,7 +11,7 @@ const TeamSchema = new mongoose.Schema({
   username: {type: String, unique: true},
   password: String,
   salt: String,
-  members: String,
+  members: [{type: mongoose.Schema.Types.ObjectId, ref: 'Person'}],
   division: {type: mongoose.Schema.Types.ObjectId, ref: 'Division'},
 }, {
   toJSON: { virtuals: true },
@@ -44,15 +44,15 @@ const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
 export class TeamDao {
   static async getTeam(id: string): Promise<TeamModel> {
-    return await TeamDao.addScore(await Team.findById(id).populate('division').exec());
+    return await TeamDao.addScore(await Team.findById(id).populate('division').populate('members').exec());
   }
 
   static async getTeams(): Promise<TeamType[]> {
-    return await TeamDao.addScores(await Team.find().populate('division').exec());
+    return await TeamDao.addScores(await Team.find().populate('division').populate('members').exec());
   }
 
   static async getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
-    return (await TeamDao.addScores(await Team.find({division: {_id: divisionId}}).populate('division').exec())).map(team => team.toObject());
+    return (await TeamDao.addScores(await Team.find({division: {_id: divisionId}}).populate('division').populate('members').exec())).map(team => team.toObject());
   }
 
   static async login(username: string, password: string): Promise<TeamModel> {
@@ -60,7 +60,7 @@ export class TeamDao {
       throw LoginResponse.NotFound;
     }
 
-    const team = await Team.findOne({username: username}).populate('division');
+    const team = await Team.findOne({username: username}).populate('division').populate('members');
 
     if (!team) {
       throw LoginResponse.NotFound;

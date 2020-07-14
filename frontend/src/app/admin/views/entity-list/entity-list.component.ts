@@ -29,6 +29,8 @@ export class EntityListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.entityService = this.route.snapshot.data.entityService;
+    console.assert(!(this.entityService instanceof GroupedEntityService && !this.parent), 'EntityListComponent with GroupedEntityService doesn\'t have parent set. Did you mean to use EntityGroupingComponent in the route config?');
+
     this.entityService.getColumns(this.parent).then(columns => {
       this.columns = columns;
       this.refreshData();

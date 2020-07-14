@@ -37,7 +37,7 @@ router.get('/init', async (req: Request, res: Response) => {
 
     await TeamDao.deleteTeams(debugTeamUsernames);
     const teams = await TeamDao.createTeams(debugTeamUsernames.map(username => ({
-        members: '$DEBUG$',
+        members: undefined,
         division,
         username,
         password: '',

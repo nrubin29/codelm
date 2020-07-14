@@ -1,6 +1,8 @@
 import './admin.dao';
 import './alert.dao';
 import './division.dao';
+import './group.dao';
+import './person.dao';
 import './problem.dao';
 import './settings.dao';
 import './submission.dao';

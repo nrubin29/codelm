@@ -21,4 +21,8 @@ export class StandingsComponent implements OnInit {
       this.link = '/api/files/startercode/' + team.division._id;
     });
   }
+
+  get members() {
+    return this.team.members.map(member => member.name).join(', ');
+  }
 }

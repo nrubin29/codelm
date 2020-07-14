@@ -33,6 +33,8 @@ const routes: Routes = [
         {path: 'divisions', component: EntityListComponent, canActivate: [SuperUserGuard], resolve: {entityService: EntityServiceResolve}},
         {path: 'problems', component: EntityGroupingComponent, canActivate: [SuperUserGuard], resolve: {entityService: EntityServiceResolve}},
         {path: 'admins', component: EntityListComponent, canActivate: [SuperUserGuard], resolve: {entityService: EntityServiceResolve}},
+        {path: 'groups', component: EntityListComponent, resolve: {entityService: EntityServiceResolve}},
+        {path: 'people', component: EntityGroupingComponent, resolve: {entityService: EntityServiceResolve}},
         {path: 'add-team', component: EditTeamComponent},
         {path: 'batch-add-teams', component: BatchAddTeamsComponent, resolve: {divisions: DivisionsResolve}},
         {path: 'game/:gameType', component: GameComponent},

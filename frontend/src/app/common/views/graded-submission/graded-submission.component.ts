@@ -76,4 +76,8 @@ export class GradedSubmissionComponent implements OnInit {
   get admin() {
     return this.submissionComponent.admin;
   }
+
+  get members() {
+    return this.submission.team.members.map(member => member.name).join(', ');
+  }
 }

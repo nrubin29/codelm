@@ -37,6 +37,14 @@
         <mat-icon mat-list-icon>insert_drive_file</mat-icon>
         <p mat-line>Problems</p>
       </a>
+      <a mat-list-item [routerLink]="['/admin', 'groups']">
+        <mat-icon mat-list-icon>group</mat-icon>
+        <p mat-line>Groups</p>
+      </a>
+      <a mat-list-item [routerLink]="['/admin', 'people']">
+        <mat-icon mat-list-icon>person</mat-icon>
+        <p mat-line>People</p>
+      </a>
       <a mat-list-item *ngIf="admin.superUser" [routerLink]="['/admin', 'admins']">
         <mat-icon mat-list-icon>assignment_ind</mat-icon>
         <p mat-line>Admins</p>

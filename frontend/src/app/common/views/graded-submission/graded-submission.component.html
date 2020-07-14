@@ -60,7 +60,7 @@
             </ng-container>
         </app-card>
         <app-card header="Admin" *ngIf="admin">
-            <p>Team: <a [routerLink]="['/admin', 'team', submission.team._id]">{{submission.team.username}}</a> ({{submission.team.members}})</p>
+            <p>Team: <a [routerLink]="['/admin', 'team', submission.team._id]">{{submission.team.username}}</a> ({{members}})</p>
             <br/>
             <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
             <br/><br/>
