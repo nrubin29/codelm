@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { YEAR } from '../../../../../../common/version';
 
 interface QA {
   question: string;
@@ -76,4 +77,8 @@ export class FaqComponent {
         'an email to team@newwavecomputers.com describing your issue.',
     },
   });
+
+  get year() {
+    return YEAR;
+  }
 }
