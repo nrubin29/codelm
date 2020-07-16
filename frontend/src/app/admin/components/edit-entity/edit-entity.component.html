@@ -48,6 +48,7 @@
       </ng-container>
       <ng-template #dynamic>
         <app-dynamic-form-field
+          *ngIf="attribute.name != '_id' || (entity && entity._id)"
           [attribute]="attribute"
           [formControlName]="attribute.name"
         ></app-dynamic-form-field>
