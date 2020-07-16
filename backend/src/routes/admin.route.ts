@@ -8,7 +8,7 @@ router.get(
   '/',
   PermissionsUtil.requireSuperUser,
   async (req: Request, res: Response) => {
-    res.json(await AdminDao.getAdmins());
+    res.json(await AdminDao.getAll());
   }
 );
 
@@ -16,7 +16,7 @@ router.put(
   '/',
   PermissionsUtil.requireSuperUser,
   async (req: Request, res: Response) => {
-    res.json(await AdminDao.addOrUpdateAdmin(req.body));
+    res.json(await AdminDao.addOrUpdate(req.body));
   }
 );
 
@@ -24,7 +24,7 @@ router.delete(
   '/:id',
   PermissionsUtil.requireSuperUser,
   async (req: Request, res: Response) => {
-    await AdminDao.deleteAdmin(req.params.id);
+    await AdminDao.deleteById(req.params.id);
     res.json(true);
   }
 );

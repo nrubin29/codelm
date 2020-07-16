@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/startercode/:division', async (req: Request, res: Response) => {
   const settings = await SettingsDao.getSettings();
-  const division = await DivisionDao.getDivision(req.params.division);
+  const division = await DivisionDao.getById(req.params.division);
   const starterCode = division.starterCode.find(
     sc => sc.state === settings.state
   );

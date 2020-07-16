@@ -12,7 +12,7 @@ router.get(
   '/:id',
   PermissionsUtil.requireAdmin,
   async (req: Request, res: Response) => {
-    res.json(await TeamDao.getTeam(req.params.id));
+    res.json(await TeamDao.getById(req.params.id));
   }
 );
 
@@ -20,7 +20,7 @@ router.put(
   '/',
   PermissionsUtil.requireAdmin,
   async (req: Request, res: Response) => {
-    res.json(await TeamDao.addOrUpdateTeam(req.body));
+    res.json(await TeamDao.addOrUpdate(req.body));
   }
 );
 
@@ -28,7 +28,7 @@ router.delete(
   '/:id',
   PermissionsUtil.requireAdmin,
   async (req: Request, res: Response) => {
-    await TeamDao.deleteTeam(req.params.id);
+    await TeamDao.deleteById(req.params.id);
     res.json(true);
   }
 );
@@ -37,7 +37,7 @@ router.get(
   '/division/:id',
   PermissionsUtil.requireAdmin,
   async (req: Request, res: Response) => {
-    res.json(await TeamDao.getTeamsForDivision(req.params.id));
+    res.json(await TeamDao.getAllByField('division', req.params.id));
   }
 );
 

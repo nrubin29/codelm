@@ -43,7 +43,7 @@ export class PermissionsUtil {
       return;
     }
 
-    req.params.team = await TeamDao.getTeam(
+    req.params.team = await TeamDao.getById(
       req.headers.authorization.split(' ')[1]
     );
 
@@ -72,7 +72,7 @@ export class PermissionsUtil {
       return;
     }
 
-    req.params.admin = await AdminDao.getAdmin(
+    req.params.admin = await AdminDao.getById(
       req.headers.authorization.split(' ')[1]
     );
 
@@ -96,7 +96,9 @@ export class PermissionsUtil {
       return;
     }
 
-    const admin = await AdminDao.getAdmin(id);
+    const admin = await AdminDao.getById(id);
+    console.log(id);
+    console.log(admin);
 
     if (admin) {
       req.params.admin = admin;
@@ -129,7 +131,7 @@ export class PermissionsUtil {
       return;
     }
 
-    const team = await TeamDao.getTeam(req.headers.authorization.split(' ')[1]);
+    const team = await TeamDao.getById(req.headers.authorization.split(' ')[1]);
 
     if (team) {
       req.params.team = team;

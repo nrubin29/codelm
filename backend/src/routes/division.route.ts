@@ -20,17 +20,19 @@ router.get(
     let divisions: DivisionModel[];
 
     if (req.params.admin) {
-      divisions = await DivisionDao.getDivisions();
+      divisions = await DivisionDao.getAll();
       // TODO: Only send the starterCode field when necessary.
     } else {
       const settings = await SettingsDao.getSettings();
 
       if (settings.preliminaries) {
-        divisions = await DivisionDao.getDivisionsOfType(
+        divisions = await DivisionDao.getAllByField(
+          'type',
           DivisionType.Preliminaries
         );
       } else {
-        divisions = await DivisionDao.getDivisionsOfType(
+        divisions = await DivisionDao.getAllByField(
+          'type',
           DivisionType.Competition
         );
       }
@@ -74,7 +76,7 @@ router.put(
     }
 
     if (division._id) {
-      const oldDivision = await DivisionDao.getDivision(division._id);
+      const oldDivision = await DivisionDao.getById(division._id);
 
       // We need to delete any files that...
       for (const sc of oldDivision.starterCode.filter(
@@ -97,7 +99,7 @@ router.put(
 
     delete division.states;
 
-    const updatedDivision = await DivisionDao.addOrUpdateDivision(division);
+    const updatedDivision = await DivisionDao.addOrUpdate(division);
     res.json(updatedDivision);
   }
 );
@@ -106,7 +108,7 @@ router.delete(
   '/:id',
   PermissionsUtil.requireSuperUser,
   async (req: Request, res: Response) => {
-    await DivisionDao.deleteDivision(req.params.id);
+    await DivisionDao.deleteById(req.params.id);
     res.json(true);
   }
 );

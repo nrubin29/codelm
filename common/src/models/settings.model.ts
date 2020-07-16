@@ -12,6 +12,7 @@ export interface ScheduleModel {
 }
 
 export interface SettingsModel {
+  _id?: string;
   state: SettingsState;
   schedule: ScheduleModel[];
   preliminaries: boolean;

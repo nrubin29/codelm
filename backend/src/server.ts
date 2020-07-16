@@ -5,11 +5,12 @@ import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as fileUpload from 'express-fileupload';
 import * as mongoose from 'mongoose';
+import { MongoClient } from 'mongodb';
 import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
 import { VERSION } from '../../common/version';
 import { objectFromEntries } from '../../common/src/utils/submission.util';
-import './daos/dao';
+import { Dao } from './daos/dao';
 import apiRoutes from './routes/route';
 
 export const DEBUG = process.argv.includes('--debug');
@@ -61,26 +62,31 @@ console.log(
   `Starting CodeLM server build ${VERSION}${DEBUG ? ' in debug mode' : ''}`
 );
 
-mongoose.set('useFindAndModify', false);
-mongoose
-  .connect('mongodb://localhost/codelm', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log('Connected to MongoDB');
+MongoClient.connect('mongodb://localhost/codelm', { useNewUrlParser: true })
+  .then(client => {
+    Dao.db = client.db('codelm');
 
-    SettingsDao.getSettings().then(settings => {
-      console.log(
-        'Scheduled ' + SettingsDao.scheduleJobs(settings) + ' events'
-      );
+    mongoose.set('useFindAndModify', false);
+    mongoose
+      .connect('mongodb://localhost/codelm', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
+      .then(() => {
+        console.log('Connected to MongoDB');
 
-      SocketManager.init(app);
-      console.log('Set up socket manager');
+        SettingsDao.getSettings().then(settings => {
+          console.log(
+            'Scheduled ' + SettingsDao.scheduleJobs(settings) + ' events'
+          );
 
-      app.listen(8080, () => {
-        console.log('Listening on http://localhost:8080');
+          SocketManager.init(app);
+          console.log('Set up socket manager');
+
+          app.listen(8080, () => {
+            console.log('Listening on http://localhost:8080');
+          });
+        });
       });
-    });
   })
   .catch(console.error);

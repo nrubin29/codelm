@@ -26,10 +26,10 @@ router.get('/init', async (req: Request, res: Response) => {
     Array.from({ length: numAccounts }, (_, i) => `debug${i}`)
   );
 
-  let division = await DivisionDao.getDivisionByName('Debug');
+  let division = await DivisionDao.getByField('name', 'Debug');
 
   if (!division) {
-    division = await DivisionDao.addOrUpdateDivision({
+    division = await DivisionDao.addOrUpdate({
       _id: undefined,
       name: 'Debug',
       type: DivisionType.Special,
@@ -37,8 +37,8 @@ router.get('/init', async (req: Request, res: Response) => {
     });
   }
 
-  await TeamDao.deleteTeams(debugTeamUsernames);
-  const teams = await TeamDao.createTeams(
+  await TeamDao.deleteAllByField('username', debugTeamUsernames);
+  const teams = await TeamDao.addMany(
     debugTeamUsernames.map(username => ({
       members: undefined,
       division,
@@ -52,7 +52,7 @@ router.get('/init', async (req: Request, res: Response) => {
 });
 
 router.get('/deinit', async (req: Request, res: Response) => {
-  await TeamDao.deleteTeams(debugTeamUsernames);
+  await TeamDao.deleteAllByField('username', debugTeamUsernames);
   res.send({ success: true });
 });
 
