@@ -10,7 +10,6 @@ export const enum LoginResponse {
   IncorrectPassword = 'Incorrect Password',
   NotFound = 'Account not found',
   Closed = 'The dashboard is currently closed',
-  AlreadyExists = 'An account with that username already exists',
   AlreadyConnected = 'This account is already logged in',
   OutdatedClient = 'Please refresh the page. If this error persists, clear your browser cache',
   Error = 'An internal error occurred.',

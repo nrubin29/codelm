@@ -5,18 +5,14 @@
   align-items: center;
   justify-content: center;
   background: #fafafa;
+
+  & ::ng-deep {
+    .mat-form-field {
+      font-size: 20px;
+    }
+  }
 }
 
-img {
+app-card {
   width: 30vw;
-  margin-bottom: 1em;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.mat-form-field {
-  font-size: 20px;
 }

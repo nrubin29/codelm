@@ -15,18 +15,6 @@ export interface LoginPacket extends IClientPacket {
   password: string;
 }
 
-export interface RegisterTeamData {
-  username: string;
-  password: string;
-  members: string;
-  division: string;
-}
-
-export interface RegisterPacket extends IClientPacket {
-  name: 'register';
-  teamData: RegisterTeamData;
-}
-
 export interface ReplayPacket extends IClientPacket {
   name: 'replay';
   replayRequest: ClientReplayRequest;
@@ -39,11 +27,7 @@ export interface SubmissionPacket extends IClientPacket {
   team: TeamModel;
 }
 
-export type ClientPacket =
-  | LoginPacket
-  | RegisterPacket
-  | ReplayPacket
-  | SubmissionPacket;
+export type ClientPacket = LoginPacket | ReplayPacket | SubmissionPacket;
 
 export function isClientPacket(packet: Packet): packet is ClientPacket {
   return (packet as ClientPacket).version !== undefined;

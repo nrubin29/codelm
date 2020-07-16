@@ -10,8 +10,6 @@ import { ViewSubmissionsComponent } from './components/view-submissions/view-sub
 import { EntityGroupingComponent } from './views/entity-grouping/entity-grouping.component';
 import { EntityListComponent } from './views/entity-list/entity-list.component';
 import { LeaderboardCellComponent } from './components/leaderboard-cell/leaderboard-cell.component';
-import { EditEntityComponent } from './components/edit-entity/edit-entity.component';
-import { DynamicFormFieldComponent } from './components/dynamic-form-field/dynamic-form-field.component';
 import { BatchAddTeamsComponent } from './views/batch-add-teams/batch-add-teams.component';
 
 @NgModule({
@@ -24,8 +22,6 @@ import { BatchAddTeamsComponent } from './views/batch-add-teams/batch-add-teams.
     EntityGroupingComponent,
     EntityListComponent,
     LeaderboardCellComponent,
-    EditEntityComponent,
-    DynamicFormFieldComponent,
     BatchAddTeamsComponent,
   ],
   imports: [SharedModule, AdminRoutingModule, AngularEditorModule],

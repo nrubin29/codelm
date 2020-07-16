@@ -7,9 +7,7 @@ import { SocketService } from './socket.service';
 import { TeamService } from './team.service';
 import { RestService } from './rest.service';
 import { AdminService } from './admin.service';
-import { RegisterTeamData } from '../../../../common/src/packets/client.packet';
 import { VERSION } from '../../../../common/version';
-import { Packet } from '../../../../common/src/packets/packet';
 
 @Injectable({
   providedIn: 'root',
@@ -23,19 +21,6 @@ export class AuthService {
   ) {}
 
   login(username: string, password: string): Promise<LoginResponse> {
-    return this.connect({
-      name: 'login',
-      username,
-      password,
-      version: VERSION,
-    });
-  }
-
-  register(teamData: RegisterTeamData): Promise<LoginResponse> {
-    return this.connect({ name: 'register', teamData, version: VERSION });
-  }
-
-  private connect(packet: Packet) {
     return new Promise<LoginResponse>((resolve, reject) => {
       this.socketService
         .connect()
@@ -59,7 +44,12 @@ export class AuthService {
             }
           );
 
-          this.socketService.emit(packet);
+          this.socketService.emit({
+            name: 'login',
+            username,
+            password,
+            version: VERSION,
+          });
         })
         .catch(reject);
     });

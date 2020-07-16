@@ -1,54 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { LoginResponse } from '../../../../../../common/src/packets/server.packet';
-import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
-import { DivisionModel } from '../../../../../../common/src/models/division.model';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { PersonService } from '../../../services/person.service';
+import { DialogResult } from '../../components/edit-entity/edit-entity.component';
+import { PersonModel } from '../../../../../../common/src/models/person.model';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements OnInit {
-  divisions: DivisionModel[];
-  formGroup: FormGroup;
+export class RegisterComponent {
+  constructor(public personService: PersonService, private router: Router) {}
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
-
-  ngOnInit() {
-    this.formGroup = new FormGroup({
-      username: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
-      members: new FormControl('', Validators.required),
-      division: new FormControl(undefined, Validators.required),
-    });
-
-    this.activatedRoute.data.subscribe(data => {
-      this.divisions = data['divisions'];
-      this.formGroup.controls['division'].setValue(this.divisions[0]._id);
-    });
-  }
-
-  register(form: NgForm) {
-    if (!form.value.username || !form.value.password) {
-      alert('Please enter a username and password');
+  action([result, person]: [DialogResult, PersonModel]) {
+    if (result === 'save') {
+      this.personService
+        .addOrUpdate(person)
+        .then(() => {
+          alert('Registration successful!');
+          this.login();
+        })
+        .catch(alert);
     }
-
-    this.authService
-      .register(form.value)
-      .then((response: LoginResponse) => {
-        if (response === LoginResponse.SuccessTeam) {
-          this.router.navigate(['dashboard']);
-        }
-      })
-      .catch((response: LoginResponse | Error) => {
-        alert(response);
-      });
   }
 
   login() {

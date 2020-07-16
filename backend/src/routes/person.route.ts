@@ -12,13 +12,14 @@ router.get('/group/:groupId', async (req: Request, res: Response) => {
   res.json(await PersonDao.getPeopleForGroup(req.params.groupId));
 });
 
-router.put(
-  '/',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
+router.put('/', async (req: Request, res: Response) => {
+  try {
     res.json(await PersonDao.addOrUpdatePerson(req.body));
+  } catch {
+    // TODO: Standardize, type, and properly handle errors.
+    res.json({ error: 'This email address is already registered.' });
   }
-);
+});
 
 router.delete(
   '/:id',

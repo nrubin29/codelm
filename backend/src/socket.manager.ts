@@ -1,7 +1,6 @@
 import {
   isClientPacket,
   LoginPacket,
-  RegisterPacket,
   ReplayPacket,
   SubmissionPacket,
 } from '../../common/src/packets/client.packet';
@@ -148,11 +147,6 @@ export class SocketManager {
           __id => (_id = __id)
         )
       );
-      socket.on('register', packet =>
-        this.onRegisterPacket(packet as RegisterPacket, socket).then(
-          __id => (_id = __id)
-        )
-      );
       socket.on('submission', packet =>
         this.onSubmissionPacket(packet as SubmissionPacket, socket)
       );
@@ -284,56 +278,6 @@ export class SocketManager {
             reject();
           }
         });
-    });
-  }
-
-  onRegisterPacket(packet: RegisterPacket, socket: WebSocket): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      const registerPacket = packet as RegisterPacket;
-      PermissionsUtil.canRegister().then(canRegister => {
-        if (canRegister) {
-          TeamDao.register(registerPacket.teamData)
-            .then(team => {
-              this.emitToSocket(
-                {
-                  name: 'loginResponse',
-                  response: LoginResponse.SuccessTeam,
-                  team: sanitizeTeam(team),
-                },
-                socket
-              );
-              this.teamSockets.set(team._id.toString(), socket);
-              resolve(team._id);
-            })
-            .catch((response: LoginResponse | Error) => {
-              if ((response as any).stack !== undefined) {
-                console.error(response);
-                this.emitToSocket(
-                  { name: 'loginResponse', response: LoginResponse.Error },
-                  socket
-                );
-              } else {
-                this.emitToSocket(
-                  {
-                    name: 'loginResponse',
-                    response: response as LoginResponse,
-                  },
-                  socket
-                );
-              }
-
-              socket.close();
-              reject();
-            });
-        } else {
-          this.emitToSocket(
-            { name: 'loginResponse', response: LoginResponse.Closed },
-            socket
-          );
-          socket.close();
-          reject();
-        }
-      });
     });
   }
 

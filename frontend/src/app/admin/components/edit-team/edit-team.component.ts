@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TeamModel } from '../../../../../../common/src/models/team.model';
 import { TeamService } from '../../../services/team.service';
 import { Router } from '@angular/router';
-import { DialogResult } from '../edit-entity/edit-entity.component';
+import { DialogResult } from '../../../common/components/edit-entity/edit-entity.component';
 
 @Component({
   selector: 'app-edit-team',

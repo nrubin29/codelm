@@ -20,6 +20,7 @@ export interface Attribute {
     | 'wysiwyg'
     | 'multiline'
     | 'password'
+    | 'email'
     | 'file'
     | 'boolean'
     | 'select'

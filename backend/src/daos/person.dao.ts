@@ -5,7 +5,7 @@ type PersonType = PersonModel & mongoose.Document;
 
 const PersonSchema = new mongoose.Schema({
   name: String,
-  email: String,
+  email: { type: String, unique: true },
   year: String,
   experience: String,
   group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group' },
@@ -32,7 +32,16 @@ export class PersonDao {
 
   static async addOrUpdatePerson(person: PersonModel): Promise<PersonModel> {
     if (!person._id) {
-      return (await Person.create(person)).toObject();
+      try {
+        return (await Person.create(person)).toObject();
+      } catch (err) {
+        if (err.code !== undefined && err.code === 11000) {
+          // It's a MongoError for non-unique username.
+          throw Error('This email address is already registered.');
+        } else {
+          throw err;
+        }
+      }
     } else {
       return (
         await Person.findByIdAndUpdate(person._id, person, { new: true })

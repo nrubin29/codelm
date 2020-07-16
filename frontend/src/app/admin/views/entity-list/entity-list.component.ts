@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   DialogResult,
   EditEntityComponent,
-} from '../../components/edit-entity/edit-entity.component';
+} from '../../../common/components/edit-entity/edit-entity.component';
 
 // TODO: Add searching
 

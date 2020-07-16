@@ -37,6 +37,8 @@ import { GameComponent } from './common/views/game/game.component';
 import { FileDropComponent } from './common/components/file-drop/file-drop.component';
 import { PluralizeSentencePipe } from './pipes/pluralize-sentence.pipe';
 import { AlertComponent } from './common/components/alert/alert.component';
+import { EditEntityComponent } from './common/components/edit-entity/edit-entity.component';
+import { DynamicFormFieldComponent } from './common/components/dynamic-form-field/dynamic-form-field.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { AlertComponent } from './common/components/alert/alert.component';
     GameComponent,
     FileDropComponent,
     AlertComponent,
+    EditEntityComponent,
+    DynamicFormFieldComponent,
     PluralizePipe,
     PluralizeSentencePipe,
     TitlePipe,
@@ -91,6 +95,8 @@ import { AlertComponent } from './common/components/alert/alert.component';
     CodeMirrorComponent,
     FileDropComponent,
     AlertComponent,
+    EditEntityComponent,
+    DynamicFormFieldComponent,
     PluralizePipe,
     PluralizeSentencePipe,
     TitlePipe,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsModel } from '../../../../../../common/src/models/settings.model';
 import { SettingsService } from '../../../services/settings.service';
-import { DialogResult } from '../../components/edit-entity/edit-entity.component';
+import { DialogResult } from '../../../common/components/edit-entity/edit-entity.component';
 
 @Component({
   selector: 'app-settings',

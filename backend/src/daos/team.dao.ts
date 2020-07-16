@@ -126,35 +126,6 @@ export class TeamDao {
     }
   }
 
-  // TODO: Consolidate code between register() and addOrUpdateTeam()
-  static async register(team: any): Promise<TeamModel> {
-    if (!team.username || !team.password) {
-      throw LoginResponse.NotFound;
-    }
-
-    const salt = crypto.randomBytes(16).toString('hex');
-    const hash = crypto
-      .pbkdf2Sync(team.password, new Buffer(salt), 1000, 64, 'sha512')
-      .toString('hex');
-
-    team.salt = salt;
-    team.password = hash;
-
-    // TODO: Check for valid division.
-
-    try {
-      const createdTeam = await Team.create(team as TeamModel);
-      return await TeamDao.getTeam(createdTeam._id);
-    } catch (err) {
-      if (err.code !== undefined && err.code === 11000) {
-        // It's a MongoError for not-unique username.
-        throw LoginResponse.AlreadyExists;
-      } else {
-        throw err;
-      }
-    }
-  }
-
   static deleteTeam(id: string): Promise<any> {
     return Team.deleteOne({ _id: id }).exec();
   }
