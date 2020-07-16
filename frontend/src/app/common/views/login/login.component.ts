@@ -4,7 +4,7 @@ import { AuthService } from '../../../services/auth.service';
 import { LoginResponse } from '../../../../../../common/src/packets/server.packet';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { SettingsModel } from '../../../../../../common/src/models/settings.model';
-import { VERSION } from '../../../../../../common/version';
+import { VERSION, YEAR } from '../../../../../../common/version';
 import { MatDialog } from '@angular/material/dialog';
 import { AllCodeComponent } from '../../components/all-code/all-code.component';
 import { FaqComponent } from '../../components/faq/faq.component';
@@ -76,5 +76,9 @@ export class LoginComponent implements OnInit {
 
   get version() {
     return VERSION;
+  }
+
+  get year() {
+    return YEAR;
   }
 }

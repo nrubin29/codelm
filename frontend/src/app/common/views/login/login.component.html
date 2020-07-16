@@ -1,8 +1,23 @@
 <app-card>
   <img src="assets/logo.png" />
-  <!--  <app-card display="info">-->
-  <!--    <p>Welcome to the CodeLM 2020 dashboard! <a href="javascript:void(0)" (click)="showFaq()">Click here</a> to learn more.</p>-->
-  <!--  </app-card>-->
+  <app-card
+    display="info"
+    header="Welcome to the CodeLM {{ year }} dashboard!"
+    *ngIf="settings.registration"
+  >
+    <button mat-raised-button color="accent" type="button" (click)="showFaq()">
+      Frequently Asked Questions
+    </button>
+    <button
+      mat-raised-button
+      color="accent"
+      type="button"
+      style="float: right;"
+      (click)="register()"
+    >
+      Register
+    </button>
+  </app-card>
   <form
     #loginForm="ngForm"
     [formGroup]="formGroup"
@@ -27,18 +42,7 @@
         placeholder="Password"
       />
     </mat-form-field>
-    <div class="flex display-side">
-      <button mat-raised-button color="accent" type="submit">Log In</button>
-      <button
-        mat-raised-button
-        color="accent"
-        type="button"
-        (click)="register()"
-        *ngIf="settings.registration"
-      >
-        Register
-      </button>
-    </div>
+    <button mat-raised-button color="accent" type="submit">Log In</button>
   </form>
   <br />
   <p class="right">
