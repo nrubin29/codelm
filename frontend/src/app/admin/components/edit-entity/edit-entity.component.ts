@@ -90,7 +90,10 @@ export class EditEntityComponent implements OnInit {
           attribute.type === 'password'
             ? ''
             : attribute.transform?.(entity) ?? entity[attribute.name],
-          attribute.optional ? [] : [Validators.required]
+          [
+            ...(attribute.optional ? [] : [Validators.required]),
+            ...(attribute.type === 'email' ? [Validators.email] : []),
+          ]
         ),
       }))
     );

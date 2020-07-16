@@ -8,15 +8,6 @@
     >
     <br /><br />
   </ng-container>
-  <mat-form-field color="accent" *ngSwitchCase="'password'">
-    <input
-      matInput
-      [(ngModel)]="value"
-      type="password"
-      [placeholder]="hideLabel ? null : (attribute.name | title)"
-      [readonly]="attribute.readonly"
-    />
-  </mat-form-field>
   <angular-editor
     *ngSwitchCase="'wysiwyg'"
     [(ngModel)]="value"
@@ -58,7 +49,7 @@
     <input
       matInput
       [(ngModel)]="value"
-      type="text"
+      [type]="attribute.type || 'text'"
       [placeholder]="hideLabel ? null : (attribute.name | title)"
       [readonly]="attribute.readonly"
     />
