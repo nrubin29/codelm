@@ -67,20 +67,15 @@ export class PermissionsUtil {
   }
 
   static async requireAdmin(req: Request, res: Response, next: NextFunction) {
-    if (!req.headers.authorization) {
-      next(new Error('No Authorization header.'));
-      return;
-    }
-
-    req.params.admin = await AdminDao.getAdmin(
-      req.headers.authorization.split(' ')[1]
-    );
-
-    if (req.params.admin) {
-      next();
-    } else {
-      next(new Error('No admin found for given authorization.'));
-    }
+    await PermissionsUtil.requestAdmin(req, res, err => {
+      if (err) {
+        next(err);
+      } else if (req.params.admin) {
+        next();
+      } else {
+        next(new Error('No admin found for given authorization.'));
+      }
+    });
   }
 
   static async requestAdmin(req: Request, res: Response, next: NextFunction) {
