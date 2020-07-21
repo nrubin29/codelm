@@ -40,6 +40,7 @@ import { AlertComponent } from './common/components/alert/alert.component';
 import { EditEntityComponent } from './common/components/edit-entity/edit-entity.component';
 import { DynamicFormFieldComponent } from './common/components/dynamic-form-field/dynamic-form-field.component';
 import { DrawerToggleComponent } from './common/components/drawer-toggle/drawer-toggle.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { DrawerToggleComponent } from './common/components/drawer-toggle/drawer-
     MatMenuModule,
     MatRadioModule,
     MatTooltipModule,
+    MatButtonToggleModule,
   ],
   exports: [
     SubmissionComponent,
@@ -128,6 +130,7 @@ import { DrawerToggleComponent } from './common/components/drawer-toggle/drawer-
     MatMenuModule,
     MatRadioModule,
     MatTooltipModule,
+    MatButtonToggleModule,
   ],
 })
 export class SharedModule {}

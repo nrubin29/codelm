@@ -76,11 +76,6 @@ app-admin {
     & > :not(:last-child) {
       margin-right: 1em;
     }
-
-    // This fixes the button alignment in problem.component, but it might not be wanted elsewhere.
-    & > a[mat-raised-button] {
-      margin-bottom: 1em;
-    }
   }
 
   &.column {
@@ -131,4 +126,8 @@ mat-row:last-child {
   white-space: pre-line;
   text-align: center;
   font-size: 12px;
+}
+
+.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  line-height: 36px;
 }

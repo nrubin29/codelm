@@ -27,91 +27,87 @@
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="container">
-  <div class="flex display-side">
-    <app-card header="Problem">
-      <p [innerHtml]="problem.description"></p>
-    </app-card>
-    <!-- TODO: Different card for open-ended problem. -->
-    <app-card header="Sample Test Cases" [pad]="false" *ngIf="isGraded">
-      <mat-table #table [dataSource]="problem.testCases">
-        <ng-container matColumnDef="input">
-          <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
-          <mat-cell *matCellDef="let element"
-            ><code>{{ element.input }}</code></mat-cell
-          >
-        </ng-container>
-        <ng-container matColumnDef="output">
-          <mat-header-cell *matHeaderCellDef>Output</mat-header-cell>
-          <mat-cell *matCellDef="let element"
-            ><code>{{ element.output }}</code></mat-cell
-          >
-        </ng-container>
-        <ng-container matColumnDef="explanation">
-          <mat-header-cell *matHeaderCellDef>Explanation</mat-header-cell>
-          <mat-cell *matCellDef="let element">
-            <mat-icon
-              *ngIf="element.explanation"
-              [matTooltip]="element.explanation"
-              matTooltipClass="app-tooltip"
-              style="cursor: pointer;"
-              >info</mat-icon
-            >
-          </mat-cell>
-        </ng-container>
-        <mat-header-row
-          *matHeaderRowDef="['input', 'output', 'explanation']"
-        ></mat-header-row>
-        <mat-row
-          *matRowDef="let row; columns: ['input', 'output', 'explanation']"
-        ></mat-row>
-      </mat-table>
-    </app-card>
-  </div>
-  <div class="flex right">
-    <form>
-      <mat-form-field color="accent">
-        <mat-select
-          placeholder="Language"
-          [(ngModel)]="language"
-          name="language"
-          (selectionChange)="onLanguageChange($event)"
+<div class="flex display-side" style="flex: 1;">
+  <mat-tab-group style="background: white;">
+    <mat-tab label="Problem">
+      <div class="container">
+        <p [innerHtml]="problem.description"></p>
+        <mat-divider style="margin: 1em 0;"></mat-divider>
+        <!-- TODO: Show a sample run for open-ended problems -->
+        <div *ngIf="isGraded">
+          <h3>Sample Data</h3>
+          <mat-table #table [dataSource]="problem.testCases">
+            <ng-container matColumnDef="input">
+              <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
+              <mat-cell *matCellDef="let element"
+                ><code>{{ element.input }}</code></mat-cell
+              >
+            </ng-container>
+            <ng-container matColumnDef="output">
+              <mat-header-cell *matHeaderCellDef>Output</mat-header-cell>
+              <mat-cell *matCellDef="let element"
+                ><code>{{ element.output }}</code></mat-cell
+              >
+            </ng-container>
+            <ng-container matColumnDef="explanation">
+              <mat-header-cell *matHeaderCellDef>Explanation</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <mat-icon
+                  *ngIf="element.explanation"
+                  [matTooltip]="element.explanation"
+                  matTooltipClass="app-tooltip"
+                  style="cursor: pointer;"
+                  >info</mat-icon
+                >
+              </mat-cell>
+            </ng-container>
+            <mat-header-row
+              *matHeaderRowDef="['input', 'output', 'explanation']"
+            ></mat-header-row>
+            <mat-row
+              *matRowDef="let row; columns: ['input', 'output', 'explanation']"
+            ></mat-row>
+          </mat-table>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Submissions" *ngIf="isGraded && submissions.length > 0">
+      <mat-list>
+        <mat-list-item *ngFor="let submission of submissions.slice().reverse()"
+          ><a [routerLink]="['/', 'dashboard', 'submission', submission._id]"
+            >{{ submission.datetime | date: 'shortTime' }}
+            {{ submission.test ? ' (Test)' : '' }}</a
+          ></mat-list-item
         >
-          <mat-option value="java">Java</mat-option>
-          <mat-option value="python">Python 3</mat-option>
-          <mat-option value="cpp">C++</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </form>
-    <a mat-raised-button color="accent" [href]="documentation" target="_blank"
-      >Documentation</a
-    >
-  </div>
-  <app-code-mirror
-    mode="text/x-python"
-    *ngIf="language === 'python'"
-  ></app-code-mirror>
-  <app-code-mirror
-    mode="text/x-java"
-    *ngIf="language === 'java'"
-  ></app-code-mirror>
-  <app-code-mirror
-    mode="text/x-c++src"
-    *ngIf="language === 'cpp'"
-  ></app-code-mirror>
-  <br />
-  <app-card
-    header="Submissions"
-    [pad]="false"
-    *ngIf="isGraded && submissions.length > 0"
-  >
-    <mat-list>
-      <mat-list-item *ngFor="let submission of submissions.slice().reverse()"
-        ><a [routerLink]="['/', 'dashboard', 'submission', submission._id]"
-          >{{ submission.datetime | date: 'shortTime' }}
-          {{ submission.test ? ' (Test)' : '' }}</a
-        ></mat-list-item
+      </mat-list>
+    </mat-tab>
+  </mat-tab-group>
+  <div class="flex" style="flex-direction: column;">
+    <div class="flex right" style="height: 48px; margin-right: 1em;">
+      <mat-button-toggle-group
+        name="language"
+        [(ngModel)]="language"
+        (change)="onLanguageChange($event)"
       >
-    </mat-list>
-  </app-card>
+        <mat-button-toggle value="java">Java</mat-button-toggle>
+        <mat-button-toggle value="python">Python 3</mat-button-toggle>
+        <mat-button-toggle value="cpp">C++</mat-button-toggle>
+      </mat-button-toggle-group>
+      <a mat-raised-button color="accent" [href]="documentation" target="_blank"
+        >Documentation</a
+      >
+    </div>
+    <app-code-mirror
+      mode="text/x-python"
+      *ngIf="language === 'python'"
+    ></app-code-mirror>
+    <app-code-mirror
+      mode="text/x-java"
+      *ngIf="language === 'java'"
+    ></app-code-mirror>
+    <app-code-mirror
+      mode="text/x-c++src"
+      *ngIf="language === 'cpp'"
+    ></app-code-mirror>
+  </div>
 </div>

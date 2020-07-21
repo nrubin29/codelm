@@ -1,5 +1,12 @@
 :host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   flex: 1;
+
+  & ::ng-deep .CodeMirror {
+    height: 100%;
+  }
 }
 
 p {
@@ -8,4 +15,10 @@ p {
 
 mat-chip-list {
   margin-left: 0.5em;
+}
+
+app-code-mirror {
+  flex: 1;
+  overflow-y: scroll;
+  margin: 0 1em 1em 0;
 }

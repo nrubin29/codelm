@@ -20,7 +20,7 @@ import { CodeSaverService } from '../../../services/code-saver.service';
 import { ProblemUtil } from '../../../../../../common/src/utils/problem.util';
 import { CodeMirrorComponent } from '../../../common/components/code-mirror/code-mirror.component';
 import { debounceTime } from 'rxjs/operators';
-import { MatSelectChange } from '@angular/material/select';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-problem',
@@ -109,7 +109,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     return isGradedProblem(this.problem);
   }
 
-  onLanguageChange(event: MatSelectChange) {
+  onLanguageChange(event: MatButtonToggleChange) {
     this.codeSaverService.setLanguage(event.value);
     this.documentation = this.codeSaverService.getDocumentation();
     this.saveCode();
