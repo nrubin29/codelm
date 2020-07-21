@@ -16,6 +16,7 @@ export class GroupService extends SingleEntityService<GroupModel> {
       attributes: [
         { name: '_id', readonly: true, optional: true },
         { name: 'name' },
+        { name: 'special', type: 'boolean' },
       ],
       editable: true,
     });

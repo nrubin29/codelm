@@ -6,13 +6,14 @@ import { SettingsDao } from './daos/settings.dao';
 import { SettingsState } from '../../common/src/models/settings.model';
 import { DivisionType } from '../../common/src/models/division.model';
 import { DEBUG } from './server';
+import { TeamUtil } from '../../common/src/utils/team.util';
 
 export class PermissionsUtil {
   static async hasAccess(team: TeamModel): Promise<boolean> {
     const settings = await SettingsDao.getSettings();
 
     return (
-      team.division.type === DivisionType.Special ||
+      TeamUtil.isSpecial(team) ||
       settings.state === SettingsState.Debug ||
       ((settings.state === SettingsState.Graded ||
         settings.state === SettingsState.Upload) &&

@@ -7,7 +7,7 @@ import {
 import { PermissionsUtil } from '../permissions.util';
 import { SettingsDao } from '../daos/settings.dao';
 import { SettingsState } from '../../../common/src/models/settings.model';
-import { DivisionType } from '../../../common/src/models/division.model';
+import { TeamUtil } from '../../../common/src/utils/team.util';
 
 const router = Router();
 
@@ -59,7 +59,7 @@ router.get(
           ) !== -1
       );
 
-      if (req.params.team.division.type !== DivisionType.Special) {
+      if (!TeamUtil.isSpecial(req.params.team)) {
         if (settings.state === SettingsState.Graded) {
           problems = problems.filter(
             problem =>

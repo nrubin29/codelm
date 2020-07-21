@@ -4,6 +4,7 @@ import { TeamModel } from '../../../common/src/models/team.model';
 import { LoginResponse } from '../../../common/src/packets/server.packet';
 import { SubmissionDao } from './submission.dao';
 import { DEBUG } from '../server';
+import { QueryPopulateOptions } from 'mongoose';
 
 type TeamType = TeamModel & mongoose.Document;
 
@@ -46,15 +47,20 @@ export function sanitizeTeam(team: TeamModel): TeamModel {
 const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
 export class TeamDao {
+  private static readonly populationPaths: QueryPopulateOptions[] = [
+    { path: 'division' },
+    { path: 'members', populate: { path: 'group' } },
+  ];
+
   static async getTeam(id: string): Promise<TeamModel> {
     return await TeamDao.addScore(
-      await Team.findById(id).populate('division').populate('members').exec()
+      await Team.findById(id).populate(TeamDao.populationPaths).exec()
     );
   }
 
   static async getTeams(): Promise<TeamType[]> {
     return await TeamDao.addScores(
-      await Team.find().populate('division').populate('members').exec()
+      await Team.find().populate(TeamDao.populationPaths).exec()
     );
   }
 
@@ -62,8 +68,7 @@ export class TeamDao {
     return (
       await TeamDao.addScores(
         await Team.find({ division: { _id: divisionId } })
-          .populate('division')
-          .populate('members')
+          .populate(TeamDao.populationPaths)
           .exec()
       )
     ).map(team => team.toObject());
@@ -74,9 +79,9 @@ export class TeamDao {
       throw LoginResponse.NotFound;
     }
 
-    const team = await Team.findOne({ username: username })
-      .populate('division')
-      .populate('members');
+    const team = await Team.findOne({ username: username }).populate(
+      TeamDao.populationPaths
+    );
 
     if (!team) {
       throw LoginResponse.NotFound;

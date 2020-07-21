@@ -5,6 +5,7 @@ type GroupType = GroupModel & mongoose.Document;
 
 const GroupSchema = new mongoose.Schema({
   name: String,
+  special: { type: Boolean, default: false },
 });
 
 const Group = mongoose.model<GroupType>('Group', GroupSchema);
@@ -16,6 +17,12 @@ export class GroupDao {
 
   static async getGroups(): Promise<GroupModel[]> {
     return (await Group.find().exec()).map(group => group.toObject());
+  }
+
+  static async getNonSpecialGroups(): Promise<GroupModel[]> {
+    return (await Group.find({ special: false }).exec()).map(group =>
+      group.toObject()
+    );
   }
 
   static async addOrUpdateGroup(group: GroupModel): Promise<GroupModel> {
