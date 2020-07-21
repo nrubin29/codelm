@@ -24,7 +24,7 @@ export class DivisionService extends SingleEntityService<DivisionModel> {
         {
           name: 'type',
           type: 'select',
-          options: Object.keys(DivisionType).map(type => DivisionType[type]),
+          options: Object.values(DivisionType),
         },
         {
           name: 'starterCode',

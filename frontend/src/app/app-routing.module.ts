@@ -7,7 +7,6 @@ import { IsEndGuard } from './guards/is-end.guard';
 import { IsNotEndGuard } from './guards/is-not-end.guard';
 import { DisconnectGuard } from './guards/disconnect.guard';
 import { EndComponent } from './common/views/end/end.component';
-import { DivisionsResolve } from './resolves/divisions.resolve';
 import { SettingsResolve } from './resolves/settings.resolve';
 import { OpenRegistrationGuard } from './guards/open-registration.guard';
 
@@ -32,7 +31,6 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent,
     canActivate: [IsNotEndGuard, OpenRegistrationGuard],
-    resolve: { divisions: DivisionsResolve },
   },
   {
     path: 'disconnected',

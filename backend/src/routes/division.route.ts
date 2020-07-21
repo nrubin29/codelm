@@ -7,12 +7,14 @@ import {
 import { PermissionsUtil } from '../permissions.util';
 import { FileArray, UploadedFile } from 'express-fileupload';
 import { SettingsState } from '../../../common/src/models/settings.model';
-import { SettingsDao } from '../daos/settings.dao';
 import * as shortid from 'shortid';
 import * as fs from 'fs-extra';
 
 const router = Router();
 
+// This endpoint returns Competition divisions for non-admins to support the
+// possibility of Group sponsor accounts. If this feature isn't implemented,
+// this endpoint can be locked down to just admins.
 router.get(
   '/',
   PermissionsUtil.requestAdmin,
@@ -21,24 +23,12 @@ router.get(
 
     if (req.params.admin) {
       divisions = await DivisionDao.getDivisions();
-      // TODO: Only send the starterCode field when necessary.
     } else {
-      const settings = await SettingsDao.getSettings();
-
-      if (settings.preliminaries) {
-        divisions = await DivisionDao.getDivisionsOfType(
-          DivisionType.Preliminaries
-        );
-      } else {
-        divisions = await DivisionDao.getDivisionsOfType(
-          DivisionType.Competition
-        );
-      }
-
-      divisions.forEach(division => {
-        delete division.starterCode;
-      });
+      divisions = await DivisionDao.getDivisionsOfType(
+        DivisionType.Competition
+      );
     }
+
     res.json(divisions);
   }
 );
