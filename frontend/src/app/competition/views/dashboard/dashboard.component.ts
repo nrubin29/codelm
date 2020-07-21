@@ -63,8 +63,18 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  toggle(): Promise<MatDrawerToggleResult> {
-    return this.sideNav.toggle();
+  setSidenavOpen(open: boolean): Promise<any> {
+    if (open && !this.isSidenavOpen) {
+      return this.sideNav.open();
+    } else if (!open && this.isSidenavOpen) {
+      return this.sideNav.close();
+    }
+
+    return Promise.resolve();
+  }
+
+  get isSidenavOpen() {
+    return this.sideNav.opened;
   }
 
   didSolve(problem: ProblemModel) {

@@ -33,8 +33,9 @@ export class SubmitComponent implements OnInit {
     this.finished = false;
     this.problemSubmission = this.problemService.problemSubmission;
     this.animation = Math.floor(Math.random() * 12);
+    const wasSidenavOpen = this.dashboard.isSidenavOpen;
 
-    this.dashboard.toggle().then(() => {
+    this.dashboard.setSidenavOpen(false).then(() => {
       this.socketService.on<SubmissionStatusPacket>(
         'submissionStatus',
         packet => {
@@ -48,7 +49,7 @@ export class SubmitComponent implements OnInit {
           this.socketService.off('submissionStatus');
 
           this.teamService.refreshTeam().then(() => {
-            this.dashboard.toggle().then(() => {
+            this.dashboard.setSidenavOpen(wasSidenavOpen).then(() => {
               // setTimeout(() => {
               this.finished = true;
               this.router.navigate(

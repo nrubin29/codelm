@@ -67,7 +67,9 @@ export class GameComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.toggle().then(() => {
+    const wasSidenavOpen = this.rootComponent.isSidenavOpen;
+
+    this.rootComponent.setSidenavOpen(false).then(() => {
       this.socketService.on<SubmissionStatusPacket>(
         'submissionStatus',
         packet => {
@@ -127,7 +129,7 @@ export class GameComponent implements OnInit, AfterViewInit {
             clearInterval(interval);
 
             // this.teamService.refreshTeam().then(() => {
-            this.toggle().then(() => {
+            this.rootComponent.setSidenavOpen(wasSidenavOpen).then(() => {
               this.status = 'Finished';
               this._id = packet.submission._id;
               // setTimeout(() => {
@@ -139,7 +141,7 @@ export class GameComponent implements OnInit, AfterViewInit {
           } else if (packet.name === 'dockerKilled') {
             clearInterval(interval);
 
-            this.toggle().then(() => {
+            this.rootComponent.setSidenavOpen(wasSidenavOpen).then(() => {
               this.status = 'Error';
               this.error = packet.reason;
             });
@@ -176,14 +178,8 @@ export class GameComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private toggle(): Promise<any> {
-    if (this.dashboardComponent) {
-      return this.dashboardComponent.toggle();
-    } else if (this.adminComponent) {
-      return this.adminComponent.toggle();
-    }
-
-    return Promise.resolve();
+  get rootComponent() {
+    return this.dashboardComponent ?? this.adminComponent;
   }
 
   /**

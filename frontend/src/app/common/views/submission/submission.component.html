@@ -1,5 +1,6 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
+    <app-drawer-toggle></app-drawer-toggle>
     <a
       [routerLink]="['/dashboard', 'problem', submission.problem._id]"
       *ngIf="showBackButton"

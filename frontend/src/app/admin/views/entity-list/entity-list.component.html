@@ -1,5 +1,6 @@
 <mat-toolbar color="primary" *ngIf="type === 'single'">
   <mat-toolbar-row>
+    <app-drawer-toggle></app-drawer-toggle>
     <span>{{ entityName | title | pluralize }}</span>
     <ng-container *ngIf="editable">
       <span class="spacer"></span>

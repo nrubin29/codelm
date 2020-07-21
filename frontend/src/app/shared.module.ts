@@ -39,6 +39,7 @@ import { PluralizeSentencePipe } from './pipes/pluralize-sentence.pipe';
 import { AlertComponent } from './common/components/alert/alert.component';
 import { EditEntityComponent } from './common/components/edit-entity/edit-entity.component';
 import { DynamicFormFieldComponent } from './common/components/dynamic-form-field/dynamic-form-field.component';
+import { DrawerToggleComponent } from './common/components/drawer-toggle/drawer-toggle.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { DynamicFormFieldComponent } from './common/components/dynamic-form-fiel
     AlertComponent,
     EditEntityComponent,
     DynamicFormFieldComponent,
+    DrawerToggleComponent,
     PluralizePipe,
     PluralizeSentencePipe,
     TitlePipe,
@@ -97,6 +99,7 @@ import { DynamicFormFieldComponent } from './common/components/dynamic-form-fiel
     AlertComponent,
     EditEntityComponent,
     DynamicFormFieldComponent,
+    DrawerToggleComponent,
     PluralizePipe,
     PluralizeSentencePipe,
     TitlePipe,
