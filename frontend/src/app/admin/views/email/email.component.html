@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <app-drawer-toggle></app-drawer-toggle>
+    <span>Send Email</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <mat-form-field color="accent">
+    <mat-select [(ngModel)]="template" placeholder="Template">
+      <mat-option *ngFor="let template of templates" [value]="template">
+        {{ template }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <mat-select [(ngModel)]="to" placeholder="To" [multiple]="true">
+      <mat-option *ngFor="let person of persons" [value]="person">
+        {{ person.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <input matInput [(ngModel)]="subject" type="text" placeholder="Subject" />
+  </mat-form-field>
+  <button mat-button color="accent" type="button" (click)="send()">Send</button>
+</div>

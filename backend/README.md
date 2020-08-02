@@ -3,6 +3,11 @@
 The backend for CodeLM.
 See the `deployment` directory for information on deploying CodeLM.
 
+## Setup
+
+In `src/`, rename `env.sample.ts` to `env.ts`.
+To use the built-in email feature, enter your Mailgun API key and domain.
+
 ## Usage
 
 ```shell script

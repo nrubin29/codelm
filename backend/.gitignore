@@ -4,6 +4,7 @@
 deployment/newwavecomputers.com.*
 db
 db2
+src/env.ts
 
 # compiled output
 /dist

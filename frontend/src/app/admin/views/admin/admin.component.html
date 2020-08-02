@@ -84,6 +84,14 @@
         <mat-icon mat-list-icon>group_add</mat-icon>
         <p mat-line>Add Team</p>
       </a>
+      <a
+        mat-list-item
+        *ngIf="admin.superUser"
+        [routerLink]="['/admin', 'email']"
+      >
+        <mat-icon mat-list-icon>email</mat-icon>
+        <p mat-line>Send Email</p>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

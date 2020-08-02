@@ -11,6 +11,7 @@ import { EntityGroupingComponent } from './views/entity-grouping/entity-grouping
 import { EntityListComponent } from './views/entity-list/entity-list.component';
 import { LeaderboardCellComponent } from './components/leaderboard-cell/leaderboard-cell.component';
 import { BatchAddTeamsComponent } from './views/batch-add-teams/batch-add-teams.component';
+import { EmailComponent } from './views/email/email.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { BatchAddTeamsComponent } from './views/batch-add-teams/batch-add-teams.
     EntityListComponent,
     LeaderboardCellComponent,
     BatchAddTeamsComponent,
+    EmailComponent,
   ],
   imports: [SharedModule, AdminRoutingModule, AngularEditorModule],
 })

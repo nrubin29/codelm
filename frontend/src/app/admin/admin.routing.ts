@@ -17,6 +17,9 @@ import { EntityServiceResolve } from '../resolves/entity-service.resolve';
 import { EntityListComponent } from './views/entity-list/entity-list.component';
 import { BatchAddTeamsComponent } from './views/batch-add-teams/batch-add-teams.component';
 import { DivisionsResolve } from '../resolves/divisions.resolve';
+import { EmailComponent } from './views/email/email.component';
+import { PersonsResolve } from '../resolves/persons.resolve';
+import { GroupsResolve } from '../resolves/groups.resolve';
 
 const routes: Routes = [
   {
@@ -93,6 +96,11 @@ const routes: Routes = [
         path: 'batch-add-teams',
         component: BatchAddTeamsComponent,
         resolve: { divisions: DivisionsResolve },
+      },
+      {
+        path: 'email',
+        component: EmailComponent,
+        resolve: { persons: PersonsResolve, groups: GroupsResolve },
       },
       { path: 'game/:gameType', component: GameComponent },
     ],

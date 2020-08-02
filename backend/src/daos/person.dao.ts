@@ -24,6 +24,14 @@ export class PersonDao {
     );
   }
 
+  static async getPeopleByIds(_ids: string[]): Promise<PersonModel[]> {
+    return (
+      await Person.find({ _id: { $in: _ids } })
+        .populate('group')
+        .exec()
+    ).map(person => person.toObject());
+  }
+
   static async getPeopleForGroup(groupId: string): Promise<PersonModel[]> {
     return (
       await Person.find({ group: groupId }).populate('group').exec()
