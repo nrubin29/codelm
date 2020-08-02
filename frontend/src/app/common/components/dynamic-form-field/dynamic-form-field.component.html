@@ -33,18 +33,27 @@
       />
     </ng-template>
   </ng-container>
-  <mat-form-field color="accent" *ngSwitchCase="'select'">
-    <mat-select
-      [(ngModel)]="value"
-      [placeholder]="hideLabel ? null : (attribute.name | title)"
-    >
-      <mat-option
-        *ngFor="let option of options | async"
-        [value]="option.value"
-        >{{ option.name }}</mat-option
+  <ng-container *ngSwitchCase="'select'">
+    <ng-container *ngTemplateOutlet="select"></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'multiselect'">
+    <ng-container *ngTemplateOutlet="select"></ng-container>
+  </ng-container>
+  <ng-template #select>
+    <mat-form-field color="accent">
+      <mat-select
+        [(ngModel)]="value"
+        [placeholder]="hideLabel ? null : (attribute.name | title)"
+        [multiple]="attribute.type === 'multiselect'"
       >
-    </mat-select>
-  </mat-form-field>
+        <mat-option
+          *ngFor="let option of options | async"
+          [value]="option.value"
+          >{{ option.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+  </ng-template>
   <mat-form-field color="accent" *ngSwitchDefault>
     <input
       matInput

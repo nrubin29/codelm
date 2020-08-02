@@ -24,6 +24,7 @@ export interface Attribute {
     | 'file'
     | 'boolean'
     | 'select'
+    | 'multiselect'
     | 'table';
 
   optional?: boolean;

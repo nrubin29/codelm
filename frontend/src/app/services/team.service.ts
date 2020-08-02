@@ -3,8 +3,8 @@ import { TeamModel } from '../../../../common/src/models/team.model';
 import { RestService } from './rest.service';
 import { BehaviorSubject } from 'rxjs';
 import { EntityService } from './entity.service';
-import { ProblemDivision } from '../../../../common/src/models/problem.model';
 import { DivisionService } from './division.service';
+import { PersonService } from './person.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,8 @@ export class TeamService extends EntityService<TeamModel> {
 
   constructor(
     private restService: RestService,
-    private divisionService: DivisionService
+    private divisionService: DivisionService,
+    private personService: PersonService
   ) {
     super({
       entityName: 'team',
@@ -23,7 +24,17 @@ export class TeamService extends EntityService<TeamModel> {
         { name: '_id', optional: true, readonly: true },
         { name: 'username' },
         { name: 'password' },
-        { name: 'members' },
+        {
+          name: 'members',
+          type: 'multiselect',
+          options: () =>
+            this.personService.getAll().then(people =>
+              people.map(person => ({
+                name: person.name,
+                value: person._id.toString(),
+              }))
+            ),
+        },
         {
           name: 'division',
           type: 'select',

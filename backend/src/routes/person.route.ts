@@ -4,13 +4,21 @@ import { PersonDao } from '../daos/person.dao';
 
 const router = Router();
 
-router.get('/', async (req: Request, res: Response) => {
-  res.json(await PersonDao.getPeople());
-});
+router.get(
+  '/',
+  PermissionsUtil.requireAdmin,
+  async (req: Request, res: Response) => {
+    res.json(await PersonDao.getPeople());
+  }
+);
 
-router.get('/group/:groupId', async (req: Request, res: Response) => {
-  res.json(await PersonDao.getPeopleForGroup(req.params.groupId));
-});
+router.get(
+  '/group/:groupId',
+  PermissionsUtil.requireAdmin,
+  async (req: Request, res: Response) => {
+    res.json(await PersonDao.getPeopleForGroup(req.params.groupId));
+  }
+);
 
 router.put('/', async (req: Request, res: Response) => {
   try {

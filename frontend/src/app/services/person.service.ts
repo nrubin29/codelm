@@ -61,6 +61,10 @@ export class PersonService extends GroupedEntityService<
     );
   }
 
+  getAll(): Promise<PersonModel[]> {
+    return this.restService.get<PersonModel[]>(this.endpoint);
+  }
+
   addOrUpdate(person: PersonModel): Promise<PersonModel> {
     return this.restService.put<PersonModel>(this.endpoint, person);
   }
