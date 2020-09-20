@@ -3,8 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ProblemModel } from '../../../../../../common/src/models/problem.model';
 import { TeamModel } from '../../../../../../common/src/models/team.model';
 import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
-import * as moment from 'moment';
 import { SubmissionService } from '../../../services/submission.service';
+import { format, parseJSON } from 'date-fns';
 
 @Component({
   selector: 'app-view-submissions',
@@ -33,8 +33,8 @@ export class ViewSubmissionsComponent implements OnInit {
       .then(submissions => (this.submissions = submissions.reverse()));
   }
 
-  formattedDate(date: Date): string {
-    return moment(date).format('MMM D, h:mm:ss a');
+  formatDate(date: string): string {
+    return format(parseJSON(date), 'MMM d, h:mm:ss a');
   }
 
   close() {

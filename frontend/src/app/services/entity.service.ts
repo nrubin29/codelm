@@ -21,6 +21,7 @@ export interface Attribute {
     | 'multiline'
     | 'password'
     | 'email'
+    | 'date'
     | 'file'
     | 'boolean'
     | 'select'

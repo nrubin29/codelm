@@ -5,7 +5,7 @@ import { TeamService } from '../../../services/team.service';
 import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
 import { ProblemModel } from '../../../../../../common/src/models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
-import * as moment from 'moment';
+import { format, parseJSON } from 'date-fns';
 
 @Component({
   selector: 'app-team',
@@ -41,7 +41,7 @@ export class TeamComponent implements OnInit {
     return this.team.members.map(member => member.name).join(', ');
   }
 
-  asMoment(date: Date): moment.Moment {
-    return moment(date);
+  formatDate(date: string): string {
+    return format(parseJSON(date), 'MMM d, h:mm:ss a');
   }
 }

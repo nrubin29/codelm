@@ -31,3 +31,7 @@
             newwavecomputers.com.key
             newwavecomputers.com.pem
 ```
+
+## Commands
+
+- `$ timedatectl set-timezone America/New_York`

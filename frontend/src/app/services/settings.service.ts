@@ -37,7 +37,7 @@ export class SettingsService extends EntityService<SettingsModel> {
                 state => SettingsState[state]
               ),
             },
-            { name: 'when' },
+            { name: 'when', type: 'date' },
           ],
         },
       ],

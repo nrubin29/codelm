@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
-import { Moment } from 'moment';
+import {
+  getUnixTime,
+  intervalToDuration,
+  isFuture,
+  isPast,
+  parseJSON,
+} from 'date-fns';
 import { SettingsService } from '../../../services/settings.service';
 import { SocketService } from '../../../services/socket.service';
 import { SettingsModel } from '../../../../../../common/src/models/settings.model';
@@ -14,7 +19,7 @@ export class CountdownComponent implements OnInit {
   private settings: SettingsModel;
   private interval: number;
 
-  end: Moment;
+  end: Date;
   countdown: string;
 
   constructor(
@@ -42,28 +47,32 @@ export class CountdownComponent implements OnInit {
     }
 
     const schedule = this.settings.schedule
-      .filter(schedule => moment().isBefore(moment(schedule.when)))
-      .sort(schedule => moment(schedule.when).unix());
+      .map(schedule => parseJSON(schedule.when))
+      .filter(when => isFuture(when))
+      .sort(when => getUnixTime(when));
 
     const tick = () => {
       if (!this.end) {
         return;
       }
 
-      if (moment().isAfter(this.end)) {
+      if (isPast(this.end)) {
         clearInterval(this.interval);
         this.countdown = '00:00:00';
       } else {
         // TODO: Only display days if > 1 day remains.
-        const diff = moment.duration(this.end.diff(moment()));
-        this.countdown = [diff.hours(), diff.minutes(), diff.seconds()]
+        const duration = intervalToDuration({
+          start: new Date(),
+          end: this.end,
+        });
+        this.countdown = [duration.hours, duration.minutes, duration.seconds]
           .map(x => this.pad(x))
           .join(':');
       }
     };
 
     if (schedule.length > 0) {
-      this.end = moment(schedule[0].when);
+      this.end = schedule[0];
 
       tick();
       this.interval = setInterval(tick, 500);

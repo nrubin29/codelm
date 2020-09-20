@@ -24,7 +24,7 @@
     "@kolkov/angular-editor": "^1.1.0",
     "codemirror": "^5.55.0",
     "core-js": "^3.6.5",
-    "moment": "^2.27.0",
+    "date-fns": "^2.16.1",
     "nanoid": "^3.1.10",
     "rxjs": "~6.6.0",
     "spinkit": "^2.0.1",
@@ -37,7 +37,6 @@
     "@angular/compiler-cli": "~10.0.3",
     "@angular/language-service": "~10.0.3",
     "@types/codemirror": "^0.0.97",
-    "@types/moment": "^2.13.0",
     "ts-node": "~8.10.2",
     "typescript": "~3.9.6"
   }

@@ -4,12 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "fs-extra": "^9.0.1",
-    "moment": "^2.27.0",
+    "date-fns": "^2.16.1",
     "rxjs": "^6.6.0"
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.1",
     "tslib": "^2.0.0",
     "typescript": "~3.9.6"
   }
