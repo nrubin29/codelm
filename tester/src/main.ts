@@ -7,7 +7,7 @@ console.log(`Starting CodeLM tester build ${VERSION}`);
 
 const REMOTE = process.argv.includes('--remote');
 const SECURE = REMOTE ? 's' : '';
-const BASE_URL = REMOTE ? 'newwavecomputers.com' : 'localhost:8080';
+const BASE_URL = REMOTE ? 'dashboard.newwavecomputers.com' : 'localhost:8080';
 
 export function makeURL(path: string) {
   return `http${SECURE}://${BASE_URL}${path}`;

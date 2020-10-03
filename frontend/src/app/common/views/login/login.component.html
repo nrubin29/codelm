@@ -1,23 +1,5 @@
 <app-card>
   <img src="assets/logo.png" />
-  <app-card
-    display="info"
-    header="Welcome to the CodeLM {{ year }} dashboard!"
-    *ngIf="settings.registration"
-  >
-    <button mat-raised-button color="accent" type="button" (click)="showFaq()">
-      Frequently Asked Questions
-    </button>
-    <button
-      mat-raised-button
-      color="accent"
-      type="button"
-      style="float: right;"
-      (click)="register()"
-    >
-      Register
-    </button>
-  </app-card>
   <form
     #loginForm="ngForm"
     [formGroup]="formGroup"
@@ -44,6 +26,21 @@
     </mat-form-field>
     <button mat-raised-button color="accent" type="submit">Log In</button>
   </form>
+  <ng-container *ngIf="settings.registration">
+    <br />
+    <mat-divider></mat-divider>
+    <br />
+    <button
+      mat-raised-button
+      color="basic"
+      type="button"
+      class="register-button"
+      (click)="register()"
+    >
+      Register
+    </button>
+    <br />
+  </ng-container>
   <br />
   <p class="right">
     Build:

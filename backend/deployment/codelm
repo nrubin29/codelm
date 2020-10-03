@@ -2,10 +2,23 @@ upstream app_server_codelm {
     server 127.0.0.1:8080 fail_timeout=0;
 }
 
+# Landing
 server {
     listen 80;
     listen 443 ssl;
     server_name newwavecomputers.com www.newwavecomputers.com;
+    root /home/codelm/dist/landing;
+
+    ssl on;
+    ssl_certificate /root/certs/newwavecomputers.com.pem;
+    ssl_certificate_key /root/certs/newwavecomputers.com.key;
+}
+
+# Dashboard
+server {
+    listen 80;
+    listen 443 ssl;
+    server_name dashboard.newwavecomputers.com www.dashboard.newwavecomputers.com;
     root /home/codelm/dist/frontend;
 
     ssl on;

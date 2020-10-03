@@ -10,4 +10,4 @@ The server must be run in debug mode for the tester to work.
 node tester.js [--remote]
 ```
 
-If `--remote` is passed, the tester will connect to `newwavecomputers.com`. Otherwise, it will connect to `localhost:8080`.
+If `--remote` is passed, the tester will connect to `dashboard.newwavecomputers.com`. Otherwise, it will connect to `localhost:8080`.

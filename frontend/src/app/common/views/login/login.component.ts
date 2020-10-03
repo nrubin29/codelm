@@ -4,10 +4,9 @@ import { AuthService } from '../../../services/auth.service';
 import { LoginResponse } from '../../../../../../common/src/packets/server.packet';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { SettingsModel } from '../../../../../../common/src/models/settings.model';
-import { VERSION, YEAR } from '../../../../../../common/version';
+import { VERSION } from '../../../../../../common/version';
 import { MatDialog } from '@angular/material/dialog';
 import { AllCodeComponent } from '../../components/all-code/all-code.component';
-import { FaqComponent } from '../../components/faq/faq.component';
 
 @Component({
   selector: 'app-login',
@@ -60,13 +59,6 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['register']);
   }
 
-  showFaq() {
-    this.dialog.open(FaqComponent, {
-      width: '90vw',
-      height: '90vh',
-    });
-  }
-
   showAllCode() {
     this.dialog.open(AllCodeComponent, {
       width: '90vw',
@@ -76,9 +68,5 @@ export class LoginComponent implements OnInit {
 
   get version() {
     return VERSION;
-  }
-
-  get year() {
-    return YEAR;
   }
 }

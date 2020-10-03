@@ -32,7 +32,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AllCodeComponent } from './common/components/all-code/all-code.component';
 import { TitlePipe } from './pipes/title.pipe';
-import { FaqComponent } from './common/components/faq/faq.component';
 import { GameComponent } from './common/views/game/game.component';
 import { FileDropComponent } from './common/components/file-drop/file-drop.component';
 import { PluralizeSentencePipe } from './pipes/pluralize-sentence.pipe';
@@ -52,7 +51,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     CardComponent,
     CodeMirrorComponent,
     AllCodeComponent,
-    FaqComponent,
     GameComponent,
     FileDropComponent,
     AlertComponent,
