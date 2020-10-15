@@ -14,7 +14,7 @@ import {
   ProblemType,
   TestCaseOutputMode,
 } from '../../../common/src/models/problem.model';
-import { ModelPopulateOptions } from 'mongoose';
+import { QueryPopulateOptions } from 'mongoose';
 import { SocketManager } from '../socket.manager';
 import { ProblemUtil } from '../../../common/src/utils/problem.util';
 import { TeamDao } from './team.dao';
@@ -186,29 +186,32 @@ const Submission = mongoose.model<SubmissionType>(
 );
 
 export class SubmissionDao {
-  private static readonly problemPopulationPath: ModelPopulateOptions = {
-    path: 'problem',
-    model: 'Problem',
-    populate: { path: 'divisions.division', model: 'Division' },
-  };
-  private static readonly teamPopulationPath: ModelPopulateOptions = {
-    path: 'team',
-    model: 'Team',
-    populate: { path: 'division', model: 'Division' },
-  };
+  private static readonly populationPaths: QueryPopulateOptions[] = [
+    {
+      path: 'problem',
+      model: 'Problem',
+      populate: { path: 'divisions.division', model: 'Division' },
+    },
+    {
+      path: 'team',
+      model: 'Team',
+      populate: [
+        { path: 'division', model: 'Division' },
+        { path: 'members', model: 'Person' },
+      ],
+    },
+  ];
 
   static getSubmissionRaw(id: string): Promise<SubmissionType | null> {
     return Submission.findById(id)
-      .populate(SubmissionDao.problemPopulationPath)
-      .populate(SubmissionDao.teamPopulationPath)
+      .populate(SubmissionDao.populationPaths)
       .exec();
   }
 
   static async getSubmission(id: string): Promise<SubmissionModel> {
     return (
       await Submission.findById(id)
-        .populate(SubmissionDao.problemPopulationPath)
-        .populate(SubmissionDao.teamPopulationPath)
+        .populate(SubmissionDao.populationPaths)
         .exec()
     ).toObject();
   }
@@ -217,8 +220,7 @@ export class SubmissionDao {
     teamId: string
   ): Promise<SubmissionModel[]> {
     const submissions = await Submission.find({ team: teamId })
-      .populate(SubmissionDao.problemPopulationPath)
-      .populate(SubmissionDao.teamPopulationPath)
+      .populate(SubmissionDao.populationPaths)
       .exec();
     return submissions.map(submission => submission.toObject());
   }
@@ -231,8 +233,7 @@ export class SubmissionDao {
       team: teamId,
       problem: problemId,
     })
-      .populate(SubmissionDao.problemPopulationPath)
-      .populate(SubmissionDao.teamPopulationPath)
+      .populate(SubmissionDao.populationPaths)
       .exec();
     return submissions.map(submission => submission.toObject());
   }
@@ -303,8 +304,7 @@ export class SubmissionDao {
 
   static async getDisputedSubmissions(): Promise<SubmissionModel[]> {
     const submissions = await Submission.find({ 'dispute.open': true })
-      .populate(SubmissionDao.problemPopulationPath)
-      .populate(SubmissionDao.teamPopulationPath)
+      .populate(SubmissionDao.populationPaths)
       .exec();
     return submissions.map(submission => submission.toObject());
   }
@@ -312,8 +312,7 @@ export class SubmissionDao {
   static async getScoreForTeam(teamId: string): Promise<number> {
     // This is needed because if the score is calculated in team.dao, there is circular population.
     const submissions = await Submission.find({ team: teamId })
-      .populate(SubmissionDao.problemPopulationPath)
-      .populate(SubmissionDao.teamPopulationPath)
+      .populate(SubmissionDao.populationPaths)
       .exec();
     return submissions.reduce(
       (previousValue: number, currentValue: SubmissionType) =>
@@ -337,8 +336,7 @@ export class SubmissionDao {
     const subm = await Submission.findOneAndUpdate({ _id: id }, submission, {
       new: true,
     })
-      .populate(SubmissionDao.problemPopulationPath)
-      .populate(SubmissionDao.teamPopulationPath)
+      .populate(SubmissionDao.populationPaths)
       .exec();
     SocketManager.instance.emit(subm.team._id.toString(), {
       name: 'updateTeam',
