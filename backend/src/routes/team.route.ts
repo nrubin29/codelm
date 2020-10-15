@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { TeamDao } from '../daos/team.dao';
 import { PermissionsUtil } from '../permissions.util';
 

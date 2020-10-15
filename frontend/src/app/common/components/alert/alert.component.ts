@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertService } from '../../../services/alert.service';
-import { AlertModel } from '../../../../../../common/src/models/alert.model';
+import { AlertModel } from '@codelm/common/src/models/alert.model';
 
 @Component({
   selector: 'app-alert',

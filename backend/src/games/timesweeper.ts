@@ -2,7 +2,7 @@ import { Game, GameResult } from './game';
 import {
   TimesweeperExtras,
   TimesweeperOutputType,
-} from '../../../common/src/models/game.model';
+} from '@codelm/common/src/models/game.model';
 
 const PERSON = 9;
 

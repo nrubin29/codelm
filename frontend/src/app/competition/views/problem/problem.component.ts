@@ -11,13 +11,13 @@ import {
   isGradedProblem,
   OpenEndedProblemModel,
   ProblemModel,
-} from '../../../../../../common/src/models/problem.model';
+} from '@codelm/common/src/models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
-import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
+import { SubmissionModel } from '@codelm/common/src/models/submission.model';
 import { TeamService } from '../../../services/team.service';
-import { TeamModel } from '../../../../../../common/src/models/team.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 import { CodeSaverService } from '../../../services/code-saver.service';
-import { ProblemUtil } from '../../../../../../common/src/utils/problem.util';
+import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 import { CodeMirrorComponent } from '../../../common/components/code-mirror/code-mirror.component';
 import { debounceTime } from 'rxjs/operators';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';

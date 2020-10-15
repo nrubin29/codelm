@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import * as crypto from 'crypto';
-import { AdminModel } from '../../../common/src/models/admin.model';
-import { LoginResponse } from '../../../common/src/packets/server.packet';
+import { AdminModel } from '@codelm/common/src/models/admin.model';
+import { LoginResponse } from '@codelm/common/src/packets/server.packet';
 
 type AdminType = AdminModel & mongoose.Document;
 

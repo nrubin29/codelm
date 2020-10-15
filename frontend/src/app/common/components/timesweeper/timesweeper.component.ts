@@ -6,12 +6,12 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { GameExtrasPacket } from '../../../../../../common/src/packets/server.packet';
+import { GameExtrasPacket } from '@codelm/common/src/packets/server.packet';
 import { SocketService } from '../../../services/socket.service';
 import {
   TimesweeperExtras,
   TimesweeperOutputType,
-} from '../../../../../../common/src/models/game.model';
+} from '@codelm/common/src/models/game.model';
 import { GameComponent } from '../../views/game/game.component';
 
 @Component({

@@ -4,9 +4,9 @@ import {
   DivisionModel,
   DivisionModelForUpload,
   DivisionType,
-} from '../../../../common/src/models/division.model';
+} from '@codelm/common/src/models/division.model';
 import { SingleEntityService } from './entity.service';
-import { SettingsState } from '../../../../common/src/models/settings.model';
+import { SettingsState } from '@codelm/common/src/models/settings.model';
 
 @Injectable({
   providedIn: 'root',

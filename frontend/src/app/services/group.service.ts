@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { SingleEntityService } from './entity.service';
-import { GroupModel } from '../../../../common/src/models/group.model';
+import { GroupModel } from '@codelm/common/src/models/group.model';
 
 @Injectable({
   providedIn: 'root',

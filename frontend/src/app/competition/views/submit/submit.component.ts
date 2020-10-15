@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ProblemService } from '../../../services/problem.service';
-import { ClientProblemSubmission } from '../../../../../../common/src/problem-submission';
+import { ClientProblemSubmission } from '@codelm/common/src/problem-submission';
 import { TeamService } from '../../../services/team.service';
 import { SocketService } from '../../../services/socket.service';
-import { VERSION } from '../../../../../../common/version';
+import { VERSION } from '@codelm/common/version';
 import {
   SubmissionCompletedPacket,
   SubmissionStatusPacket,
-} from '../../../../../../common/src/packets/server.packet';
+} from '@codelm/common/src/packets/server.packet';
 
 @Component({
   selector: 'app-submit',

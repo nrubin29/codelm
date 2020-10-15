@@ -3,10 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   isGradedSubmission,
   SubmissionModel,
-} from '../../../../../../common/src/models/submission.model';
+} from '@codelm/common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
 import { TeamService } from '../../../services/team.service';
-import { ProblemUtil } from '../../../../../../common/src/utils/problem.util';
+import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 
 @Component({
   selector: 'app-result',

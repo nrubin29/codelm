@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import {
   LoginResponse,
   LoginResponsePacket,
-} from '../../../../common/src/packets/server.packet';
+} from '@codelm/common/src/packets/server.packet';
 import { SocketService } from './socket.service';
 import { TeamService } from './team.service';
 import { RestService } from './rest.service';
 import { AdminService } from './admin.service';
-import { VERSION } from '../../../../common/version';
+import { VERSION } from '@codelm/common/version';
 
 @Injectable({
   providedIn: 'root',

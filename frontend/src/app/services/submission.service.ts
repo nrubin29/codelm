@@ -5,8 +5,8 @@ import {
   isUploadSubmission,
   SubmissionModel,
   SubmissionOverview,
-} from '../../../../common/src/models/submission.model';
-import { objectFromEntries } from '../../../../common/src/utils/submission.util';
+} from '@codelm/common/src/models/submission.model';
+import { objectFromEntries } from '@codelm/common/src/utils/submission.util';
 
 @Injectable({
   providedIn: 'root',

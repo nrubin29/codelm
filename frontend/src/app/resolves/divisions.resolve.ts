@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { DivisionModel } from '../../../../common/src/models/division.model';
+import { DivisionModel } from '@codelm/common/src/models/division.model';
 import { DivisionService } from '../services/division.service';
 
 @Injectable({

@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { GradedSubmissionModel } from '../../../../../../common/src/models/submission.model';
+import { GradedSubmissionModel } from '@codelm/common/src/models/submission.model';
 import { CodeMirrorComponent } from '../../components/code-mirror/code-mirror.component';
 import { SubmissionService } from '../../../services/submission.service';
 import { CodeSaverService } from '../../../services/code-saver.service';
 import { SubmissionComponent } from '../submission/submission.component';
-import { SubmissionUtil } from '../../../../../../common/src/utils/submission.util';
-import { TeamUtil } from '../../../../../../common/src/utils/team.util';
+import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 @Component({
   selector: 'app-graded-submission',

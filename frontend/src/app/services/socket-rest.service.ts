@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import { SocketConnection } from '../../../../common/src/models/sockets.model';
+import { SocketConnection } from '@codelm/common/src/models/sockets.model';
 import { Column, GroupedEntityService } from './entity.service';
 
 // TODO: Refresh when action button is clicked.

@@ -5,9 +5,9 @@ import {
   PersonExperience,
   PersonModel,
   PersonYear,
-} from '../../../../common/src/models/person.model';
+} from '@codelm/common/src/models/person.model';
 import { GroupService } from './group.service';
-import { GroupModel } from '../../../../common/src/models/group.model';
+import { GroupModel } from '@codelm/common/src/models/group.model';
 
 @Injectable({
   providedIn: 'root',

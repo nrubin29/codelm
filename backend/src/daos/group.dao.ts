@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { GroupModel } from '../../../common/src/models/group.model';
+import { GroupModel } from '@codelm/common/src/models/group.model';
 
 type GroupType = GroupModel & mongoose.Document;
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { SingleEntityService } from './entity.service';
-import { AlertModel } from '../../../../common/src/models/alert.model';
+import { AlertModel } from '@codelm/common/src/models/alert.model';
 
 @Injectable({
   providedIn: 'root',

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { TeamModel } from '../../../../common/src/models/team.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 import { TeamService } from '../services/team.service';
-import { ProblemModel } from '../../../../common/src/models/problem.model';
+import { ProblemModel } from '@codelm/common/src/models/problem.model';
 import { ProblemService } from '../services/problem.service';
 
 @Injectable({

@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TeamModel } from '../../../../../../common/src/models/team.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 import { TeamService } from '../../../services/team.service';
 import { Router } from '@angular/router';
 import { DialogResult } from '../../../common/components/edit-entity/edit-entity.component';
-import { TeamUtil } from '../../../../../../common/src/utils/team.util';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 @Component({
   selector: 'app-edit-team',

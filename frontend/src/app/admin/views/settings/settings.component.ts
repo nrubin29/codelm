@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsModel } from '../../../../../../common/src/models/settings.model';
+import { SettingsModel } from '@codelm/common/src/models/settings.model';
 import { SettingsService } from '../../../services/settings.service';
 import { DialogResult } from '../../../common/components/edit-entity/edit-entity.component';
 

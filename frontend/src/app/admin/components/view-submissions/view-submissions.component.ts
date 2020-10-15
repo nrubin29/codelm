@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ProblemModel } from '../../../../../../common/src/models/problem.model';
-import { TeamModel } from '../../../../../../common/src/models/team.model';
-import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
+import { ProblemModel } from '@codelm/common/src/models/problem.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
+import { SubmissionModel } from '@codelm/common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
 import { format, parseJSON } from 'date-fns';
-import { TeamUtil } from '../../../../../../common/src/utils/team.util';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 @Component({
   selector: 'app-view-submissions',

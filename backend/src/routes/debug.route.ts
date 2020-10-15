@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { TeamDao } from '../daos/team.dao';
 import { DivisionDao } from '../daos/division.dao';
-import { DivisionType } from '../../../common/src/models/division.model';
+import { DivisionType } from '@codelm/common/src/models/division.model';
 import { PermissionsUtil } from '../permissions.util';
 
 let debugTeamUsernames: readonly string[];

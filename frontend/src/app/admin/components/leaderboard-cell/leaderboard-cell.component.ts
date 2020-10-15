@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import {
   SubmissionOverviewElement,
   SubmissionOverviewStatus,
-} from '../../../../../../common/src/models/submission.model';
-import { ProblemModel } from '../../../../../../common/src/models/problem.model';
+} from '@codelm/common/src/models/submission.model';
+import { ProblemModel } from '@codelm/common/src/models/problem.model';
 import { ViewSubmissionsComponent } from '../view-submissions/view-submissions.component';
 import { MatDialog } from '@angular/material/dialog';
 

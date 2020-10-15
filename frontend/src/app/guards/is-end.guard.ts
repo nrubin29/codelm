@@ -6,7 +6,7 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { SettingsService } from '../services/settings.service';
-import { SettingsState } from '../../../../common/src/models/settings.model';
+import { SettingsState } from '@codelm/common/src/models/settings.model';
 
 /**
  * The navigation is allowed if the current state IS End.

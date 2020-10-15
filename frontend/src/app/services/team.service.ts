@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { TeamModel } from '../../../../common/src/models/team.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 import { RestService } from './rest.service';
 import { BehaviorSubject } from 'rxjs';
 import { EntityService } from './entity.service';
 import { DivisionService } from './division.service';
 import { PersonService } from './person.service';
-import { TeamUtil } from '../../../../common/src/utils/team.util';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 @Injectable({
   providedIn: 'root',

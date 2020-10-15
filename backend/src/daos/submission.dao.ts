@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { QueryPopulateOptions } from 'mongoose';
 import {
   GradedSubmissionModel,
   isGradedSubmission,
@@ -8,18 +9,17 @@ import {
   SubmissionOverviewStatus,
   TestCaseSubmissionModel,
   UploadSubmissionModel,
-} from '../../../common/src/models/submission.model';
+} from '@codelm/common/src/models/submission.model';
 import {
   GradedProblemModel,
   ProblemType,
   TestCaseOutputMode,
-} from '../../../common/src/models/problem.model';
-import { QueryPopulateOptions } from 'mongoose';
+} from '@codelm/common/src/models/problem.model';
 import { SocketManager } from '../socket.manager';
-import { ProblemUtil } from '../../../common/src/utils/problem.util';
+import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 import { TeamDao } from './team.dao';
 import { ProblemDao } from './problem.dao';
-import { SubmissionUtil } from '../../../common/src/utils/submission.util';
+import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
 
 type SubmissionType = SubmissionModel & mongoose.Document;
 

@@ -1,7 +1,7 @@
 import * as fetchHttp from 'node-fetch';
-import { VERSION } from '../../common/version';
+import { VERSION } from '@codelm/common/version';
 import { Tester } from './tester';
-import { TeamModel } from '../../common/src/models/team.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 
 console.log(`Starting CodeLM tester build ${VERSION}`);
 

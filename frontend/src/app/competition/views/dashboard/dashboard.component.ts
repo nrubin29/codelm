@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProblemModel } from '../../../../../../common/src/models/problem.model';
+import { ProblemModel } from '@codelm/common/src/models/problem.model';
 import { TeamService } from '../../../services/team.service';
 import { ProblemService } from '../../../services/problem.service';
 import { MatDrawerToggleResult, MatSidenav } from '@angular/material/sidenav';
-import { TeamModel } from '../../../../../../common/src/models/team.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 import { SocketService } from '../../../services/socket.service';
-import { SubmissionUtil } from '../../../../../../common/src/utils/submission.util';
-import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
+import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
+import { SubmissionModel } from '@codelm/common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
-import { StateSwitchPacket } from '../../../../../../common/src/packets/server.packet';
-import { SettingsState } from '../../../../../../common/src/models/settings.model';
+import { StateSwitchPacket } from '@codelm/common/src/packets/server.packet';
+import { SettingsState } from '@codelm/common/src/models/settings.model';
 import { Router } from '@angular/router';
-import { TeamUtil } from '../../../../../../common/src/utils/team.util';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 @Component({
   selector: 'app-dashboard',

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
-import { AdminModel } from '../../../../../../common/src/models/admin.model';
+import { AdminModel } from '@codelm/common/src/models/admin.model';
 import { MatDrawerToggleResult, MatSidenav } from '@angular/material/sidenav';
 
 @Component({

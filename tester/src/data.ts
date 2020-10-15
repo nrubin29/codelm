@@ -1,4 +1,4 @@
-import { ClientProblemSubmission } from '../../common/src/problem-submission';
+import { ClientProblemSubmission } from '@codelm/common/src/problem-submission';
 
 // TODO: Refer to problem by name here, have the server send a name-_id mapping in /init.
 

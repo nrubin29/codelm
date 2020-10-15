@@ -1,11 +1,11 @@
 import { Action } from '../action';
 import { Tester } from '../tester';
-import { VERSION } from '../../../common/version';
+import { VERSION } from '@codelm/common/version';
 import { PROBLEM_SUBMISSIONS } from '../data';
 import {
   SubmissionCompletedPacket,
   SubmissionStatusPacket,
-} from '../../../common/src/packets/server.packet';
+} from '@codelm/common/src/packets/server.packet';
 
 export class SubmitAction extends Action {
   constructor() {

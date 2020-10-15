@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Column, SingleEntityService } from './entity.service';
 import { SubmissionService } from './submission.service';
-import { GradedSubmissionModel } from '../../../../common/src/models/submission.model';
-import { TeamUtil } from '../../../../common/src/utils/team.util';
+import { GradedSubmissionModel } from '@codelm/common/src/models/submission.model';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 @Injectable({
   providedIn: 'root',

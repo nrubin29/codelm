@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { BehaviorSubject } from 'rxjs';
-import { AdminModel } from '../../../../common/src/models/admin.model';
+import { AdminModel } from '@codelm/common/src/models/admin.model';
 import { SingleEntityService } from './entity.service';
 
 @Injectable({

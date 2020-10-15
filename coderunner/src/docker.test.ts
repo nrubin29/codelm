@@ -1,9 +1,9 @@
 import * as _ from 'mocha';
 import { spawn } from 'child_process';
-import { ServerProblemSubmission } from '../../common/src/problem-submission';
+import { ServerProblemSubmission } from '@codelm/common/src/problem-submission';
 import * as assert from 'assert';
-import { TestCaseSubmissionModel } from '../../common/src/models/submission.model';
-import { ProblemType } from '../../common/src/models/problem.model';
+import { TestCaseSubmissionModel } from '@codelm/common/src/models/submission.model';
+import { ProblemType } from '@codelm/common/src/models/problem.model';
 
 // function spawnProcess(submission: ServerProblemSubmission, onData: (data: string) => void) {
 //   return new Promise<void>((resolve, reject) => {

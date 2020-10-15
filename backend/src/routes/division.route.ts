@@ -3,10 +3,10 @@ import { DivisionDao } from '../daos/division.dao';
 import {
   DivisionModel,
   DivisionType,
-} from '../../../common/src/models/division.model';
+} from '@codelm/common/src/models/division.model';
 import { PermissionsUtil } from '../permissions.util';
 import { FileArray, UploadedFile } from 'express-fileupload';
-import { SettingsState } from '../../../common/src/models/settings.model';
+import { SettingsState } from '@codelm/common/src/models/settings.model';
 import * as shortid from 'shortid';
 import * as fs from 'fs-extra';
 

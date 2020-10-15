@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { GroupModel } from '../../../../common/src/models/group.model';
+import { GroupModel } from '@codelm/common/src/models/group.model';
 import { GroupService } from '../services/group.service';
 
 @Injectable({

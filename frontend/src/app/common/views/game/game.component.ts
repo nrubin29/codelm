@@ -9,21 +9,21 @@ import {
 import {
   SubmissionCompletedPacket,
   SubmissionStatusPacket,
-} from '../../../../../../common/src/packets/server.packet';
+} from '@codelm/common/src/packets/server.packet';
 import { MatTable } from '@angular/material/table';
 import { DashboardComponent } from '../../../competition/views/dashboard/dashboard.component';
 import { AdminComponent } from '../../../admin/views/admin/admin.component';
 import { ProblemService } from '../../../services/problem.service';
 import { TeamService } from '../../../services/team.service';
 import { SocketService } from '../../../services/socket.service';
-import { VERSION } from '../../../../../../common/version';
+import { VERSION } from '@codelm/common/version';
 import {
   DockerKilledPacket,
   GameTurnPacket,
-} from '../../../../../../common/src/packets/coderunner.packet';
-import { GameType } from '../../../../../../common/src/models/game.model';
+} from '@codelm/common/src/packets/coderunner.packet';
+import { GameType } from '@codelm/common/src/models/game.model';
 import { ActivatedRoute } from '@angular/router';
-import { Packet } from '../../../../../../common/src/packets/packet';
+import { Packet } from '@codelm/common/src/packets/packet';
 
 interface LogItem {
   guess: string;

@@ -7,8 +7,8 @@ import * as fileUpload from 'express-fileupload';
 import * as mongoose from 'mongoose';
 import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
-import { VERSION } from '../../common/version';
-import { objectFromEntries } from '../../common/src/utils/submission.util';
+import { VERSION } from '@codelm/common/version';
+import { objectFromEntries } from '@codelm/common/src/utils/submission.util';
 import './daos/dao';
 import apiRoutes from './routes/route';
 

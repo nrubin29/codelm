@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import { EmailRequest } from '../../../../common/src/models/email.model';
+import { EmailRequest } from '@codelm/common/src/models/email.model';
 
 @Injectable({
   providedIn: 'root',

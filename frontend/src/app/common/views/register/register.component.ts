@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { PersonService } from '../../../services/person.service';
 import { DialogResult } from '../../components/edit-entity/edit-entity.component';
-import { PersonModel } from '../../../../../../common/src/models/person.model';
+import { PersonModel } from '@codelm/common/src/models/person.model';
 
 @Component({
   selector: 'app-register',

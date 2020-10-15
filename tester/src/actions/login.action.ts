@@ -3,8 +3,8 @@ import { Tester } from '../tester';
 import {
   LoginResponse,
   LoginResponsePacket,
-} from '../../../common/src/packets/server.packet';
-import { VERSION } from '../../../common/version';
+} from '@codelm/common/src/packets/server.packet';
+import { VERSION } from '@codelm/common/version';
 
 export class LoginAction extends Action {
   constructor() {

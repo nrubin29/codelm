@@ -8,7 +8,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { SubmissionComponent } from '../submission/submission.component';
-import { UploadSubmissionModel } from '../../../../../../common/src/models/submission.model';
+import { UploadSubmissionModel } from '@codelm/common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
 import { CodeMirrorComponent } from '../../components/code-mirror/code-mirror.component';
 import { CodeSaverService } from '../../../services/code-saver.service';

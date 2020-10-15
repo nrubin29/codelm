@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { PermissionsUtil } from '../permissions.util';
 import { PersonDao, sanitizePerson } from '../daos/person.dao';
 

@@ -3,11 +3,11 @@ import { ProblemDao, sanitizeProblem } from '../daos/problem.dao';
 import {
   ProblemModel,
   ProblemType,
-} from '../../../common/src/models/problem.model';
+} from '@codelm/common/src/models/problem.model';
 import { PermissionsUtil } from '../permissions.util';
 import { SettingsDao } from '../daos/settings.dao';
-import { SettingsState } from '../../../common/src/models/settings.model';
-import { TeamUtil } from '../../../common/src/utils/team.util';
+import { SettingsState } from '@codelm/common/src/models/settings.model';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PersonModel } from '../../../../../../common/src/models/person.model';
-import { GroupModel } from '../../../../../../common/src/models/group.model';
+import { PersonModel } from '@codelm/common/src/models/person.model';
+import { GroupModel } from '@codelm/common/src/models/group.model';
 import { EmailService } from '../../../services/email.service';
 
 @Component({

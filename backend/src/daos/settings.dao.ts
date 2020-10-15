@@ -3,7 +3,7 @@ import {
   defaultSettingsModel,
   SettingsModel,
   SettingsState,
-} from '../../../common/src/models/settings.model';
+} from '@codelm/common/src/models/settings.model';
 import { Job, scheduleJob } from 'node-schedule';
 import { SocketManager } from '../socket.manager';
 

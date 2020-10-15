@@ -1,14 +1,14 @@
 import * as mongoose from 'mongoose';
 import { QueryPopulateOptions } from 'mongoose';
-import { PersonModel } from '../../../common/src/models/person.model';
-import { LoginResponse } from '../../../common/src/packets/server.packet';
+import { PersonModel } from '@codelm/common/src/models/person.model';
+import { LoginResponse } from '@codelm/common/src/packets/server.packet';
 import * as crypto from 'crypto';
 import { DEBUG } from '../server';
-import { TeamModel } from '../../../common/src/models/team.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 import { TeamDao } from './team.dao';
 import { SettingsDao } from './settings.dao';
-import { SettingsState } from '../../../common/src/models/settings.model';
-import { DivisionType } from '../../../common/src/models/division.model';
+import { SettingsState } from '@codelm/common/src/models/settings.model';
+import { DivisionType } from '@codelm/common/src/models/division.model';
 import { DivisionDao } from './division.dao';
 
 type PersonType = PersonModel & mongoose.Document;

@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
-import { SocketPacketManager } from '../../common/src/packet.manager';
-import { TeamModel } from '../../common/src/models/team.model';
+import { SocketPacketManager } from '@codelm/common/src/packet.manager';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 import { makeWebsocketURI } from './main';
 import { Action, ActionInvocation, TimeDelta } from './action';
 import { WaitAction } from './actions/wait.action';

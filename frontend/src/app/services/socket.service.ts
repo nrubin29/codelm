@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { SocketPacketManager } from '../../../../common/src/packet.manager';
+import { SocketPacketManager } from '@codelm/common/src/packet.manager';
 import { skipWhile } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 

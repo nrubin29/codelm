@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
-import { SubmissionModel } from '../../../../common/src/models/submission.model';
+import { SubmissionModel } from '@codelm/common/src/models/submission.model';
 import { SubmissionService } from '../services/submission.service';
 
 @Injectable({

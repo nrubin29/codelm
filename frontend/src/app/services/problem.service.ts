@@ -5,15 +5,15 @@ import {
   ProblemModel,
   ProblemType,
   TestCaseOutputMode,
-} from '../../../../common/src/models/problem.model';
+} from '@codelm/common/src/models/problem.model';
 import {
   ClientProblemSubmission,
   ClientReplayRequest,
-} from '../../../../common/src/problem-submission';
-import { DivisionModel } from '../../../../common/src/models/division.model';
+} from '@codelm/common/src/problem-submission';
+import { DivisionModel } from '@codelm/common/src/models/division.model';
 import { DivisionService } from './division.service';
 import { Column, GroupedEntityService } from './entity.service';
-import { ProblemUtil } from '../../../../common/src/utils/problem.util';
+import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 
 @Injectable({
   providedIn: 'root',

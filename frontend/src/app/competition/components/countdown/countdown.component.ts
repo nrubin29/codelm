@@ -8,7 +8,7 @@ import {
 } from 'date-fns';
 import { SettingsService } from '../../../services/settings.service';
 import { SocketService } from '../../../services/socket.service';
-import { SettingsModel } from '../../../../../../common/src/models/settings.model';
+import { SettingsModel } from '@codelm/common/src/models/settings.model';
 
 @Component({
   selector: 'app-countdown',

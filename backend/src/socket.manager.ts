@@ -3,22 +3,22 @@ import {
   LoginPacket,
   ReplayPacket,
   SubmissionPacket,
-} from '../../common/src/packets/client.packet';
+} from '@codelm/common/src/packets/client.packet';
 import { AdminDao } from './daos/admin.dao';
-import { Packet } from '../../common/src/packets/packet';
+import { Packet } from '@codelm/common/src/packets/packet';
 import {
   LoginResponse,
   SubmissionStatus,
-} from '../../common/src/packets/server.packet';
-import { VERSION } from '../../common/version';
-import { ServerProblemSubmission } from '../../common/src/problem-submission';
+} from '@codelm/common/src/packets/server.packet';
+import { VERSION } from '@codelm/common/version';
+import { ServerProblemSubmission } from '@codelm/common/src/problem-submission';
 import { ProblemDao } from './daos/problem.dao';
 import {
   isGradedProblem,
   isOpenEndedProblem,
   OpenEndedProblemModel,
   ProblemType,
-} from '../../common/src/models/problem.model';
+} from '@codelm/common/src/models/problem.model';
 import {
   isFalse,
   isTestCaseSubmissionCorrect,
@@ -30,15 +30,15 @@ import {
   isGradedSubmission,
   SubmissionModel,
   TestCaseSubmissionModel,
-} from '../../common/src/models/submission.model';
+} from '@codelm/common/src/models/submission.model';
 import * as WebSocket from 'ws';
 import { Express } from 'express';
 import { WithWebsocketMethod } from 'express-ws';
 import { CodeRunnerConnection } from './coderunner.connection';
-import { GameType } from '../../common/src/models/game.model';
+import { GameType } from '@codelm/common/src/models/game.model';
 import { Timesweeper } from './games/timesweeper';
 import { HighLow } from './games/high-low';
-import { CodeRunnerPacket } from '../../common/src/packets/coderunner.packet';
+import { CodeRunnerPacket } from '@codelm/common/src/packets/coderunner.packet';
 import { Observable } from 'rxjs';
 import { PersonDao } from './daos/person.dao';
 

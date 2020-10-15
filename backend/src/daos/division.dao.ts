@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import {
   DivisionModel,
   DivisionType,
-} from '../../../common/src/models/division.model';
+} from '@codelm/common/src/models/division.model';
 
 type DivisionDocumentType = DivisionModel & mongoose.Document;
 

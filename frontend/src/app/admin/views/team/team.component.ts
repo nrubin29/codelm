@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { TeamModel } from '../../../../../../common/src/models/team.model';
+import { TeamModel } from '@codelm/common/src/models/team.model';
 import { ActivatedRoute } from '@angular/router';
 import { TeamService } from '../../../services/team.service';
-import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
-import { ProblemModel } from '../../../../../../common/src/models/problem.model';
+import { SubmissionModel } from '@codelm/common/src/models/submission.model';
+import { ProblemModel } from '@codelm/common/src/models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
 import { format, parseJSON } from 'date-fns';
-import { TeamUtil } from '../../../../../../common/src/utils/team.util';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 @Component({
   selector: 'app-team',

@@ -3,7 +3,7 @@ import { RestService } from './rest.service';
 import {
   SettingsModel,
   SettingsState,
-} from '../../../../common/src/models/settings.model';
+} from '@codelm/common/src/models/settings.model';
 import { EntityService } from './entity.service';
 
 @Injectable({

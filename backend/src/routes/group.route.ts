@@ -1,7 +1,7 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { PermissionsUtil } from '../permissions.util';
 import { GroupDao } from '../daos/group.dao';
-import { GroupModel } from '../../../common/src/models/group.model';
+import { GroupModel } from '@codelm/common/src/models/group.model';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { ExecException, execFile, spawn } from 'child_process';
-import { TestCaseModel } from '../../common/src/models/problem.model';
-import { TestCaseSubmissionModel } from '../../common/src/models/submission.model';
+import { TestCaseModel } from '@codelm/common/src/models/problem.model';
+import { TestCaseSubmissionModel } from '@codelm/common/src/models/submission.model';
 import { Language, languages } from './language';
 import { CodeFile, FOLDER } from './codefile';
 import * as fs from 'fs-extra';
@@ -10,8 +10,8 @@ import {
   RunGamePacket,
   RunTestCasePacket,
   ServerProblemSubmissionPacket,
-} from '../../common/src/packets/coderunner.packet';
-import { StdioPacketManager } from '../../common/src/packet.manager';
+} from '@codelm/common/src/packets/coderunner.packet';
+import { StdioPacketManager } from '@codelm/common/src/packet.manager';
 
 process.on('uncaughtException', (e: Error) => {
   if (!e) {

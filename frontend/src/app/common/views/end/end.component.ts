@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsModel } from '../../../../../../common/src/models/settings.model';
+import { SettingsModel } from '@codelm/common/src/models/settings.model';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({

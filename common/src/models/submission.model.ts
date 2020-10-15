@@ -1,7 +1,7 @@
 import {
   GradedProblemModel,
-  ProblemModel,
   OpenEndedProblemModel,
+  ProblemModel,
 } from './problem.model';
 import { TeamModel } from './team.model';
 

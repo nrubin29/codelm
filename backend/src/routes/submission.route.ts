@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { sanitizeSubmission, SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
-import { SubmissionModel } from '../../../common/src/models/submission.model';
+import { SubmissionModel } from '@codelm/common/src/models/submission.model';
 
 const router = Router();
 

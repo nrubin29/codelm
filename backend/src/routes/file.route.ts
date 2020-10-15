@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { SettingsDao } from '../daos/settings.dao';
 import { DivisionDao } from '../daos/division.dao';
 

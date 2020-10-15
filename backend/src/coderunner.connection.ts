@@ -1,7 +1,7 @@
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import { TestCaseModel } from '../../common/src/models/problem.model';
-import { TestCaseSubmissionModel } from '../../common/src/models/submission.model';
-import { ServerProblemSubmission } from '../../common/src/problem-submission';
+import { TestCaseModel } from '@codelm/common/src/models/problem.model';
+import { TestCaseSubmissionModel } from '@codelm/common/src/models/submission.model';
+import { ServerProblemSubmission } from '@codelm/common/src/problem-submission';
 import {
   CodeRunnerPacket,
   DockerKilledReason,
@@ -9,11 +9,11 @@ import {
   DockerKilledPacket,
   GameOutputPacket,
   RunTestCaseResultPacket,
-} from '../../common/src/packets/coderunner.packet';
-import { StdioPacketManager } from '../../common/src/packet.manager';
+} from '@codelm/common/src/packets/coderunner.packet';
+import { StdioPacketManager } from '@codelm/common/src/packet.manager';
 import { Game } from './games/game';
 import { Observable } from 'rxjs';
-import { UnexpectedDataPacket } from '../../common/src/packets/packet';
+import { UnexpectedDataPacket } from '@codelm/common/src/packets/packet';
 
 const dockerArgs = [
   'run',

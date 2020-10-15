@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { ProblemService } from '../services/problem.service';
-import { ProblemModel } from '../../../../common/src/models/problem.model';
+import { ProblemModel } from '@codelm/common/src/models/problem.model';
 
 @Injectable({
   providedIn: 'root',

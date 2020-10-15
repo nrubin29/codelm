@@ -7,7 +7,7 @@ import {
 } from '@angular/router';
 import { ProblemService } from '../services/problem.service';
 import { SubmissionService } from '../services/submission.service';
-import { SubmissionUtil } from '../../../../common/src/utils/submission.util';
+import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
 
 @Injectable({
   providedIn: 'root',

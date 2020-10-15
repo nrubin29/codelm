@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { PermissionsUtil } from '../permissions.util';
 import { SocketManager } from '../socket.manager';
-import { SocketConnection } from '../../../common/src/models/sockets.model';
+import { SocketConnection } from '@codelm/common/src/models/sockets.model';
 
 const router = Router();
 

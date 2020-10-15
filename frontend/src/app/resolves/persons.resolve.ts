@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { PersonModel } from '../../../../common/src/models/person.model';
+import { PersonModel } from '@codelm/common/src/models/person.model';
 import { PersonService } from '../services/person.service';
 
 @Injectable({

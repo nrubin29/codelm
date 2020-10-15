@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { PermissionsUtil } from '../permissions.util';
-import { EmailRequest } from '../../../common/src/models/email.model';
+import { EmailRequest } from '@codelm/common/src/models/email.model';
 import { PersonDao } from '../daos/person.dao';
 import { env } from '../env';
 import * as mailgun from 'mailgun-js';

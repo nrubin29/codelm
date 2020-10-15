@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { SubmissionOverviewElement } from '../../../../common/src/models/submission.model';
+import { SubmissionOverviewElement } from '@codelm/common/src/models/submission.model';
 import { SubmissionService } from './submission.service';
 import { Column, GroupedEntityService } from './entity.service';
-import { DivisionModel } from '../../../../common/src/models/division.model';
+import { DivisionModel } from '@codelm/common/src/models/division.model';
 import { DivisionService } from './division.service';
 import { ProblemService } from './problem.service';
-import { TeamUtil } from '../../../../common/src/utils/team.util';
+import { TeamUtil } from '@codelm/common/src/utils/team.util';
 
 @Injectable({
   providedIn: 'root',

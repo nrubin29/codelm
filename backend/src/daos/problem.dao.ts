@@ -3,8 +3,8 @@ import {
   isGradedProblem,
   ProblemModel,
   TestCaseOutputMode,
-} from '../../../common/src/models/problem.model';
-import { ProblemUtil } from '../../../common/src/utils/problem.util';
+} from '@codelm/common/src/models/problem.model';
+import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 import { DivisionDao } from './division.dao';
 
 type ProblemType = ProblemModel & mongoose.Document;
