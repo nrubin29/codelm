@@ -15,8 +15,6 @@ import { GameComponent } from '../common/views/game/game.component';
 import { EntityGroupingComponent } from './views/entity-grouping/entity-grouping.component';
 import { EntityServiceResolve } from '../resolves/entity-service.resolve';
 import { EntityListComponent } from './views/entity-list/entity-list.component';
-import { BatchAddTeamsComponent } from './views/batch-add-teams/batch-add-teams.component';
-import { DivisionsResolve } from '../resolves/divisions.resolve';
 import { EmailComponent } from './views/email/email.component';
 import { PersonsResolve } from '../resolves/persons.resolve';
 import { GroupsResolve } from '../resolves/groups.resolve';
@@ -92,11 +90,6 @@ const routes: Routes = [
         resolve: { entityService: EntityServiceResolve },
       },
       { path: 'add-team', component: EditTeamComponent },
-      {
-        path: 'batch-add-teams',
-        component: BatchAddTeamsComponent,
-        resolve: { divisions: DivisionsResolve },
-      },
       {
         path: 'email',
         component: EmailComponent,
