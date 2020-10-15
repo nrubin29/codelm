@@ -14,13 +14,17 @@ export class RegisterComponent {
 
   action([result, person]: [DialogResult, PersonModel]) {
     if (result === 'save') {
-      this.personService
-        .addOrUpdate(person)
-        .then(() => {
-          alert('Registration successful!');
-          this.login();
-        })
-        .catch(alert);
+      if (!person.password) {
+        alert('Please enter a password');
+      } else {
+        this.personService
+          .addOrUpdate(person)
+          .then(() => {
+            alert('Registration successful!');
+            this.login();
+          })
+          .catch(alert);
+      }
     }
   }
 

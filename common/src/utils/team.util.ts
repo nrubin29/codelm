@@ -8,4 +8,8 @@ export class TeamUtil {
       team.members.some(member => member.group.special)
     );
   }
+
+  static getName(team: TeamModel) {
+    return team.members.map(member => member.name).join(', ');
+  }
 }

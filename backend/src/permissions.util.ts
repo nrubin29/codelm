@@ -1,29 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { TeamDao } from './daos/team.dao';
 import { AdminDao } from './daos/admin.dao';
-import { TeamModel } from '../../common/src/models/team.model';
-import { SettingsDao } from './daos/settings.dao';
-import { SettingsState } from '../../common/src/models/settings.model';
-import { DivisionType } from '../../common/src/models/division.model';
 import { DEBUG } from './server';
-import { TeamUtil } from '../../common/src/utils/team.util';
 
 export class PermissionsUtil {
-  static async hasAccess(team: TeamModel): Promise<boolean> {
-    const settings = await SettingsDao.getSettings();
-
-    return (
-      TeamUtil.isSpecial(team) ||
-      settings.state === SettingsState.Debug ||
-      ((settings.state === SettingsState.Graded ||
-        settings.state === SettingsState.Upload) &&
-        ((!settings.preliminaries &&
-          team.division.type === DivisionType.Competition) ||
-          (settings.preliminaries &&
-            team.division.type === DivisionType.Preliminaries)))
-    );
-  }
-
   static async requireTeam(req: Request, res: Response, next: NextFunction) {
     if (!req.headers.authorization) {
       next(new Error('No Authorization header.'));
@@ -38,18 +18,6 @@ export class PermissionsUtil {
       next();
     } else {
       next(new Error('No team found for given authorization.'));
-    }
-  }
-
-  static async requireAccess(req: Request, res: Response, next: NextFunction) {
-    if (!req.params.team) {
-      next(new Error('No team found. Did you forget to use requireTeam?'));
-    } else {
-      if (await PermissionsUtil.hasAccess(req.params.team)) {
-        next();
-      } else {
-        next(new Error('Team does not have access.'));
-      }
     }
   }
 

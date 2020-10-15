@@ -9,10 +9,12 @@ export const enum LoginResponse {
   SuccessAdmin = 'Success Admin',
   IncorrectPassword = 'Incorrect Password',
   NotFound = 'Account not found',
+  SpecialPersonError = 'A person in a special group must have exactly one associated team',
+  NoTeam = 'You cannot log in at this time',
   Closed = 'The dashboard is currently closed',
   AlreadyConnected = 'This account is already logged in',
   OutdatedClient = 'Please refresh the page. If this error persists, clear your browser cache',
-  Error = 'An internal error occurred.',
+  Error = 'An internal error occurred',
 }
 
 export interface LoginResponsePacket {

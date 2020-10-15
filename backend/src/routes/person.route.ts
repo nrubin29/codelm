@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { PermissionsUtil } from '../permissions.util';
-import { PersonDao } from '../daos/person.dao';
+import { PersonDao, sanitizePerson } from '../daos/person.dao';
 
 const router = Router();
 
@@ -22,10 +22,12 @@ router.get(
 
 router.put('/', async (req: Request, res: Response) => {
   try {
-    res.json(await PersonDao.addOrUpdatePerson(req.body));
+    res.json(sanitizePerson(await PersonDao.addOrUpdatePerson(req.body)));
   } catch {
     // TODO: Standardize, type, and properly handle errors.
-    res.json({ error: 'This email address is already registered.' });
+    res.json({
+      error: 'This email address or username is already registered.',
+    });
   }
 });
 

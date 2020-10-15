@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { EntityService } from './entity.service';
 import { DivisionService } from './division.service';
 import { PersonService } from './person.service';
+import { TeamUtil } from '../../../../common/src/utils/team.util';
 
 @Injectable({
   providedIn: 'root',
@@ -22,8 +23,6 @@ export class TeamService extends EntityService<TeamModel> {
       entityName: 'team',
       attributes: [
         { name: '_id', optional: true, readonly: true },
-        { name: 'username' },
-        { name: 'password' },
         {
           name: 'members',
           type: 'multiselect',
@@ -84,6 +83,6 @@ export class TeamService extends EntityService<TeamModel> {
   }
 
   getName(entity: TeamModel) {
-    return entity.username;
+    return TeamUtil.getName(entity);
   }
 }

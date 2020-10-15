@@ -4,10 +4,8 @@ import {
   ReplayPacket,
   SubmissionPacket,
 } from '../../common/src/packets/client.packet';
-import { sanitizeTeam, TeamDao } from './daos/team.dao';
 import { AdminDao } from './daos/admin.dao';
 import { Packet } from '../../common/src/packets/packet';
-import { PermissionsUtil } from './permissions.util';
 import {
   LoginResponse,
   SubmissionStatus,
@@ -42,6 +40,7 @@ import { Timesweeper } from './games/timesweeper';
 import { HighLow } from './games/high-low';
 import { CodeRunnerPacket } from '../../common/src/packets/coderunner.packet';
 import { Observable } from 'rxjs';
+import { PersonDao } from './daos/person.dao';
 
 export class SocketManager {
   private static _instance: SocketManager;
@@ -172,11 +171,48 @@ export class SocketManager {
     });
   }
 
-  onLoginPacket(loginPacket: LoginPacket, socket: WebSocket): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      TeamDao.login(loginPacket.username, loginPacket.password)
-        .then(team => {
-          if (this.teamSockets.has(team._id.toString())) {
+  async onLoginPacket(
+    loginPacket: LoginPacket,
+    socket: WebSocket
+  ): Promise<string> {
+    try {
+      const team = await PersonDao.login(
+        loginPacket.username,
+        loginPacket.password
+      );
+
+      if (this.teamSockets.has(team._id.toString())) {
+        this.emitToSocket(
+          {
+            name: 'loginResponse',
+            response: LoginResponse.AlreadyConnected,
+          },
+          socket
+        );
+        socket.close();
+      } else {
+        this.teamSockets.set(team._id.toString(), socket);
+
+        this.emitToSocket(
+          {
+            name: 'loginResponse',
+            response: LoginResponse.SuccessTeam,
+            team,
+          },
+          socket
+        );
+
+        return team._id.toString();
+      }
+    } catch (response) {
+      if (response === LoginResponse.NotFound) {
+        try {
+          const admin = await AdminDao.login(
+            loginPacket.username,
+            loginPacket.password
+          );
+
+          if (this.adminSockets.has(admin._id.toString())) {
             this.emitToSocket(
               {
                 name: 'loginResponse',
@@ -185,100 +221,56 @@ export class SocketManager {
               socket
             );
             socket.close();
-            reject();
           } else {
-            PermissionsUtil.hasAccess(team).then(access => {
-              const response = access
-                ? LoginResponse.SuccessTeam
-                : LoginResponse.Closed;
-              this.emitToSocket(
-                {
-                  name: 'loginResponse',
-                  response,
-                  team:
-                    response === LoginResponse.SuccessTeam
-                      ? sanitizeTeam(team)
-                      : undefined,
-                },
-                socket
-              );
+            this.adminSockets.set(admin._id.toString(), socket);
 
-              if (response === LoginResponse.SuccessTeam) {
-                this.teamSockets.set(team._id.toString(), socket);
-                resolve(team._id.toString());
-              } else {
-                socket.close();
-                reject();
-              }
-            });
+            this.emitToSocket(
+              {
+                name: 'loginResponse',
+                response: LoginResponse.SuccessAdmin,
+                admin,
+              },
+              socket
+            );
+
+            return admin._id.toString();
           }
-        })
-        .catch((response: LoginResponse | Error) => {
-          if (response === LoginResponse.NotFound) {
-            AdminDao.login(loginPacket.username, loginPacket.password)
-              .then(admin => {
-                if (this.adminSockets.has(admin._id.toString())) {
-                  this.emitToSocket(
-                    {
-                      name: 'loginResponse',
-                      response: LoginResponse.AlreadyConnected,
-                    },
-                    socket
-                  );
-                  socket.close();
-                  reject();
-                } else {
-                  this.adminSockets.set(admin._id.toString(), socket);
-                  this.emitToSocket(
-                    {
-                      name: 'loginResponse',
-                      response: LoginResponse.SuccessAdmin,
-                      admin,
-                    },
-                    socket
-                  );
-                  resolve(admin._id.toString());
-                }
-              })
-              .catch((response: LoginResponse | Error) => {
-                if ((response as any).stack !== undefined) {
-                  console.error(response);
-                  this.emitToSocket(
-                    { name: 'loginResponse', response: LoginResponse.Error },
-                    socket
-                  );
-                } else {
-                  this.emitToSocket(
-                    {
-                      name: 'loginResponse',
-                      response: response as LoginResponse,
-                    },
-                    socket
-                  );
-                }
-
-                socket.close();
-                reject();
-              });
+        } catch (response) {
+          if (response.stack !== undefined) {
+            console.error(response);
+            this.emitToSocket(
+              { name: 'loginResponse', response: LoginResponse.Error },
+              socket
+            );
           } else {
-            if ((response as any).stack !== undefined) {
-              console.error(response);
-              this.emitToSocket(
-                { name: 'loginResponse', response: LoginResponse.Error },
-                socket
-              );
-            } else {
-              this.emitToSocket(
-                { name: 'loginResponse', response: response as LoginResponse },
-                socket
-              );
-            }
-
-            socket.close();
-            reject();
+            this.emitToSocket(
+              {
+                name: 'loginResponse',
+                response: response as LoginResponse,
+              },
+              socket
+            );
           }
-        });
-    });
+
+          socket.close();
+        }
+      } else {
+        if (response.stack !== undefined) {
+          console.error(response);
+          this.emitToSocket(
+            { name: 'loginResponse', response: LoginResponse.Error },
+            socket
+          );
+        } else {
+          this.emitToSocket(
+            { name: 'loginResponse', response: response as LoginResponse },
+            socket
+          );
+        }
+
+        socket.close();
+      }
+    }
   }
 
   // TODO: Ensure that submissions are open (use PermissionsUtil).

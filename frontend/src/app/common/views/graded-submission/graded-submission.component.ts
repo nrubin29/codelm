@@ -5,6 +5,7 @@ import { SubmissionService } from '../../../services/submission.service';
 import { CodeSaverService } from '../../../services/code-saver.service';
 import { SubmissionComponent } from '../submission/submission.component';
 import { SubmissionUtil } from '../../../../../../common/src/utils/submission.util';
+import { TeamUtil } from '../../../../../../common/src/utils/team.util';
 
 @Component({
   selector: 'app-graded-submission',
@@ -94,6 +95,6 @@ export class GradedSubmissionComponent implements OnInit {
   }
 
   get members() {
-    return this.submission.team.members.map(member => member.name).join(', ');
+    return TeamUtil.getName(this.submission.team);
   }
 }

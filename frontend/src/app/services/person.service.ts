@@ -29,6 +29,8 @@ export class PersonService extends GroupedEntityService<
         { name: '_id', readonly: true, optional: true },
         { name: 'name' },
         { name: 'email', type: 'email' },
+        { name: 'username' },
+        { name: 'password', type: 'password', optional: true },
         { name: 'year', type: 'select', options: Object.values(PersonYear) },
         {
           name: 'experience',

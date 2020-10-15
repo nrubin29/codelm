@@ -3,6 +3,7 @@ import { TeamModel } from '../../../../../../common/src/models/team.model';
 import { TeamService } from '../../../services/team.service';
 import { Router } from '@angular/router';
 import { DialogResult } from '../../../common/components/edit-entity/edit-entity.component';
+import { TeamUtil } from '../../../../../../common/src/utils/team.util';
 
 @Component({
   selector: 'app-edit-team',
@@ -15,6 +16,10 @@ export class EditTeamComponent implements OnInit {
   constructor(public teamService: TeamService, private router: Router) {}
 
   ngOnInit() {}
+
+  get teamName() {
+    return this.team ? TeamUtil.getName(this.team) : null;
+  }
 
   action(result: [DialogResult, TeamModel]) {
     if (result[0] === 'save') {

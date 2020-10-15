@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <app-drawer-toggle></app-drawer-toggle>
-    <span>{{ team.username }}</span>
+    <span>{{ members }}</span>
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="container">
@@ -11,10 +11,6 @@
         <ng-container matColumnDef="id">
           <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
           <mat-cell *matCellDef="let element">{{ element._id }}</mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="username">
-          <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
-          <mat-cell *matCellDef="let element">{{ element.username }}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="members">
           <mat-header-cell *matHeaderCellDef>Members</mat-header-cell>
@@ -31,13 +27,10 @@
           <mat-cell *matCellDef="let element">{{ element.score }}</mat-cell>
         </ng-container>
         <mat-header-row
-          *matHeaderRowDef="['id', 'username', 'members', 'division', 'score']"
+          *matHeaderRowDef="['id', 'members', 'division', 'score']"
         ></mat-header-row>
         <mat-row
-          *matRowDef="
-            let row;
-            columns: ['id', 'username', 'members', 'division', 'score']
-          "
+          *matRowDef="let row; columns: ['id', 'members', 'division', 'score']"
         ></mat-row>
       </mat-table>
     </div>

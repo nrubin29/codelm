@@ -6,6 +6,7 @@ import { SubmissionModel } from '../../../../../../common/src/models/submission.
 import { ProblemModel } from '../../../../../../common/src/models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
 import { format, parseJSON } from 'date-fns';
+import { TeamUtil } from '../../../../../../common/src/utils/team.util';
 
 @Component({
   selector: 'app-team',
@@ -38,7 +39,7 @@ export class TeamComponent implements OnInit {
   }
 
   get members() {
-    return this.team.members.map(member => member.name).join(', ');
+    return TeamUtil.getName(this.team);
   }
 
   formatDate(date: string): string {

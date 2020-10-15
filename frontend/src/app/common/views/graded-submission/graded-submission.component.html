@@ -106,10 +106,9 @@
     <app-card header="Admin" *ngIf="admin">
       <p>
         Team:
-        <a [routerLink]="['/admin', 'team', submission.team._id]">{{
-          submission.team.username
-        }}</a>
-        ({{ members }})
+        <a [routerLink]="['/admin', 'team', submission.team._id]">
+          {{ members }}
+        </a>
       </p>
       <br />
       <button mat-raised-button color="accent" (click)="delete()">

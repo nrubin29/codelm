@@ -1,11 +1,24 @@
 import * as mongoose from 'mongoose';
+import { QueryPopulateOptions } from 'mongoose';
 import { PersonModel } from '../../../common/src/models/person.model';
+import { LoginResponse } from '../../../common/src/packets/server.packet';
+import * as crypto from 'crypto';
+import { DEBUG } from '../server';
+import { TeamModel } from '../../../common/src/models/team.model';
+import { TeamDao } from './team.dao';
+import { SettingsDao } from './settings.dao';
+import { SettingsState } from '../../../common/src/models/settings.model';
+import { DivisionType } from '../../../common/src/models/division.model';
+import { DivisionDao } from './division.dao';
 
 type PersonType = PersonModel & mongoose.Document;
 
 const PersonSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
+  username: { type: String, unique: true },
+  password: String,
+  salt: String,
   year: String,
   experience: String,
   group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group' },
@@ -13,39 +26,143 @@ const PersonSchema = new mongoose.Schema({
 
 const Person = mongoose.model<PersonType>('Person', PersonSchema);
 
+export function sanitizePerson(person: PersonModel): PersonModel {
+  delete person.password;
+  delete person.salt;
+  return person;
+}
+
 export class PersonDao {
+  private static readonly populationPaths: QueryPopulateOptions[] = [
+    { path: 'group' },
+  ];
+
   static async getPerson(_id: string): Promise<PersonModel> {
-    return (await Person.findById(_id).populate('group').exec()).toObject();
+    return (
+      await Person.findById(_id).populate(PersonDao.populationPaths).exec()
+    ).toObject();
   }
 
   static async getPeople(): Promise<PersonModel[]> {
-    return (await Person.find().populate('group').exec()).map(person =>
-      person.toObject()
-    );
+    return (
+      await Person.find().populate(PersonDao.populationPaths).exec()
+    ).map(person => person.toObject());
   }
 
   static async getPeopleByIds(_ids: string[]): Promise<PersonModel[]> {
     return (
       await Person.find({ _id: { $in: _ids } })
-        .populate('group')
+        .populate(PersonDao.populationPaths)
         .exec()
     ).map(person => person.toObject());
   }
 
   static async getPeopleForGroup(groupId: string): Promise<PersonModel[]> {
     return (
-      await Person.find({ group: groupId }).populate('group').exec()
+      await Person.find({ group: groupId })
+        .populate(PersonDao.populationPaths)
+        .exec()
     ).map(person => person.toObject());
   }
 
+  static async login(username: string, password: string): Promise<TeamModel> {
+    if (!username || !password) {
+      throw LoginResponse.NotFound;
+    }
+
+    const person = await Person.findOne({ username }).populate(
+      PersonDao.populationPaths
+    );
+
+    if (!person) {
+      throw LoginResponse.NotFound;
+    }
+
+    const inputHash = crypto
+      .pbkdf2Sync(password, new Buffer(person.salt), 1000, 64, 'sha512')
+      .toString('hex');
+
+    if (DEBUG || inputHash === person.password) {
+      const teams = await TeamDao.getTeamsForPerson(person._id);
+
+      if (person.group.special) {
+        // Assert that this person has exactly one associated team and then log
+        // that team in regardless of settings state.
+
+        if (teams.length !== 1) {
+          throw LoginResponse.SpecialPersonError;
+        }
+
+        return teams[0];
+      } else {
+        const settings = await SettingsDao.getSettings();
+
+        if (
+          settings.state === SettingsState.Closed ||
+          settings.state === SettingsState.End
+        ) {
+          throw LoginResponse.Closed;
+        } else if (settings.preliminaries) {
+          // Find the team for the person that is in a preliminaries division;
+          // create one if it does not exist.
+
+          const team = teams.find(
+            team => team.division.type === DivisionType.Preliminaries
+          );
+
+          if (team) {
+            return team;
+          } else {
+            // TODO: The division name is basically hardcoded.
+            const division = await DivisionDao.getDivisionByName(
+              person.experience + ' Practice'
+            );
+
+            return await TeamDao.addOrUpdateTeam({
+              members: [person],
+              division,
+            });
+          }
+        } else {
+          // Find the team for the person that is in a competition division;
+          // reject if one does not exist.
+
+          const team = teams.find(
+            team => team.division.type === DivisionType.Competition
+          );
+
+          if (team) {
+            return team;
+          } else {
+            throw LoginResponse.NoTeam;
+          }
+        }
+      }
+    } else {
+      throw LoginResponse.IncorrectPassword;
+    }
+  }
+
   static async addOrUpdatePerson(person: PersonModel): Promise<PersonModel> {
+    if (person.password) {
+      const salt = crypto.randomBytes(16).toString('hex');
+      const hash = crypto
+        .pbkdf2Sync(person.password, new Buffer(salt), 1000, 64, 'sha512')
+        .toString('hex');
+
+      person.salt = salt;
+      person.password = hash;
+    } else if (person.password === '') {
+      delete person.password;
+    }
+
     if (!person._id) {
       try {
         return (await Person.create(person)).toObject();
       } catch (err) {
         if (err.code !== undefined && err.code === 11000) {
           // It's a MongoError for non-unique username.
-          throw Error('This email address is already registered.');
+          throw Error('This email address or username is already registered.');
         } else {
           throw err;
         }
@@ -53,7 +170,7 @@ export class PersonDao {
     } else {
       return (
         await Person.findByIdAndUpdate(person._id, person, { new: true })
-          .populate('group')
+          .populate(PersonDao.populationPaths)
           .exec()
       ).toObject();
     }

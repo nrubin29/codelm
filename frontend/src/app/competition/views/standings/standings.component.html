@@ -7,10 +7,6 @@
   <app-card header="Team Info" [pad]="false">
     <div class="container">
       <mat-table #table [dataSource]="[team]">
-        <ng-container matColumnDef="username">
-          <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
-          <mat-cell *matCellDef="let element">{{ element.username }}</mat-cell>
-        </ng-container>
         <ng-container matColumnDef="members">
           <mat-header-cell *matHeaderCellDef>Members</mat-header-cell>
           <mat-cell *matCellDef="let element">{{ members }}</mat-cell>
@@ -26,13 +22,10 @@
           <mat-cell *matCellDef="let element">{{ element.score }}</mat-cell>
         </ng-container>
         <mat-header-row
-          *matHeaderRowDef="['username', 'members', 'division', 'score']"
+          *matHeaderRowDef="['members', 'division', 'score']"
         ></mat-header-row>
         <mat-row
-          *matRowDef="
-            let row;
-            columns: ['username', 'members', 'division', 'score']
-          "
+          *matRowDef="let row; columns: ['members', 'division', 'score']"
         ></mat-row>
       </mat-table>
     </div>

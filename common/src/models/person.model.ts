@@ -1,4 +1,5 @@
 import { GroupModel } from './group.model';
+import { UserModel } from './user.model';
 
 export enum PersonYear {
   Freshman = 'Freshman',
@@ -13,8 +14,7 @@ export enum PersonExperience {
   Expert = 'Expert',
 }
 
-export interface PersonModel {
-  _id?: string;
+export interface PersonModel extends UserModel {
   name: string;
   email: string;
   year: PersonYear;

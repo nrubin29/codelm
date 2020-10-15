@@ -11,6 +11,7 @@ import { SubmissionService } from '../../../services/submission.service';
 import { StateSwitchPacket } from '../../../../../../common/src/packets/server.packet';
 import { SettingsState } from '../../../../../../common/src/models/settings.model';
 import { Router } from '@angular/router';
+import { TeamUtil } from '../../../../../../common/src/utils/team.util';
 
 @Component({
   selector: 'app-dashboard',
@@ -75,6 +76,10 @@ export class DashboardComponent implements OnInit {
 
   get isSidenavOpen() {
     return this.sideNav.opened;
+  }
+
+  get teamName() {
+    return TeamUtil.getName(this.team);
   }
 
   didSolve(problem: ProblemModel) {

@@ -5,6 +5,7 @@ import { TeamModel } from '../../../../../../common/src/models/team.model';
 import { SubmissionModel } from '../../../../../../common/src/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
 import { format, parseJSON } from 'date-fns';
+import { TeamUtil } from '../../../../../../common/src/utils/team.util';
 
 @Component({
   selector: 'app-view-submissions',
@@ -31,6 +32,10 @@ export class ViewSubmissionsComponent implements OnInit {
         this.data.problem._id
       )
       .then(submissions => (this.submissions = submissions.reverse()));
+  }
+
+  get teamName() {
+    return TeamUtil.getName(this.data.team);
   }
 
   formatDate(date: string): string {

@@ -5,6 +5,7 @@ import { Column, GroupedEntityService } from './entity.service';
 import { DivisionModel } from '../../../../common/src/models/division.model';
 import { DivisionService } from './division.service';
 import { ProblemService } from './problem.service';
+import { TeamUtil } from '../../../../common/src/utils/team.util';
 
 @Injectable({
   providedIn: 'root',
@@ -58,13 +59,15 @@ export class StandingsService extends GroupedEntityService<
 
   getData(column: Column, value: SubmissionOverviewElement): any | undefined {
     if (column.name === 'team') {
-      return value.team.username.replace(/Junior|Senior|Upper/g, '');
+      return TeamUtil.getName(value.team);
     } else if (column.name === 'score') {
       return value.team.score;
     }
   }
 
   getName(entity: SubmissionOverviewElement) {
-    return entity.team ? `Standings for ${entity.team.username}` : 'Standings';
+    return entity.team
+      ? `Standings for ${TeamUtil.getName(entity.team)}`
+      : 'Standings';
   }
 }

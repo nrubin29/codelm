@@ -1,11 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { sanitizeTeam, TeamDao } from '../daos/team.dao';
+import { TeamDao } from '../daos/team.dao';
 import { PermissionsUtil } from '../permissions.util';
 
 const router = Router();
 
 router.get('/', PermissionsUtil.requireTeam, (req: Request, res: Response) => {
-  res.json(sanitizeTeam(req.params.team));
+  res.json(req.params.team);
 });
 
 router.get(

@@ -10,9 +10,6 @@ type TeamType = TeamModel & mongoose.Document;
 
 const TeamSchema = new mongoose.Schema(
   {
-    username: { type: String, unique: true },
-    password: String,
-    salt: String,
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
     division: { type: mongoose.Schema.Types.ObjectId, ref: 'Division' },
   },
@@ -21,28 +18,6 @@ const TeamSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-
-export function sanitizeTeam(team: TeamModel): TeamModel {
-  team.password = undefined;
-  team.salt = undefined;
-  return team;
-}
-
-// I don't really want this, but it might allow me to synchronously calculate the score. Too bad it doesn't work.
-// TeamSchema.virtual('submissions', {
-//   ref: 'Submission',
-//   localField: '_id',
-//   foreignField: 'team'
-// });
-
-// TODO: Since this doesn't work, I should a nicer way to calculate the score than what I have right now.
-// TeamSchema.virtual('score').get(function() {
-//   return new Promise<number>((resolve, reject) => {
-//     SubmissionDao.getSubmissionsForTeam(this._id).then(submissions => {
-//       resolve(submissions.reduce(((previousValue: number, currentValue: any) => previousValue + currentValue.toObject().points), 0));
-//     }).catch(reject);
-//   });
-// });
 
 const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
@@ -74,28 +49,14 @@ export class TeamDao {
     ).map(team => team.toObject());
   }
 
-  static async login(username: string, password: string): Promise<TeamModel> {
-    if (!username || !password) {
-      throw LoginResponse.NotFound;
-    }
-
-    const team = await Team.findOne({ username: username }).populate(
-      TeamDao.populationPaths
-    );
-
-    if (!team) {
-      throw LoginResponse.NotFound;
-    }
-
-    const inputHash = crypto
-      .pbkdf2Sync(password, new Buffer(team.salt), 1000, 64, 'sha512')
-      .toString('hex');
-
-    if (DEBUG || inputHash === team.password) {
-      return await TeamDao.addScore(team);
-    } else {
-      throw LoginResponse.IncorrectPassword;
-    }
+  static async getTeamsForPerson(personId: string): Promise<TeamModel[]> {
+    return (
+      await TeamDao.addScores(
+        await Team.find({ members: personId })
+          .populate(TeamDao.populationPaths)
+          .exec()
+      )
+    ).map(team => team.toObject());
   }
 
   static async deleteTeams(teamUsernames: readonly string[]) {
@@ -106,19 +67,7 @@ export class TeamDao {
     return await Team.create(teams);
   }
 
-  static async addOrUpdateTeam(team: any): Promise<TeamModel> {
-    if (team.password) {
-      const salt = crypto.randomBytes(16).toString('hex');
-      const hash = crypto
-        .pbkdf2Sync(team.password, new Buffer(salt), 1000, 64, 'sha512')
-        .toString('hex');
-
-      team.salt = salt;
-      team.password = hash;
-    } else if (team.password === '') {
-      team.password = undefined;
-    }
-
+  static async addOrUpdateTeam(team: TeamModel): Promise<TeamModel> {
     if (!team._id) {
       return await TeamDao.addScore(await Team.create(team as TeamModel));
     } else {
