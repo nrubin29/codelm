@@ -52,11 +52,7 @@ abstract class PacketManager {
   // The below methods are source-specific and are implemented by subclasses. They are called by the source-agnostic
   // methods above.
 
-  /**
-   * TODO: This needs to return any because otherwise common and frontend have two separate versions of rxjs and they
-   *  don't like each other. This should be fixed by having the other packages add common as a dependency.
-   */
-  abstract onDisconnect(): any;
+  abstract onDisconnect(): Observable<void>;
   abstract isConnected(): boolean;
   protected abstract open(): Promise<void>;
   protected abstract send(packetString: string);
@@ -97,7 +93,7 @@ export abstract class SocketPacketManager<
     super();
   }
 
-  onDisconnect(): any {
+  onDisconnect(): Observable<void> {
     /*
         For some reason, `fromEvent` didn't work here:
         return fromEvent(this.socket, 'onclose').pipe(tap(() => { this.offAll() }));
@@ -158,7 +154,7 @@ export abstract class StdioPacketManager extends PacketManager {
     });
   }
 
-  onDisconnect(): any {
+  onDisconnect(): Observable<void> {
     return new Observable<void>(subscriber => {
       this.read.once('close', () => {
         subscriber.next();
