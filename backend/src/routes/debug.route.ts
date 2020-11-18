@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import * as Router from 'koa-router';
 import { TeamDao } from '../daos/team.dao';
 import { DivisionDao } from '../daos/division.dao';
 import { DivisionType } from '@codelm/common/src/models/division.model';
@@ -6,19 +6,19 @@ import { PermissionsUtil } from '../permissions.util';
 
 let debugTeamUsernames: readonly string[];
 
-const router = Router();
-
+const router = new Router();
 router.use(PermissionsUtil.requireDebugMode);
 
-router.get('/', (req: Request, res: Response) => {
-  res.send('Debug mode is enabled!');
+router.get('/', ctx => {
+  ctx.body = 'Debug mode is enabled!';
 });
 
-router.get('/init', async (req: Request, res: Response) => {
-  const numAccounts = parseInt(req.query.num_accounts);
+router.get('/init', async ctx => {
+  const numAccounts = parseInt(ctx.query.num_accounts);
 
   if (!numAccounts) {
-    res.status(400).json({ error: 'Must specify num_accounts param.' });
+    ctx.status = 400;
+    ctx.body = { error: 'Must specify num_accounts param.' };
     return;
   }
 
@@ -48,12 +48,12 @@ router.get('/init', async (req: Request, res: Response) => {
     }))
   );
 
-  res.send(teams);
+  ctx.body = teams;
 });
 
-router.get('/deinit', async (req: Request, res: Response) => {
+router.get('/deinit', async ctx => {
   await TeamDao.deleteTeams(debugTeamUsernames);
-  res.send({ success: true });
+  ctx.body = { success: true };
 });
 
 export default router;

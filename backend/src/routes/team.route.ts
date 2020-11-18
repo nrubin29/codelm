@@ -1,44 +1,29 @@
-import { Request, Response, Router } from 'express';
+import * as Router from 'koa-router';
+import * as koaBody from 'koa-body';
 import { TeamDao } from '../daos/team.dao';
 import { PermissionsUtil } from '../permissions.util';
 
-const router = Router();
+const router = new Router();
 
-router.get('/', PermissionsUtil.requireTeam, (req: Request, res: Response) => {
-  res.json(req.params.team);
+router.get('/', PermissionsUtil.requireTeam, ctx => {
+  ctx.body = ctx.state.team;
 });
 
-router.get(
-  '/:id',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await TeamDao.getTeam(req.params.id));
-  }
-);
+router.get('/:id', PermissionsUtil.requireAdmin, async ctx => {
+  ctx.body = await TeamDao.getTeam(ctx.params.id);
+});
 
-router.put(
-  '/',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await TeamDao.addOrUpdateTeam(req.body));
-  }
-);
+router.put('/', PermissionsUtil.requireAdmin, koaBody(), async ctx => {
+  ctx.body = await TeamDao.addOrUpdateTeam(ctx.request.body);
+});
 
-router.delete(
-  '/:id',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    await TeamDao.deleteTeam(req.params.id);
-    res.json(true);
-  }
-);
+router.delete('/:id', PermissionsUtil.requireAdmin, async ctx => {
+  await TeamDao.deleteTeam(ctx.params.id);
+  ctx.body = true;
+});
 
-router.get(
-  '/division/:id',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await TeamDao.getTeamsForDivision(req.params.id));
-  }
-);
+router.get('/division/:id', PermissionsUtil.requireAdmin, async ctx => {
+  ctx.body = await TeamDao.getTeamsForDivision(ctx.params.id);
+});
 
 export default router;

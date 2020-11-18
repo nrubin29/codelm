@@ -1,41 +1,30 @@
-import { Request, Response, Router } from 'express';
+import * as Router from 'koa-router';
+import * as koaBody from 'koa-body';
 import { PermissionsUtil } from '../permissions.util';
 import { GroupDao } from '../daos/group.dao';
 import { GroupModel } from '@codelm/common/src/models/group.model';
 
-const router = Router();
+const router = new Router();
 
-router.get(
-  '/',
-  PermissionsUtil.requestAdmin,
-  async (req: Request, res: Response) => {
-    let groups: GroupModel[];
+router.get('/', PermissionsUtil.requestAuth, async ctx => {
+  let groups: GroupModel[];
 
-    if (req.params.admin) {
-      groups = await GroupDao.getGroups();
-    } else {
-      groups = await GroupDao.getNonSpecialGroups();
-    }
-
-    res.json(groups);
+  if (ctx.state.admin) {
+    groups = await GroupDao.getGroups();
+  } else {
+    groups = await GroupDao.getNonSpecialGroups();
   }
-);
 
-router.put(
-  '/',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await GroupDao.addOrUpdateGroup(req.body));
-  }
-);
+  ctx.body = groups;
+});
 
-router.delete(
-  '/:id',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    await GroupDao.deleteGroup(req.params.id);
-    res.json(true);
-  }
-);
+router.put('/', PermissionsUtil.requireAdmin, koaBody(), async ctx => {
+  ctx.body = await GroupDao.addOrUpdateGroup(ctx.request.body);
+});
+
+router.delete('/:id', PermissionsUtil.requireAdmin, async ctx => {
+  await GroupDao.deleteGroup(ctx.params.id);
+  ctx.body = true;
+});
 
 export default router;

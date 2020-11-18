@@ -32,8 +32,8 @@ import {
   TestCaseSubmissionModel,
 } from '@codelm/common/src/models/submission.model';
 import * as WebSocket from 'ws';
-import { Express } from 'express';
-import { WithWebsocketMethod } from 'express-ws';
+import * as KoaWebsocket from 'koa-websocket';
+import * as route from 'koa-router';
 import { CodeRunnerConnection } from './coderunner.connection';
 import { GameType } from '@codelm/common/src/models/game.model';
 import { Timesweeper } from './games/timesweeper';
@@ -56,7 +56,7 @@ export class SocketManager {
     return SocketManager._instance;
   }
 
-  public static init(app: Express) {
+  public static init(app: KoaWebsocket.App) {
     if (SocketManager._instance) {
       throw new Error('SocketManager has already been initialized.');
     }
@@ -100,7 +100,7 @@ export class SocketManager {
     this.teamSockets.clear();
   }
 
-  protected constructor(app: Express) {
+  protected constructor(app: KoaWebsocket.App) {
     this.teamSockets = new Map<string, WebSocket>();
     this.adminSockets = new Map<string, WebSocket>();
 
@@ -124,7 +124,8 @@ export class SocketManager {
       });
     }, 15 * 1000);
 
-    ((app as any) as WithWebsocketMethod).ws('/', socket => {
+    app.ws.use(ctx => {
+      const socket = ctx.websocket;
       let _id: string;
 
       socket.onmessage = data => {

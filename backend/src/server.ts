@@ -1,16 +1,15 @@
-import * as express from 'express';
-import { Router } from 'express';
-import * as morgan from 'morgan';
-import * as bodyParser from 'body-parser';
+import * as Koa from 'koa';
+import * as websocketify from 'koa-websocket';
+
 import * as path from 'path';
-import * as fileUpload from 'express-fileupload';
 import * as mongoose from 'mongoose';
 import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
 import { VERSION } from '@codelm/common/version';
 import { objectFromEntries } from '@codelm/common/src/utils/submission.util';
 import './daos/dao';
-import apiRoutes from './routes/route';
+import apiRouter from './routes/route';
+import { MyContext } from './typings';
 
 export const DEBUG = process.argv.includes('--debug');
 
@@ -24,38 +23,22 @@ if (!DEBUG) {
   });
 }
 
-const app = express();
-app.set('trust proxy', true);
-app.set('json replacer', (key: string, value: any) => {
-  // TODO: Ensure that this doesn't slow down `res#json` in the general case.
-  if (key === 'rubric') {
-    // `rubric` is stored as a Map in the database, but it must be converted to an Object for JSON.
-    const rubric = value as Map<string, number>;
-    return objectFromEntries(rubric);
-  }
+const app = websocketify(new Koa<MyContext>());
 
-  return value;
-});
+// app.use(
+//   morgan('[:date[clf]] :method :url :status :response-time ms :remote-addr')
+// );
+app.use(apiRouter.routes());
+app.use(apiRouter.allowedMethods());
 
-const expressWs = require('express-ws')(app);
-
-app.use(
-  morgan('[:date[clf]] :method :url :status :response-time ms :remote-addr')
-);
-app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' })); // parse application/x-www-form-urlencoded
-app.use(bodyParser.json({ limit: '5mb' })); // parse application/json
-app.use(bodyParser.json({ type: 'application/vnd.api+json', limit: '5mb' })); // Parse application/vnd.api+json as json
-app.use(fileUpload({ createParentPath: true }));
-app.use('/api', apiRoutes);
-
-if (process.env.NODE_ENV == 'development') {
-  app.use(express.static(path.join('.', 'dist', 'frontend')));
-} else {
-  app.use(
-    '/',
-    Router().get('/', (req, res) => res.redirect('/index.html'))
-  );
-}
+// if (process.env.NODE_ENV == 'development') {
+//   app.use(express.static(path.join('.', 'dist', 'frontend')));
+// } else {
+//   app.use(
+//     '/',
+//     Router().get('/', (req, res) => res.redirect('/index.html'))
+//   );
+// }
 
 console.log(
   `Starting CodeLM server build ${VERSION}${DEBUG ? ' in debug mode' : ''}`

@@ -1,78 +1,55 @@
-import { Router, Request, Response } from 'express';
+import * as Router from 'koa-router';
 import { sanitizeSubmission, SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
 import { SubmissionModel } from '@codelm/common/src/models/submission.model';
+import * as koaBody from 'koa-body';
 
-const router = Router();
+const router = new Router();
 
-router.get(
-  '/',
-  PermissionsUtil.requireTeam,
-  async (req: Request, res: Response) => {
-    const submissions = await SubmissionDao.getSubmissionsForTeam(
-      req.params.team._id
-    );
-    res.json(submissions.map(submission => sanitizeSubmission(submission)));
-  }
-);
+router.get('/', PermissionsUtil.requireTeam, async ctx => {
+  const submissions = await SubmissionDao.getSubmissionsForTeam(
+    ctx.params.team._id
+  );
+  ctx.body = submissions.map(submission => sanitizeSubmission(submission));
+});
 
-router.get(
-  '/overview/:divisionId',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await SubmissionDao.getSubmissionOverview(req.params.divisionId));
-  }
-);
+router.get('/overview/:divisionId', PermissionsUtil.requireAdmin, async ctx => {
+  ctx.body = await SubmissionDao.getSubmissionOverview(ctx.params.divisionId);
+});
 
-router.get(
-  '/team/:id',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await SubmissionDao.getSubmissionsForTeam(req.params.id));
-  }
-);
+router.get('/team/:id', PermissionsUtil.requireAdmin, async ctx => {
+  ctx.body = await SubmissionDao.getSubmissionsForTeam(ctx.params.id);
+});
 
 router.get(
   '/problem/:problemId/team/:teamId',
   PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(
-      await SubmissionDao.getSubmissionsForTeamAndProblem(
-        req.params.teamId,
-        req.params.problemId
-      )
+  async ctx => {
+    ctx.body = await SubmissionDao.getSubmissionsForTeamAndProblem(
+      ctx.params.teamId,
+      ctx.params.problemId
     );
   }
 );
 
-router.get(
-  '/disputes',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await SubmissionDao.getDisputedSubmissions());
-  }
-);
+router.get('/disputes', PermissionsUtil.requireAdmin, async ctx => {
+  ctx.body = await SubmissionDao.getDisputedSubmissions();
+});
 
-router.get(
-  '/:id',
-  PermissionsUtil.requireAuth,
-  async (req: Request, res: Response) => {
-    const submission = await SubmissionDao.getSubmission(req.params.id);
+router.get('/:id', PermissionsUtil.requireAuth, async ctx => {
+  const submission = await SubmissionDao.getSubmission(ctx.params.id);
 
-    if (req.params.team) {
-      // The toString() calls are needed because both _ids are objects.
-      if (submission.team._id.toString() === req.params.team._id.toString()) {
-        res.json(sanitizeSubmission(submission));
-      } else {
-        res.sendStatus(403);
-      }
-    } else if (req.params.admin) {
-      res.json(submission);
+  if (ctx.state.team) {
+    // The toString() calls are needed because both _ids are objects.
+    if (submission.team._id.toString() === ctx.state.team._id.toString()) {
+      ctx.body = sanitizeSubmission(submission);
     } else {
-      res.sendStatus(403);
+      ctx.status = 403;
     }
+  } else {
+    ctx.body = submission;
   }
-);
+});
 
 // TODO: Protect this route.
 // router.get('/:id/file/:fileName', async (req: Request, res: Response) => {
@@ -102,44 +79,30 @@ router.get(
 //   }
 // });
 
-router.put(
-  '/:id',
-  PermissionsUtil.requireAuth,
-  async (req: Request, res: Response) => {
-    if (req.params.team) {
-      const submission = await SubmissionDao.getSubmissionRaw(req.params.id);
-      // Only allow teams to set the dispute message.
-      submission.set('dispute.message', req.body.dispute.message);
-      submission.set('dispute.open', true);
+router.put('/:id', PermissionsUtil.requireAuth, koaBody(), async ctx => {
+  if (ctx.state.team) {
+    const submission = await SubmissionDao.getSubmissionRaw(ctx.params.id);
+    // Only allow teams to set the dispute message.
+    submission.set('dispute.message', ctx.request.body.dispute.message);
+    submission.set('dispute.open', true);
 
-      res.json(
-        sanitizeSubmission(
-          await SubmissionDao.updateSubmission(
-            req.params.id,
-            submission as SubmissionModel
-          )
-        )
-      );
-    } else if (req.params.admin) {
-      res.json(
-        await SubmissionDao.updateSubmission(
-          req.params.id,
-          req.body as SubmissionModel
-        )
-      );
-    } else {
-      res.sendStatus(403);
-    }
+    ctx.body = sanitizeSubmission(
+      await SubmissionDao.updateSubmission(
+        ctx.params.id,
+        submission as SubmissionModel
+      )
+    );
+  } else {
+    ctx.body = await SubmissionDao.updateSubmission(
+      ctx.params.id,
+      ctx.request.body as SubmissionModel
+    );
   }
-);
+});
 
-router.delete(
-  '/:id',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    await SubmissionDao.deleteSubmission(req.params.id);
-    res.json(true);
-  }
-);
+router.delete('/:id', PermissionsUtil.requireAdmin, async ctx => {
+  await SubmissionDao.deleteSubmission(ctx.params.id);
+  ctx.body = true;
+});
 
 export default router;
