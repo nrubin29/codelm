@@ -21,6 +21,17 @@ export interface DivisionModel {
 export type DivisionModelForUpload = Omit<DivisionModel, 'starterCode'> & {
   starterCode: {
     state: SettingsState;
-    file: string | File;
+    file: string | FileLike;
   }[];
 };
+
+interface FileLike {
+  readonly lastModified: number;
+  readonly name: string;
+  readonly size: number;
+  readonly type: string;
+  arrayBuffer(): Promise<ArrayBuffer>;
+  slice(start?: number, end?: number, contentType?: string): any;
+  stream(): any;
+  text(): Promise<string>;
+}
