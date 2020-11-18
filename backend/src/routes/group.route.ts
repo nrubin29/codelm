@@ -1,37 +1,29 @@
 import { Request, Response, Router } from 'express';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 import { GroupDao } from '../daos/group.dao';
 import { GroupModel } from '@codelm/common/src/models/group.model';
 
 const router = Router();
 
-router.get(
-  '/',
-  PermissionsUtil.requestAdmin,
-  async (req: Request, res: Response) => {
-    let groups: GroupModel[];
+router.get('/', AuthUtil.requestAdmin, async (req: Request, res: Response) => {
+  let groups: GroupModel[];
 
-    if (req.params.admin) {
-      groups = await GroupDao.getGroups();
-    } else {
-      groups = await GroupDao.getNonSpecialGroups();
-    }
-
-    res.json(groups);
+  if (req.params.admin) {
+    groups = await GroupDao.getGroups();
+  } else {
+    groups = await GroupDao.getNonSpecialGroups();
   }
-);
 
-router.put(
-  '/',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await GroupDao.addOrUpdateGroup(req.body));
-  }
-);
+  res.json(groups);
+});
+
+router.put('/', AuthUtil.requireAdmin, async (req: Request, res: Response) => {
+  res.json(await GroupDao.addOrUpdateGroup(req.body));
+});
 
 router.delete(
   '/:id',
-  PermissionsUtil.requireAdmin,
+  AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     await GroupDao.deleteGroup(req.params.id);
     res.json(true);

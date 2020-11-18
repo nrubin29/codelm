@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import * as crypto from 'crypto';
 import { AdminModel } from '@codelm/common/src/models/admin.model';
-import { LoginResponse } from '@codelm/common/src/packets/server.packet';
+import { LoginResponseType } from '@codelm/common/src/models/auth.model';
 
 type AdminType = AdminModel & mongoose.Document;
 
@@ -28,7 +28,7 @@ export class AdminDao {
     const admin = await Admin.findOne({ username: username });
 
     if (!admin) {
-      throw LoginResponse.NotFound;
+      throw LoginResponseType.NotFound;
     }
 
     const inputHash = crypto
@@ -38,7 +38,7 @@ export class AdminDao {
     if (inputHash === admin.password) {
       return admin;
     } else {
-      throw LoginResponse.IncorrectPassword;
+      throw LoginResponseType.IncorrectPassword;
     }
   }
 

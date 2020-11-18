@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import { QueryPopulateOptions } from 'mongoose';
 import { PersonModel } from '@codelm/common/src/models/person.model';
-import { LoginResponse } from '@codelm/common/src/packets/server.packet';
+import { LoginResponseType } from '@codelm/common/src/models/auth.model';
 import * as crypto from 'crypto';
 import { DEBUG } from '../server';
 import { TeamModel } from '@codelm/common/src/models/team.model';
@@ -65,9 +65,9 @@ export class PersonDao {
     ).map(person => person.toObject());
   }
 
-  static async login(username: string, password: string): Promise<TeamModel> {
+  static async login(username: string, password: string): Promise<PersonModel> {
     if (!username || !password) {
-      throw LoginResponse.NotFound;
+      throw LoginResponseType.NotFound;
     }
 
     const person = await Person.findOne({ username }).populate(
@@ -75,7 +75,7 @@ export class PersonDao {
     );
 
     if (!person) {
-      throw LoginResponse.NotFound;
+      throw LoginResponseType.NotFound;
     }
 
     const inputHash = crypto
@@ -83,63 +83,67 @@ export class PersonDao {
       .toString('hex');
 
     if (DEBUG || inputHash === person.password) {
-      const teams = await TeamDao.getTeamsForPerson(person._id);
+      return person;
+    } else {
+      throw LoginResponseType.IncorrectPassword;
+    }
+  }
 
-      if (person.group.special) {
-        // Assert that this person has exactly one associated team and then log
-        // that team in regardless of settings state.
+  static async getActiveTeam(person: PersonModel): Promise<TeamModel> {
+    const teams = await TeamDao.getTeamsForPerson(person._id);
 
-        if (teams.length !== 1) {
-          throw LoginResponse.SpecialPersonError;
-        }
+    if (person.group.special) {
+      // Assert that this person has exactly one associated team and then log
+      // that team in regardless of settings state.
 
-        return teams[0];
-      } else {
-        const settings = await SettingsDao.getSettings();
+      if (teams.length !== 1) {
+        throw LoginResponseType.SpecialPersonError;
+      }
 
-        if (
-          settings.state === SettingsState.Closed ||
-          settings.state === SettingsState.End
-        ) {
-          throw LoginResponse.Closed;
-        } else if (settings.preliminaries) {
-          // Find the team for the person that is in a preliminaries division;
-          // create one if it does not exist.
+      return teams[0];
+    } else {
+      const settings = await SettingsDao.getSettings();
 
-          const team = teams.find(
-            team => team.division.type === DivisionType.Preliminaries
-          );
+      if (
+        settings.state === SettingsState.Closed ||
+        settings.state === SettingsState.End
+      ) {
+        throw LoginResponseType.Closed;
+      } else if (settings.preliminaries) {
+        // Find the team for the person that is in a preliminaries division;
+        // create one if it does not exist.
 
-          if (team) {
-            return team;
-          } else {
-            // TODO: The division name is basically hardcoded.
-            const division = await DivisionDao.getDivisionByName(
-              person.experience + ' Practice'
-            );
+        const team = teams.find(
+          team => team.division.type === DivisionType.Preliminaries
+        );
 
-            return await TeamDao.addOrUpdateTeam({
-              members: [person],
-              division,
-            });
-          }
+        if (team) {
+          return team;
         } else {
-          // Find the team for the person that is in a competition division;
-          // reject if one does not exist.
-
-          const team = teams.find(
-            team => team.division.type === DivisionType.Competition
+          // TODO: The division name is basically hardcoded.
+          const division = await DivisionDao.getDivisionByName(
+            person.experience + ' Practice'
           );
 
-          if (team) {
-            return team;
-          } else {
-            throw LoginResponse.NoTeam;
-          }
+          return await TeamDao.addOrUpdateTeam({
+            members: [person],
+            division,
+          });
+        }
+      } else {
+        // Find the team for the person that is in a competition division;
+        // reject if one does not exist.
+
+        const team = teams.find(
+          team => team.division.type === DivisionType.Competition
+        );
+
+        if (team) {
+          return team;
+        } else {
+          throw LoginResponseType.NoTeam;
         }
       }
-    } else {
-      throw LoginResponse.IncorrectPassword;
     }
   }
 

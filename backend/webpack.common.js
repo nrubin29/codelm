@@ -1,11 +1,20 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'typeof window': JSON.stringify('object'),
       window: JSON.stringify(false),
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'deployment', 'jwt.key'),
+          to: path.resolve(__dirname, '..', 'dist'),
+        },
+      ],
     }),
   ],
   entry: {

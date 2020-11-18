@@ -1,16 +1,10 @@
 import {
-  isClientPacket,
-  LoginPacket,
+  ConnectPacket,
   ReplayPacket,
   SubmissionPacket,
 } from '@codelm/common/src/packets/client.packet';
-import { AdminDao } from './daos/admin.dao';
 import { Packet } from '@codelm/common/src/packets/packet';
-import {
-  LoginResponse,
-  SubmissionStatus,
-} from '@codelm/common/src/packets/server.packet';
-import { VERSION } from '@codelm/common/version';
+import { SubmissionStatus } from '@codelm/common/src/packets/server.packet';
 import { ServerProblemSubmission } from '@codelm/common/src/problem-submission';
 import { ProblemDao } from './daos/problem.dao';
 import {
@@ -40,7 +34,9 @@ import { Timesweeper } from './games/timesweeper';
 import { HighLow } from './games/high-low';
 import { CodeRunnerPacket } from '@codelm/common/src/packets/coderunner.packet';
 import { Observable } from 'rxjs';
-import { PersonDao } from './daos/person.dao';
+import * as jwt from 'jsonwebtoken';
+import { JWT_PRIVATE_KEY } from './server';
+import { isTeamJwt, Jwt } from '../../common/src/models/auth.model';
 
 export class SocketManager {
   private static _instance: SocketManager;
@@ -125,33 +121,26 @@ export class SocketManager {
     }, 15 * 1000);
 
     ((app as any) as WithWebsocketMethod).ws('/', socket => {
-      let _id: string;
+      let _id: string; // TODO: Set this.
 
       socket.onmessage = data => {
-        const packet = JSON.parse(<string>data.data);
-
-        if (isClientPacket(packet) && packet.version !== VERSION) {
-          this.emitToSocket(
-            { name: 'loginResponse', response: LoginResponse.OutdatedClient },
-            socket
-          );
-          socket.close();
-        } else {
-          socket.listeners(packet.name).map(listener => listener(packet));
-        }
+        const packet = JSON.parse(data.data as string);
+        socket.listeners(packet.name).map(listener => listener(packet));
       };
 
-      socket.on('login', packet =>
-        this.onLoginPacket(packet as LoginPacket, socket).then(
-          __id => (_id = __id)
-        )
-      );
-      socket.on('submission', packet =>
-        this.onSubmissionPacket(packet as SubmissionPacket, socket)
-      );
-      socket.on('replay', packet =>
-        this.onReplayPacket(packet as ReplayPacket, socket)
-      );
+      socket.on('connect', packet => {
+        this.onConnectPacket(packet as ConnectPacket, socket).then(__id => {
+          _id = __id;
+        });
+      });
+
+      socket.on('submission', packet => {
+        this.onSubmissionPacket(packet as SubmissionPacket, socket);
+      });
+
+      socket.on('replay', packet => {
+        this.onReplayPacket(packet as ReplayPacket, socket);
+      });
 
       socket.onclose = event => {
         if (!event.wasClean) {
@@ -171,106 +160,35 @@ export class SocketManager {
     });
   }
 
-  async onLoginPacket(
-    loginPacket: LoginPacket,
-    socket: WebSocket
-  ): Promise<string> {
-    try {
-      const team = await PersonDao.login(
-        loginPacket.username,
-        loginPacket.password
-      );
-
-      if (this.teamSockets.has(team._id.toString())) {
-        this.emitToSocket(
-          {
-            name: 'loginResponse',
-            response: LoginResponse.AlreadyConnected,
-          },
-          socket
-        );
-        socket.close();
-      } else {
-        this.teamSockets.set(team._id.toString(), socket);
-
-        this.emitToSocket(
-          {
-            name: 'loginResponse',
-            response: LoginResponse.SuccessTeam,
-            team,
-          },
-          socket
-        );
-
-        return team._id.toString();
-      }
-    } catch (response) {
-      if (response === LoginResponse.NotFound) {
-        try {
-          const admin = await AdminDao.login(
-            loginPacket.username,
-            loginPacket.password
+  onConnectPacket(packet: ConnectPacket, socket: WebSocket): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      jwt.verify(packet.jwt, JWT_PRIVATE_KEY, (err, decoded) => {
+        if (err) {
+          this.emitToSocket(
+            { name: 'connectResponse', success: false },
+            socket
           );
-
-          if (this.adminSockets.has(admin._id.toString())) {
-            this.emitToSocket(
-              {
-                name: 'loginResponse',
-                response: LoginResponse.AlreadyConnected,
-              },
-              socket
-            );
-            socket.close();
-          } else {
-            this.adminSockets.set(admin._id.toString(), socket);
-
-            this.emitToSocket(
-              {
-                name: 'loginResponse',
-                response: LoginResponse.SuccessAdmin,
-                admin,
-              },
-              socket
-            );
-
-            return admin._id.toString();
-          }
-        } catch (response) {
-          if (response.stack !== undefined) {
-            console.error(response);
-            this.emitToSocket(
-              { name: 'loginResponse', response: LoginResponse.Error },
-              socket
-            );
-          } else {
-            this.emitToSocket(
-              {
-                name: 'loginResponse',
-                response: response as LoginResponse,
-              },
-              socket
-            );
-          }
-
           socket.close();
-        }
-      } else {
-        if (response.stack !== undefined) {
-          console.error(response);
-          this.emitToSocket(
-            { name: 'loginResponse', response: LoginResponse.Error },
-            socket
-          );
-        } else {
-          this.emitToSocket(
-            { name: 'loginResponse', response: response as LoginResponse },
-            socket
-          );
-        }
 
-        socket.close();
-      }
-    }
+          reject(err);
+        } else {
+          const jwt = decoded as Jwt;
+          let _id: string;
+
+          if (isTeamJwt(jwt)) {
+            _id = jwt.teamId;
+            this.teamSockets.set(_id, socket);
+          } else {
+            _id = jwt.adminId;
+            this.adminSockets.set(_id, socket);
+          }
+
+          this.emitToSocket({ name: 'connectResponse', success: true }, socket);
+
+          resolve(_id);
+        }
+      });
+    });
   }
 
   // TODO: Ensure that submissions are open (use PermissionsUtil).

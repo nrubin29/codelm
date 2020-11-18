@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { SettingsDao } from '../daos/settings.dao';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 
 const router = Router();
 
@@ -10,7 +10,7 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.put(
   '/',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     res.json(await SettingsDao.updateSettings(req.body));
   }
@@ -18,7 +18,7 @@ router.put(
 
 router.delete(
   '/',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     await SettingsDao.resetSettings();
     res.json(true);

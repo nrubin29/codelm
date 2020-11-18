@@ -2,13 +2,13 @@ import { Request, Response, Router } from 'express';
 import { TeamDao } from '../daos/team.dao';
 import { DivisionDao } from '../daos/division.dao';
 import { DivisionType } from '@codelm/common/src/models/division.model';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 
 let debugTeamUsernames: readonly string[];
 
 const router = Router();
 
-router.use(PermissionsUtil.requireDebugMode);
+router.use(AuthUtil.requireDebugMode);
 
 router.get('/', (req: Request, res: Response) => {
   res.send('Debug mode is enabled!');

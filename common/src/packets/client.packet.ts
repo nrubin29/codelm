@@ -1,4 +1,3 @@
-import { Packet } from './packet';
 import {
   ClientProblemSubmission,
   ClientReplayRequest,
@@ -9,10 +8,9 @@ interface IClientPacket {
   version: string;
 }
 
-export interface LoginPacket extends IClientPacket {
-  name: 'login';
-  username: string;
-  password: string;
+export interface ConnectPacket extends IClientPacket {
+  name: 'connect';
+  jwt: string;
 }
 
 export interface ReplayPacket extends IClientPacket {
@@ -27,8 +25,4 @@ export interface SubmissionPacket extends IClientPacket {
   team: TeamModel;
 }
 
-export type ClientPacket = LoginPacket | ReplayPacket | SubmissionPacket;
-
-export function isClientPacket(packet: Packet): packet is ClientPacket {
-  return (packet as ClientPacket).version !== undefined;
-}
+export type ClientPacket = ConnectPacket | ReplayPacket | SubmissionPacket;

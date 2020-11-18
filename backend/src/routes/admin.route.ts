@@ -1,12 +1,12 @@
 import { Request, Response, Router } from 'express';
 import { AdminDao } from '../daos/admin.dao';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 
 const router = Router();
 
 router.get(
   '/',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     res.json(await AdminDao.getAdmins());
   }
@@ -14,7 +14,7 @@ router.get(
 
 router.put(
   '/',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     res.json(await AdminDao.addOrUpdateAdmin(req.body));
   }
@@ -22,7 +22,7 @@ router.put(
 
 router.delete(
   '/:id',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     await AdminDao.deleteAdmin(req.params.id);
     res.json(true);

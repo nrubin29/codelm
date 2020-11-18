@@ -6,12 +6,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class RestService {
   private baseUrl = '/api/';
-  authId: string;
+  jwtString: string;
 
   constructor(private http: HttpClient) {}
 
   private get headers(): HttpHeaders {
-    return new HttpHeaders().set('Authorization', 'Basic ' + this.authId);
+    const headers = new HttpHeaders();
+
+    if (this.jwtString) {
+      headers.set('Authorization', `Bearer ${this.jwtString}`);
+    }
+
+    return headers;
   }
 
   get<T>(endpoint: string): Promise<T> {

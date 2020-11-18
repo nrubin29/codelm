@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 import { EmailRequest } from '@codelm/common/src/models/email.model';
 import { PersonDao } from '../daos/person.dao';
 import { env } from '../env';
@@ -15,7 +15,7 @@ const mg = mailgun(env.mailgun);
 
 router.post(
   '/',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     const emailRequest = req.body as EmailRequest;
 

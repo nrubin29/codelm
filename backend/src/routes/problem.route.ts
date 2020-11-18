@@ -4,7 +4,7 @@ import {
   ProblemModel,
   ProblemType,
 } from '@codelm/common/src/models/problem.model';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 import { SettingsDao } from '../daos/settings.dao';
 import { SettingsState } from '@codelm/common/src/models/settings.model';
 import { TeamUtil } from '@codelm/common/src/utils/team.util';
@@ -13,7 +13,7 @@ const router = Router();
 
 router.put(
   '/',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     res.json(await ProblemDao.addOrUpdateProblem(req.body as ProblemModel));
   }
@@ -21,7 +21,7 @@ router.put(
 
 router.get(
   '/:id',
-  PermissionsUtil.requireAuth,
+  AuthUtil.requireAuth,
   async (req: Request, res: Response) => {
     let problem = await ProblemDao.getProblem(req.params.id);
 
@@ -35,7 +35,7 @@ router.get(
 
 router.delete(
   '/:id',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     await ProblemDao.deleteProblem(req.params.id);
     res.json(true);
@@ -44,7 +44,7 @@ router.delete(
 
 router.get(
   '/division/:id',
-  PermissionsUtil.requireAuth,
+  AuthUtil.requireAuth,
   async (req: Request, res: Response) => {
     let problems = await ProblemDao.getProblemsForDivision(req.params.id);
     const settings = await SettingsDao.getSettings();

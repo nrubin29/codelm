@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 import { SocketManager } from '../socket.manager';
 import { SocketConnection } from '@codelm/common/src/models/sockets.model';
 
@@ -7,7 +7,7 @@ const router = Router();
 
 router.get(
   '/:type',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     const sockets: SocketConnection[] = [];
 
@@ -27,7 +27,7 @@ router.get(
 
 router.delete(
   '/:id',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     SocketManager.instance.kick(req.params.id);
     res.status(200);
