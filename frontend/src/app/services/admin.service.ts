@@ -3,6 +3,7 @@ import { RestService } from './rest.service';
 import { BehaviorSubject } from 'rxjs';
 import { AdminModel } from '@codelm/common/src/models/admin.model';
 import { SingleEntityService } from './entity.service';
+import { TeamModel } from '../../../../common/src/models/team.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,8 +33,14 @@ export class AdminService extends SingleEntityService<AdminModel> {
     this.admin = new BehaviorSubject<AdminModel>(null);
   }
 
+  async refreshAdmin(): Promise<AdminModel> {
+    const admin = await this.restService.get<AdminModel>(this.endpoint);
+    this.admin.next(admin);
+    return admin;
+  }
+
   getAll(): Promise<AdminModel[]> {
-    return this.restService.get<AdminModel[]>(this.endpoint);
+    return this.restService.get<AdminModel[]>(`${this.endpoint}/all`);
   }
 
   addOrUpdate(admin: any): Promise<AdminModel> {

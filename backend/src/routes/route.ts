@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import adminRoute from './admin.route';
 import alertRoute from './alert.route';
+import authRoute from './auth.route';
 import debugRoute from './debug.route';
 import divisionRoute from './division.route';
 import emailRoute from './email.route';
@@ -17,6 +18,7 @@ const router = Router();
 
 router.use('/admins', adminRoute);
 router.use('/alerts', alertRoute);
+router.use('/auth', authRoute);
 router.use('/debug', debugRoute);
 router.use('/divisions', divisionRoute);
 router.use('/email', emailRoute);

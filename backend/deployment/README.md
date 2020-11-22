@@ -25,6 +25,7 @@
             update.sh
             files/ (where files are uploaded to)
             dist/ (production build directory)
+                jwt.key
 
     root
         certs

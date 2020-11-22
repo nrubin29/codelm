@@ -11,6 +11,7 @@ import { VERSION } from '@codelm/common/version';
 import { objectFromEntries } from '@codelm/common/src/utils/submission.util';
 import './daos/dao';
 import apiRoutes from './routes/route';
+import * as fs from 'fs';
 
 export const DEBUG = process.argv.includes('--debug');
 
@@ -23,6 +24,8 @@ if (!DEBUG) {
     console.error('unhandledRejection:', reason);
   });
 }
+
+export const JWT_PRIVATE_KEY = fs.readFileSync('jwt.key');
 
 const app = express();
 app.set('trust proxy', true);
@@ -49,7 +52,7 @@ app.use(fileUpload({ createParentPath: true }));
 app.use('/api', apiRoutes);
 
 if (process.env.NODE_ENV == 'development') {
-  app.use(express.static(path.join('.', 'dist', 'frontend')));
+  app.use(express.static(path.join('.', 'frontend')));
 } else {
   app.use(
     '/',

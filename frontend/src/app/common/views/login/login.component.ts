@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { LoginResponse } from '@codelm/common/src/packets/server.packet';
+import { LoginResponseType } from '@codelm/common/src/models/auth.model';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { SettingsModel } from '@codelm/common/src/models/settings.model';
 import { VERSION } from '@codelm/common/version';
@@ -35,24 +35,26 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  login(form: NgForm) {
+  async login(form: NgForm) {
     if (!form.value.username || !form.value.password) {
       alert('Please enter a username and password');
       return;
     }
 
-    this.authService
-      .login(form.value.username, form.value.password)
-      .then((response: LoginResponse) => {
-        if (response === LoginResponse.SuccessAdmin) {
-          this.router.navigate(['admin']);
-        } else if (response === LoginResponse.SuccessTeam) {
-          this.router.navigate(['dashboard']);
-        }
-      })
-      .catch((response: LoginResponse | Error) => {
-        alert(response);
-      });
+    try {
+      const response = await this.authService.login(
+        form.value.username,
+        form.value.password
+      );
+
+      if (response === LoginResponseType.SuccessAdmin) {
+        await this.router.navigate(['admin']);
+      } else if (response === LoginResponseType.SuccessTeam) {
+        await this.router.navigate(['dashboard']);
+      }
+    } catch (e) {
+      alert(e);
+    }
   }
 
   register() {

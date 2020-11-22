@@ -2,6 +2,7 @@
 
 # secret files
 deployment/newwavecomputers.com.*
+deployment/jwt.key
 db
 db2
 src/env.ts

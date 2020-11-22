@@ -1,20 +1,16 @@
 import { Request, Response, Router } from 'express';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 import { PersonDao, sanitizePerson } from '../daos/person.dao';
 
 const router = Router();
 
-router.get(
-  '/',
-  PermissionsUtil.requireAdmin,
-  async (req: Request, res: Response) => {
-    res.json(await PersonDao.getPeople());
-  }
-);
+router.get('/', AuthUtil.requireAdmin, async (req: Request, res: Response) => {
+  res.json(await PersonDao.getPeople());
+});
 
 router.get(
   '/group/:groupId',
-  PermissionsUtil.requireAdmin,
+  AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     res.json(await PersonDao.getPeopleForGroup(req.params.groupId));
   }
@@ -33,7 +29,7 @@ router.put('/', async (req: Request, res: Response) => {
 
 router.delete(
   '/:id',
-  PermissionsUtil.requireAdmin,
+  AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     await PersonDao.deletePerson(req.params.id);
     res.json(true);

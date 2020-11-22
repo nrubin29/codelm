@@ -1,24 +1,20 @@
 import { Router, Request, Response } from 'express';
 import { sanitizeSubmission, SubmissionDao } from '../daos/submission.dao';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 import { SubmissionModel } from '@codelm/common/src/models/submission.model';
 
 const router = Router();
 
-router.get(
-  '/',
-  PermissionsUtil.requireTeam,
-  async (req: Request, res: Response) => {
-    const submissions = await SubmissionDao.getSubmissionsForTeam(
-      req.params.team._id
-    );
-    res.json(submissions.map(submission => sanitizeSubmission(submission)));
-  }
-);
+router.get('/', AuthUtil.requireTeam, async (req: Request, res: Response) => {
+  const submissions = await SubmissionDao.getSubmissionsForTeam(
+    req.params.team._id
+  );
+  res.json(submissions.map(submission => sanitizeSubmission(submission)));
+});
 
 router.get(
   '/overview/:divisionId',
-  PermissionsUtil.requireAdmin,
+  AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     res.json(await SubmissionDao.getSubmissionOverview(req.params.divisionId));
   }
@@ -26,7 +22,7 @@ router.get(
 
 router.get(
   '/team/:id',
-  PermissionsUtil.requireAdmin,
+  AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     res.json(await SubmissionDao.getSubmissionsForTeam(req.params.id));
   }
@@ -34,7 +30,7 @@ router.get(
 
 router.get(
   '/problem/:problemId/team/:teamId',
-  PermissionsUtil.requireAdmin,
+  AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     res.json(
       await SubmissionDao.getSubmissionsForTeamAndProblem(
@@ -47,7 +43,7 @@ router.get(
 
 router.get(
   '/disputes',
-  PermissionsUtil.requireAdmin,
+  AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     res.json(await SubmissionDao.getDisputedSubmissions());
   }
@@ -55,7 +51,7 @@ router.get(
 
 router.get(
   '/:id',
-  PermissionsUtil.requireAuth,
+  AuthUtil.requireAuth,
   async (req: Request, res: Response) => {
     const submission = await SubmissionDao.getSubmission(req.params.id);
 
@@ -104,7 +100,7 @@ router.get(
 
 router.put(
   '/:id',
-  PermissionsUtil.requireAuth,
+  AuthUtil.requireAuth,
   async (req: Request, res: Response) => {
     if (req.params.team) {
       const submission = await SubmissionDao.getSubmissionRaw(req.params.id);
@@ -135,7 +131,7 @@ router.put(
 
 router.delete(
   '/:id',
-  PermissionsUtil.requireAdmin,
+  AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     await SubmissionDao.deleteSubmission(req.params.id);
     res.json(true);

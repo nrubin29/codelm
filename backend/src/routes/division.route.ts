@@ -4,7 +4,7 @@ import {
   DivisionModel,
   DivisionType,
 } from '@codelm/common/src/models/division.model';
-import { PermissionsUtil } from '../permissions.util';
+import { AuthUtil } from '../auth.util';
 import { FileArray, UploadedFile } from 'express-fileupload';
 import { SettingsState } from '@codelm/common/src/models/settings.model';
 import * as shortid from 'shortid';
@@ -15,27 +15,21 @@ const router = Router();
 // This endpoint returns Competition divisions for non-admins to support the
 // possibility of Group sponsor accounts. If this feature isn't implemented,
 // this endpoint can be locked down to just admins.
-router.get(
-  '/',
-  PermissionsUtil.requestAdmin,
-  async (req: Request, res: Response) => {
-    let divisions: DivisionModel[];
+router.get('/', AuthUtil.requestAuth, async (req: Request, res: Response) => {
+  let divisions: DivisionModel[];
 
-    if (req.params.admin) {
-      divisions = await DivisionDao.getDivisions();
-    } else {
-      divisions = await DivisionDao.getDivisionsOfType(
-        DivisionType.Competition
-      );
-    }
-
-    res.json(divisions);
+  if (req.params.admin) {
+    divisions = await DivisionDao.getDivisions();
+  } else {
+    divisions = await DivisionDao.getDivisionsOfType(DivisionType.Competition);
   }
-);
+
+  res.json(divisions);
+});
 
 router.put(
   '/',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request & { files?: FileArray }, res: Response) => {
     const division: DivisionModel & { states: string[] } = req.body;
 
@@ -94,7 +88,7 @@ router.put(
 
 router.delete(
   '/:id',
-  PermissionsUtil.requireSuperUser,
+  AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     await DivisionDao.deleteDivision(req.params.id);
     res.json(true);

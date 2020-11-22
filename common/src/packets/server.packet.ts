@@ -1,27 +1,10 @@
-import { TeamModel } from '../models/team.model';
-import { AdminModel } from '../models/admin.model';
 import { SettingsState } from '../models/settings.model';
 import { SubmissionModel } from '../models/submission.model';
 import { GameExtras } from '../models/game.model';
 
-export const enum LoginResponse {
-  SuccessTeam = 'Success Team',
-  SuccessAdmin = 'Success Admin',
-  IncorrectPassword = 'Incorrect Password',
-  NotFound = 'Account not found',
-  SpecialPersonError = 'A person in a special group must have exactly one associated team',
-  NoTeam = 'You cannot log in at this time',
-  Closed = 'The dashboard is currently closed',
-  AlreadyConnected = 'This account is already logged in',
-  OutdatedClient = 'Please refresh the page. If this error persists, clear your browser cache',
-  Error = 'An internal error occurred',
-}
-
-export interface LoginResponsePacket {
-  name: 'loginResponse';
-  response: LoginResponse;
-  team?: TeamModel;
-  admin?: AdminModel;
+export interface ConnectResponsePacket {
+  name: 'connectResponse';
+  success: boolean;
 }
 
 export interface StateSwitchPacket {
@@ -58,7 +41,7 @@ export interface UpdateTeamPacket {
 }
 
 export type ServerPacket =
-  | LoginResponsePacket
+  | ConnectResponsePacket
   | StateSwitchPacket
   | SubmissionCompletedPacket
   | GameExtrasPacket
