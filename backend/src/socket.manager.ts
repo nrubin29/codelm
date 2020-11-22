@@ -121,7 +121,7 @@ export class SocketManager {
     }, 15 * 1000);
 
     ((app as any) as WithWebsocketMethod).ws('/', socket => {
-      let _id: string; // TODO: Set this.
+      let _id: string;
 
       socket.onmessage = data => {
         const packet = JSON.parse(data.data as string);

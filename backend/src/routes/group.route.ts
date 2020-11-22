@@ -5,7 +5,7 @@ import { GroupModel } from '@codelm/common/src/models/group.model';
 
 const router = Router();
 
-router.get('/', AuthUtil.requestAdmin, async (req: Request, res: Response) => {
+router.get('/', AuthUtil.requestAuth, async (req: Request, res: Response) => {
   let groups: GroupModel[];
 
   if (req.params.admin) {

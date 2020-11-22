@@ -33,20 +33,14 @@ export class AdminService extends SingleEntityService<AdminModel> {
     this.admin = new BehaviorSubject<AdminModel>(null);
   }
 
-  refreshAdmin(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.restService
-        .get<AdminModel>(this.endpoint)
-        .then(admin => {
-          this.admin.next(admin);
-          resolve();
-        })
-        .catch(reject);
-    });
+  async refreshAdmin(): Promise<AdminModel> {
+    const admin = await this.restService.get<AdminModel>(this.endpoint);
+    this.admin.next(admin);
+    return admin;
   }
 
   getAll(): Promise<AdminModel[]> {
-    return this.restService.get<AdminModel[]>(this.endpoint);
+    return this.restService.get<AdminModel[]>(`${this.endpoint}/all`);
   }
 
   addOrUpdate(admin: any): Promise<AdminModel> {

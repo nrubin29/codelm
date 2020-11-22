@@ -4,8 +4,12 @@ import { AuthUtil } from '../auth.util';
 
 const router = Router();
 
+router.get('/', AuthUtil.requireAdmin, (req: Request, res: Response) => {
+  res.json(req.params.admin);
+});
+
 router.get(
-  '/',
+  '/all',
   AuthUtil.requireSuperUser,
   async (req: Request, res: Response) => {
     res.json(await AdminDao.getAdmins());

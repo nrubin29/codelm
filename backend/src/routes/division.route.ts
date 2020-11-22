@@ -15,7 +15,7 @@ const router = Router();
 // This endpoint returns Competition divisions for non-admins to support the
 // possibility of Group sponsor accounts. If this feature isn't implemented,
 // this endpoint can be locked down to just admins.
-router.get('/', AuthUtil.requestAdmin, async (req: Request, res: Response) => {
+router.get('/', AuthUtil.requestAuth, async (req: Request, res: Response) => {
   let divisions: DivisionModel[];
 
   if (req.params.admin) {

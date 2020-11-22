@@ -12,7 +12,6 @@ import { objectFromEntries } from '@codelm/common/src/utils/submission.util';
 import './daos/dao';
 import apiRoutes from './routes/route';
 import * as fs from 'fs';
-// import * as jwt from 'express-jwt';
 
 export const DEBUG = process.argv.includes('--debug');
 
@@ -50,13 +49,6 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' })); // parse appli
 app.use(bodyParser.json({ limit: '5mb' })); // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json', limit: '5mb' })); // Parse application/vnd.api+json as json
 app.use(fileUpload({ createParentPath: true }));
-// app.use(
-//   jwt({
-//     secret: JWT_PRIVATE_KEY,
-//     algorithms: ['HS256'],
-//     credentialsRequired: false,
-//   })
-// );
 app.use('/api', apiRoutes);
 
 if (process.env.NODE_ENV == 'development') {

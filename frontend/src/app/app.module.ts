@@ -8,6 +8,8 @@ import { SharedModule } from './shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EndComponent } from './common/views/end/end.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,13 @@ import { EndComponent } from './common/views/end/end.component';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

@@ -52,16 +52,10 @@ export class TeamService extends EntityService<TeamModel> {
     this.team = new BehaviorSubject<TeamModel>(null);
   }
 
-  refreshTeam(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.restService
-        .get<TeamModel>(this.endpoint)
-        .then(team => {
-          this.team.next(team);
-          resolve();
-        })
-        .catch(reject);
-    });
+  async refreshTeam(): Promise<TeamModel> {
+    const team = await this.restService.get<TeamModel>(this.endpoint);
+    this.team.next(team);
+    return team;
   }
 
   getTeam(id: string): Promise<TeamModel> {

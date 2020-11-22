@@ -12,6 +12,7 @@ import {
   LoginResponseType,
 } from '@codelm/common/src/models/auth.model';
 import { ConnectResponsePacket } from '@codelm/common/src/packets/server.packet';
+import { AuthInterceptor } from './auth.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -41,10 +42,8 @@ export class AuthService {
       loginResponse.response === LoginResponseType.SuccessTeam ||
       loginResponse.response === LoginResponseType.SuccessAdmin
     ) {
-      this.restService.jwtString = loginResponse.jwt;
-      console.log(this.restService.jwtString);
-      this.jwt = JSON.parse(atob(this.restService.jwtString.split('.')[1]));
-      console.log(this.jwt);
+      AuthInterceptor.jwtString = loginResponse.jwt;
+      this.jwt = JSON.parse(atob(AuthInterceptor.jwtString.split('.')[1]));
 
       await this.connect();
       return loginResponse.response;
@@ -53,38 +52,35 @@ export class AuthService {
     }
   }
 
-  private connect() {
-    return new Promise<LoginResponse>((resolve, reject) => {
-      this.socketService
-        .connect()
-        .then(() => {
-          this.socketService.once<ConnectResponsePacket>(
-            'connectResponse',
-            packet => {
-              if (!packet.success) {
-                reject();
-                return;
-              }
+  private async connect() {
+    await this.socketService.connect();
 
-              if (isTeamJwt(this.jwt)) {
-                return this.teamService.refreshTeam();
-              } else {
-                return this.adminService.refreshAdmin();
-              }
-            }
-          );
+    await new Promise<void>((resolve, reject) => {
+      this.socketService.once<ConnectResponsePacket>(
+        'connectResponse',
+        packet => {
+          if (!packet.success) {
+            reject();
+            return;
+          }
 
-          this.socketService.emit({
-            name: 'connect',
-            jwt: this.restService.jwtString,
-            version: VERSION,
-          });
-        })
-        .then(() => {
-          this.socketService.listenOnDisconnect();
           resolve();
-        })
-        .catch(reject);
+        }
+      );
+
+      this.socketService.emit({
+        name: 'connect',
+        jwt: AuthInterceptor.jwtString,
+        version: VERSION,
+      });
     });
+
+    if (isTeamJwt(this.jwt)) {
+      await this.teamService.refreshTeam();
+    } else {
+      await this.adminService.refreshAdmin();
+    }
+
+    this.socketService.listenOnDisconnect();
   }
 }
