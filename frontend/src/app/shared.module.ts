@@ -40,6 +40,7 @@ import { EditEntityComponent } from './common/components/edit-entity/edit-entity
 import { DynamicFormFieldComponent } from './common/components/dynamic-form-field/dynamic-form-field.component';
 import { DrawerToggleComponent } from './common/components/drawer-toggle/drawer-toggle.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
+    AngularEditorModule,
     MatCardModule,
     MatSidenavModule,
     MatDividerModule,

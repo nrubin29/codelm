@@ -5,10 +5,10 @@
   "license": "MIT",
   "dependencies": {
     "date-fns": "^2.16.1",
-    "rxjs": "^6.6.0"
+    "rxjs": "^6.6.3"
   },
   "devDependencies": {
-    "tslib": "^2.0.0",
-    "typescript": "~3.9.6"
+    "tslib": "^2.0.3",
+    "typescript": "~4.0.5"
   }
 }
