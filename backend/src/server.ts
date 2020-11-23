@@ -51,9 +51,7 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json', limit: '5mb' })); //
 app.use(fileUpload({ createParentPath: true }));
 app.use('/api', apiRoutes);
 
-if (process.env.NODE_ENV == 'development') {
-  app.use(express.static(path.join('.', 'frontend')));
-} else {
+if (process.env.NODE_ENV !== 'development') {
   app.use(
     '/',
     Router().get('/', (req, res) => res.redirect('/index.html'))
