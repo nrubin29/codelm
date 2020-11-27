@@ -1,5 +1,6 @@
 import { DivisionModel } from './division.model';
 import { GameType } from './game.model';
+import { Variable } from '../codegen/models';
 
 export interface ProblemDivision {
   _id?: string;
@@ -36,7 +37,8 @@ export interface ProblemModel {
 }
 
 export interface GradedProblemModel extends ProblemModel {
-  testCaseOutputMode: TestCaseOutputMode;
+  variables: Variable[];
+  testCaseOutputMode: TestCaseOutputMode; // TODO: Determine test case output mode by return type.
   testCases: TestCaseModel[];
 }
 
