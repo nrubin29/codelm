@@ -11,6 +11,8 @@ import {
   Attribute,
   Entity,
   EntityService,
+  isTableAttribute,
+  TableAttribute,
 } from '../../../services/entity.service';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -56,15 +58,13 @@ export class EditEntityComponent implements OnInit {
 
     this.formArrays = Object.assign(
       {},
-      ...this.attributes
-        .filter(attr => attr.type === 'table')
-        .map(attr => ({
-          [attr.name]: new FormArray(
-            (this.entity[attr.name] ?? []).map(
-              obj => new FormGroup(this.createFormControls(attr.columns, obj))
-            )
-          ),
-        }))
+      ...this.attributes.filter(isTableAttribute).map(attr => ({
+        [attr.name]: new FormArray(
+          (this.entity[attr.name] ?? []).map(
+            obj => new FormGroup(this.createFormControls(attr.columns, obj))
+          )
+        ),
+      }))
     );
     this.formGroup = new FormGroup(
       Object.assign(
@@ -99,7 +99,7 @@ export class EditEntityComponent implements OnInit {
     );
   }
 
-  addRow(attribute: Attribute, entity: Entity = {}) {
+  addRow(attribute: TableAttribute, entity: Entity = {}) {
     this.formArrays[attribute.name].push(
       new FormGroup(this.createFormControls(attribute.columns, entity))
     );

@@ -9,9 +9,49 @@ export interface Option {
   value: string;
 }
 
-export interface Attribute {
+interface AttributeBase {
   name: string;
+  optional?: boolean;
+  readonly?: boolean;
 
+  /**
+   * Useful when you get an object but only want its _id for the form.
+   * @param value The value to transform. Could be the entity itself or could be a sub-entity in the case of type=table.
+   */
+  transform?: <T>(value?: Partial<T>) => any;
+}
+
+export interface SelectAttribute extends AttributeBase {
+  type: 'select' | 'multiselect';
+
+  /**
+   * The options that are presented in the <select>.
+   */
+  options?: any[] | (() => Promise<Option[]>);
+}
+
+export function isSelectAttribute(
+  attribute: Attribute
+): attribute is SelectAttribute {
+  return attribute.type === 'select' || attribute.type === 'multiselect';
+}
+
+export interface TableAttribute extends AttributeBase {
+  type: 'table';
+
+  /**
+   * The columns of the table.
+   */
+  columns?: Attribute[];
+}
+
+export function isTableAttribute(
+  attribute: Attribute
+): attribute is TableAttribute {
+  return attribute.type === 'table';
+}
+
+interface DefaultAttribute extends AttributeBase {
   /**
    * The type of the attribute. This determines what control is used in the edit form. By default, we treat the input
    * like a string and display a basic <input>.
@@ -23,30 +63,10 @@ export interface Attribute {
     | 'email'
     | 'date'
     | 'file'
-    | 'boolean'
-    | 'select'
-    | 'multiselect'
-    | 'table';
-
-  optional?: boolean;
-  readonly?: boolean;
-
-  /**
-   * Useful when you get an object but only want its _id for the form.
-   * @param value The value to transform. Could be the entity itself or could be a sub-entity in the case of type=table.
-   */
-  transform?: <T>(value?: Partial<T>) => any;
-
-  /**
-   * When type=select, these are the options that are presented in the <select>.
-   */
-  options?: any[] | (() => Promise<Option[]>);
-
-  /**
-   * When type=table, these are the columns of the table.
-   */
-  columns?: Attribute[];
+    | 'boolean';
 }
+
+export type Attribute = SelectAttribute | TableAttribute | DefaultAttribute;
 
 export interface Column {
   name: string;

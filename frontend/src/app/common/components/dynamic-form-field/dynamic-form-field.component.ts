@@ -1,5 +1,9 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { Attribute, Option } from '../../../services/entity.service';
+import {
+  Attribute,
+  isSelectAttribute,
+  Option,
+} from '../../../services/entity.service';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -37,7 +41,7 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   constructor() {}
 
   ngOnInit() {
-    if (this.attribute.options) {
+    if (isSelectAttribute(this.attribute)) {
       if (Array.isArray(this.attribute.options)) {
         this.options = Promise.resolve(
           this.attribute.options.map(option => ({
