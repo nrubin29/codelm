@@ -4,6 +4,11 @@
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
+  font-weight: normal;
+}
+
+.bold {
+  font-weight: bold;
 }
 
 body {
@@ -16,10 +21,10 @@ body {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url('images/2018_1.jpg');
   background-position-x: right;
-  background-position-y: 70%;
+  background-position-y: bottom;
   background-size: cover;
   width: 100vw;
-  height: 50vh;
+  height: 100vh;
 
   display: flex;
   flex-direction: column;
@@ -40,15 +45,58 @@ body {
   font-size: 2em;
 }
 
+.header .divider {
+  width: 500px;
+  height: 1px;
+  background: white;
+  margin: 1em;
+}
+
+.nav {
+  display: flex;
+  list-style: none;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  width: 100vw;
+  background: maroon;
+  padding: 1em;
+  justify-content: center;
+  font-size: 1.25em;
+  margin-bottom: 1em;
+}
+
+.nav .spacer {
+  color: white;
+  margin: 0 0.5em;
+  cursor: default;
+}
+
+.nav a {
+  text-decoration: none;
+  color: white;
+}
+
 .maroon {
   color: maroon;
+}
+
+.buttons {
+  display: flex;
+}
+
+.buttons > *:not(:last-child) {
+  margin-right: 1em;
 }
 
 .button {
   color: white;
   text-decoration: none;
-  margin: 1em;
   padding: 0.5em;
+}
+
+.button.bordered {
   border: thin solid white;
   border-radius: 2px;
 }
@@ -72,22 +120,19 @@ body {
   margin-bottom: 0.5em;
 }
 
-.qa {
+.card {
   border: thin solid maroon;
-  border-radius: 2px;
+  border-radius: 10px;
   margin: 0 0 1em 0;
 }
 
-.question {
+.card .title {
+  border-radius: 8px 8px 0 0;
   background: maroon;
   color: white;
-  padding: 0.25em;
+  padding: 0.35em;
 }
 
-h1.question {
-  margin: 0.5em 0;
-}
-
-.answer {
+.card .content {
   padding: 0.5em;
 }
