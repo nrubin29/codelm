@@ -6,15 +6,9 @@ import {
 
 type DivisionDocumentType = DivisionModel & mongoose.Document;
 
-const StarterCode = new mongoose.Schema({
-  state: String,
-  file: String,
-});
-
 const DivisionSchema = new mongoose.Schema({
   name: String,
   type: { type: String, default: DivisionType.Competition },
-  starterCode: [StarterCode],
 });
 
 const Division = mongoose.model<DivisionDocumentType>(

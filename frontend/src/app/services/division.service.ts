@@ -2,11 +2,9 @@ import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import {
   DivisionModel,
-  DivisionModelForUpload,
   DivisionType,
 } from '@codelm/common/src/models/division.model';
 import { SingleEntityService } from './entity.service';
-import { SettingsState } from '@codelm/common/src/models/settings.model';
 
 @Injectable({
   providedIn: 'root',
@@ -26,20 +24,6 @@ export class DivisionService extends SingleEntityService<DivisionModel> {
           type: 'select',
           options: Object.values(DivisionType),
         },
-        {
-          name: 'starterCode',
-          type: 'table',
-          columns: [
-            {
-              name: 'state',
-              type: 'select',
-              options: Object.keys(SettingsState).map(
-                type => SettingsState[type]
-              ),
-            },
-            { name: 'file', type: 'file' },
-          ],
-        },
       ],
       editable: true,
     });
@@ -50,33 +34,7 @@ export class DivisionService extends SingleEntityService<DivisionModel> {
   }
 
   addOrUpdate(entity: DivisionModel): Promise<DivisionModel> {
-    // This method has to take a DivisionModel, but we need to treat it as a DivisionModelForUpload.
-    const division = (entity as unknown) as DivisionModelForUpload;
-    const formData = new FormData();
-
-    for (let starterCode of division.starterCode) {
-      if (starterCode.file && typeof starterCode.file === 'object') {
-        formData.append(
-          starterCode.state,
-          starterCode.file,
-          starterCode.file.name
-        );
-      }
-    }
-
-    for (const key of Object.keys(division).filter(
-      key => key !== 'starterCode' && division[key]
-    )) {
-      formData.append(key, division[key]);
-    }
-
-    for (let starterCode of division.starterCode) {
-      formData.append('states', starterCode.state);
-    }
-
-    delete division.starterCode;
-
-    return this.restService.put<DivisionModel>(this.endpoint, formData);
+    return this.restService.put<DivisionModel>(this.endpoint, entity);
   }
 
   delete(division: DivisionModel): Promise<void> {
