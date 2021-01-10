@@ -27,7 +27,7 @@ export interface SelectAttribute extends AttributeBase {
   /**
    * The options that are presented in the <select>.
    */
-  options?: any[] | (() => Promise<Option[]>);
+  options: any[] | (() => Promise<Option[]>);
 }
 
 export function isSelectAttribute(
@@ -42,7 +42,7 @@ export interface TableAttribute extends AttributeBase {
   /**
    * The columns of the table.
    */
-  columns?: Attribute[];
+  columns: Attribute[];
 }
 
 export function isTableAttribute(
