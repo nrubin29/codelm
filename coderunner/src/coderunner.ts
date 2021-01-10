@@ -52,7 +52,7 @@ export class CodeRunner extends StdioPacketManager {
         this.language = languages[submission.language];
         this.files = [
           new CodeFile(
-            submission.problemTitle.replace(/[ \W]/g, '') +
+            this.language.fileName(submission.problemTitle) +
               '.' +
               this.language.extension,
             submission.code

@@ -14,6 +14,7 @@ import { DivisionModel } from '@codelm/common/src/models/division.model';
 import { DivisionService } from './division.service';
 import { Column, GroupedEntityService } from './entity.service';
 import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
+import { VariableType } from '@codelm/common/src/codegen/models';
 
 @Injectable({
   providedIn: 'root',
@@ -96,6 +97,25 @@ export class ProblemService extends GroupedEntityService<
           ],
         },
         // TODO: Support open-ended questions. Should just have a drop-down with options as Game enum values.
+        {
+          name: 'variables',
+          type: 'table',
+          columns: [
+            { name: 'name' },
+            {
+              name: 'type',
+              type: 'select',
+              options: Object.keys(VariableType).map(
+                type => VariableType[type]
+              ),
+            },
+          ],
+        },
+        {
+          name: 'returnType',
+          type: 'select',
+          options: Object.keys(VariableType).map(type => VariableType[type]),
+        },
         {
           name: 'testCases',
           type: 'table',
