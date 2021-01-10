@@ -29,6 +29,10 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   options: Promise<Option[]>; // For type=select
 
   get value() {
+    if (this.attribute.type === 'boolean' && this.val === undefined) {
+      return false;
+    }
+
     return this.val;
   }
 
