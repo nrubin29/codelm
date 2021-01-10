@@ -2,8 +2,6 @@ import * as express from 'express';
 import { Router } from 'express';
 import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
-import * as path from 'path';
-import * as fileUpload from 'express-fileupload';
 import * as mongoose from 'mongoose';
 import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
@@ -48,7 +46,6 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json({ limit: '5mb' })); // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json', limit: '5mb' })); // Parse application/vnd.api+json as json
-app.use(fileUpload({ createParentPath: true }));
 app.use('/api', apiRoutes);
 
 if (process.env.NODE_ENV !== 'development') {

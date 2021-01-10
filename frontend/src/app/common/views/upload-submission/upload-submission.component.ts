@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { ProblemService } from '../../../services/problem.service';
 import { MatRadioButton } from '@angular/material/radio';
 import { rubric } from './rubric';
+import { LANGUAGES } from '@codelm/common/src/language';
 
 @Component({
   selector: 'app-upload-submission',
@@ -40,7 +41,7 @@ export class UploadSubmissionComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.mode = this.codeSaverService.getMode(this.submission.language);
+    this.mode = LANGUAGES[this.submission.language].codeMirrorMode;
     this.codeMirror.writeValue(this.submission.code);
   }
 

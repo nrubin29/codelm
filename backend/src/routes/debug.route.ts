@@ -33,7 +33,6 @@ router.get('/init', async (req: Request, res: Response) => {
       _id: undefined,
       name: 'Debug',
       type: DivisionType.Special,
-      starterCode: [],
     });
   }
 

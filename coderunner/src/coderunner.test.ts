@@ -2,8 +2,8 @@ import * as _ from 'mocha';
 import { CodeRunner } from './coderunner';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { languages } from './language';
-import { CodeFile } from './codefile';
+import { LANGUAGES } from '@codelm/common/src/language';
+import { CodeFile } from '@codelm/common/src/codefile';
 import { HighLow } from '../../backend/src/games/high-low';
 
 chai.use(chaiAsPromised);

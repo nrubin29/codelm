@@ -15,6 +15,11 @@ const ProblemDivisionSchema = new mongoose.Schema({
   points: Number,
 });
 
+const VariableSchema = new mongoose.Schema({
+  name: String,
+  type: String,
+});
+
 const TestCaseSchema = new mongoose.Schema({
   hidden: Boolean,
   input: String,
@@ -31,6 +36,8 @@ const Problem = mongoose.model<ProblemType>(
     game: String,
     extras: Object,
     divisions: [ProblemDivisionSchema],
+    variables: [VariableSchema],
+    returnType: String,
     testCaseOutputMode: {
       type: String,
       default: TestCaseOutputMode.CaseSensitive,

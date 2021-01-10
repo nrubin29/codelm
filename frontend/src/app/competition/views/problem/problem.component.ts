@@ -39,7 +39,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     CodeMirrorComponent
   >;
   language: string;
-  documentation: string;
+  documentationUrl: string;
 
   constructor(
     private problemService: ProblemService,
@@ -72,14 +72,14 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
         this.team
       );
       this.problemPoints = ProblemUtil.getPoints(this.problem, this.team);
-      this.documentation = this.codeSaverService.getDocumentation();
+      this.documentationUrl = this.codeSaverService.getLanguage().documentationUrl;
 
       if (this.codeMirrors !== undefined) {
         this.ngAfterViewInit();
       }
     });
 
-    this.language = this.codeSaverService.getLanguage();
+    this.language = this.codeSaverService.getLanguage().name;
   }
 
   ngAfterViewInit() {
@@ -111,7 +111,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onLanguageChange(event: MatButtonToggleChange) {
     this.codeSaverService.setLanguage(event.value);
-    this.documentation = this.codeSaverService.getDocumentation();
+    this.documentationUrl = this.codeSaverService.getLanguage().documentationUrl;
     this.saveCode();
   }
 

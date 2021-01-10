@@ -6,6 +6,7 @@ import { CodeSaverService } from '../../../services/code-saver.service';
 import { SubmissionComponent } from '../submission/submission.component';
 import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
 import { TeamUtil } from '@codelm/common/src/utils/team.util';
+import { LANGUAGES } from '@codelm/common/src/language';
 
 @Component({
   selector: 'app-graded-submission',
@@ -28,7 +29,7 @@ export class GradedSubmissionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.mode = this.codeSaverService.getMode(this.submission.language);
+    this.mode = LANGUAGES[this.submission.language].codeMirrorMode;
     this.codeMirror.writeValue(this.submission.code);
   }
 
