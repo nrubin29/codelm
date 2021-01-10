@@ -93,9 +93,14 @@
         <mat-button-toggle value="python">Python 3</mat-button-toggle>
         <mat-button-toggle value="cpp">C++</mat-button-toggle>
       </mat-button-toggle-group>
-      <a mat-raised-button color="accent" [href]="documentation" target="_blank"
-        >Documentation</a
+      <a
+        mat-raised-button
+        color="accent"
+        [href]="documentationUrl"
+        target="_blank"
       >
+        Documentation
+      </a>
     </div>
     <app-code-mirror
       mode="text/x-python"
