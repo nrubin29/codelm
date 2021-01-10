@@ -30,7 +30,10 @@
       </mat-table>
     </div>
   </app-card>
-  <app-card header="Starter Code" *ngIf="link">
-    <a mat-raised-button color="accent" [href]="link">Download Starter Code</a>
+  <app-card header="Starter Code">
+    <button mat-raised-button color="accent" (click)="downloadStarterCode()">
+      Download Starter Code
+    </button>
+    <a #download href="#" download="Starter Code.zip" hidden></a>
   </app-card>
 </div>

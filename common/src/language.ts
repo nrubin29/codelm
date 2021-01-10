@@ -1,5 +1,10 @@
 import { CodeFile } from './codefile';
 import { CodegenUtils } from './codegen/utils';
+import { CodeGenerator } from './codegen/codegen';
+import { JavaCodeGenerator } from './codegen/java.codegen';
+import { PythonCodeGenerator } from './codegen/python.codegen';
+import { CppCodeGenerator } from './codegen/cpp.codegen';
+import { GradedProblemModel } from './models/problem.model';
 
 export interface Language {
   name: string;
@@ -12,6 +17,7 @@ export interface Language {
   fileName: (name: string) => string;
   codeMirrorMode: string;
   documentationUrl: string;
+  codegen: (problem: GradedProblemModel) => CodeGenerator;
 }
 
 export const LANGUAGES: { [language: string]: Language } = Object.freeze({
@@ -23,6 +29,7 @@ export const LANGUAGES: { [language: string]: Language } = Object.freeze({
     fileName: CodegenUtils.toPascalCase,
     codeMirrorMode: 'text/x-java',
     documentationUrl: 'https://docs.oracle.com/en/java/javase/11/docs/api/',
+    codegen: problem => new JavaCodeGenerator(problem),
   },
   python: {
     name: 'python',
@@ -33,6 +40,7 @@ export const LANGUAGES: { [language: string]: Language } = Object.freeze({
     fileName: CodegenUtils.toSnakeCase,
     codeMirrorMode: 'text/x-python',
     documentationUrl: 'https://docs.python.org/3.8/index.html',
+    codegen: problem => new PythonCodeGenerator(problem),
   },
   cpp: {
     name: 'cpp',
@@ -42,5 +50,6 @@ export const LANGUAGES: { [language: string]: Language } = Object.freeze({
     fileName: CodegenUtils.toPascalCase,
     codeMirrorMode: 'text/x-c++src',
     documentationUrl: 'http://www.cplusplus.com/reference/',
+    codegen: problem => new CppCodeGenerator(problem),
   },
 });
