@@ -1,0 +1,63 @@
+{
+  "sections": [
+    {
+      "title": "General",
+      "questions": [
+        {
+          "title": "What is CodeLM?",
+          "answer": "CodeLM is a programming competition founded at Lower Merion High School in 2015. Competitors solve a variety of algorithm challenges to rack up points and win prizes."
+        },
+        {
+          "title": "What is New Wave Computers?",
+          "answer": "New Wave Computers is our fictitious technology company that always seems to be in need of help. The algorithms you implement during the competition will help solve New Wave's problems."
+        }
+      ]
+    },
+    {
+      "title": "Competition",
+      "questions": [
+        {
+          "title": "When is the competition?",
+          "answer": "CodeLM 2021 will most likely be held in April 2021. Check back later for updates!"
+        },
+        {
+          "title": "How do I register for the competition?",
+          "answer": "Registration is not currently open. Check back later for updates!"
+        },
+        {
+          "title": "Will I work alone or on a team?",
+          "answer": "While CodeLM is usually a team-based event, we will most likely have all competitors compete alone in their own homes this year to promote social distancing."
+        },
+        {
+          "title": "Where is the competition?",
+          "answer": "This year's competition will be online. The opening and closing presentations will be delivered over Zoom, and competitors will solve problems in their own homes to promote social distancing. More information will be announced closer to the event."
+        },
+        {
+          "title": "How long will the competition last?",
+          "answer": "The competition will last two hours, with a 30 minute opening presentation and a 30 minute closing presentation."
+        },
+        {
+          "title": "How many questions are there?",
+          "answer": "There will be 10 questions. Competitors are not expected to solve all 10, but we'll be impressed if you do!"
+        }
+      ]
+    },
+    {
+      "title": "Practice",
+      "questions": [
+        {
+          "title": "How can I practice for the competition?",
+          "answer": "You can register a practice account and get access to last year's problems. This will let you practice with the CodeLM dashboard and the types of problems you'll see in the real event. To register a practice account, click the Register button on the login page, choose a username and password, enter your name as you registered for the event, and click the Register button. Once you're in the dashboard, click the Download Starter Code button to get the starter code. Then, use the starter code for your preferred language to solve the problems!"
+        },
+        {
+          "title": "How similar are the practice problems to the real problems?",
+          "answer": "The practice problems are the exact problems used in last year's competition, so you can expect a similar format and level of difficulty in this year's problem set."
+        },
+        {
+          "title": "What if I run into an issue?",
+          "answer": "First, check this FAQ again to see if an update has been posted. If not, send an email to <a class=\"maroon\" href=\"mailto:team@newwavecomputers.com\">team@newwavecomputers.com</a> describing your issue."
+        }
+      ]
+    }
+  ]
+}

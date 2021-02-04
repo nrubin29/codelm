@@ -19,12 +19,12 @@ body {
 
 .header {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('images/2018_1.jpg');
+    url('../images/2018_1.jpg');
   background-position-x: right;
-  background-position-y: bottom;
+  background-position-y: 65%;
   background-size: cover;
   width: 100vw;
-  height: 100vh;
+  height: 50vh;
 
   display: flex;
   flex-direction: column;
