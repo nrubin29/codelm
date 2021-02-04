@@ -32,8 +32,14 @@ render('faq', getData('faq'));
 
 // Past events
 
-for (const yearData of getData('past-events').years) {
-  render('past-event', yearData, yearData.year.toString());
+const years = getData('past-events').years;
+
+for (const year of years) {
+  render(
+    'past-event',
+    { years: years.map(year => year.year), ...year },
+    year.year.toString()
+  );
 }
 
 // Staff

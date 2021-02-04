@@ -1,9 +1,11 @@
 extends base.pug
 
 block head
+    link(rel='stylesheet' href='static/past-event.css')
     title #{year} Event &bull; CodeLM
 
 block body
-    .body
-      h1= year
-      p!= description
+    .body.flex
+        .years
+            for year in years
+                a.year(href=`${year}.html`)= year

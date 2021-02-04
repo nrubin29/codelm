@@ -1,0 +1,7 @@
+.faq-section > * {
+  flex: 1;
+}
+
+.faq-section h2 {
+  margin-bottom: 0.5em;
+}

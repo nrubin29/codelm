@@ -1,0 +1,12 @@
+.years {
+  display: flex;
+}
+
+.years > *:not(:last-child) {
+  margin-right: 1em;
+}
+
+.year {
+  text-decoration: none;
+  padding: 0.5em;
+}

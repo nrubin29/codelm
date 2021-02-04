@@ -7,10 +7,6 @@
   font-weight: normal;
 }
 
-.bold {
-  font-weight: bold;
-}
-
 body {
   display: flex;
   flex-direction: column;
@@ -24,7 +20,7 @@ body {
   background-position-y: 65%;
   background-size: cover;
   width: 100vw;
-  height: 50vh;
+  padding: 2em 0;
 
   display: flex;
   flex-direction: column;
@@ -50,32 +46,6 @@ body {
   height: 1px;
   background: white;
   margin: 1em;
-}
-
-.nav {
-  display: flex;
-  list-style: none;
-  position: sticky;
-  top: 0;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  width: 100vw;
-  background: maroon;
-  padding: 1em;
-  justify-content: center;
-  font-size: 1.25em;
-  margin-bottom: 1em;
-}
-
-.nav .spacer {
-  color: white;
-  margin: 0 0.5em;
-  cursor: default;
-}
-
-.nav a {
-  text-decoration: none;
-  color: white;
 }
 
 .maroon {
@@ -105,19 +75,18 @@ body {
   padding: 1em;
 }
 
+.body.flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 @media only screen and (min-width: 1200px) {
   .body {
     width: 50vw;
     padding: 0;
   }
-}
-
-.faq-section > * {
-  flex: 1;
-}
-
-.faq-section h2 {
-  margin-bottom: 0.5em;
 }
 
 .card {
