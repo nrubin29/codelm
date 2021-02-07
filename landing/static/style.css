@@ -87,6 +87,11 @@ body {
     width: 50vw;
     padding: 0;
   }
+
+  .body.large {
+    width: 95vw;
+    padding: 0;
+  }
 }
 
 .card {

@@ -1,3 +1,17 @@
+.two-up {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.two-up > * {
+  flex: 1;
+}
+
+.two-up > :not(:last-child) {
+  margin-right: 1em;
+}
+
 .years {
   display: flex;
 }
@@ -9,6 +23,10 @@
 .year {
   text-decoration: none;
   padding: 0.5em;
+}
+
+.description {
+  line-height: 1.25em;
 }
 
 .swiper-container {

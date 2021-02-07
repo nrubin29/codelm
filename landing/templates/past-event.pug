@@ -6,15 +6,20 @@ block head
     title #{year} Event &bull; CodeLM
 
 block body
-    .body.flex
+    .body.large.flex
         .years
           for year in years
               a.year(href=`${year}.html`)= year
-        .swiper-container
-            .swiper-wrapper
-              for image in images
-                  .swiper-slide
-                      img(src=`images/${year}/${image}` width="100%")
+        .two-up
+            div
+                h1= year
+                p.description!= description
+            if images.length > 0
+                .swiper-container
+                    .swiper-wrapper
+                      for image in images
+                          .swiper-slide
+                              img(src=`images/${year}/${image}` width="100%")
     script(type='text/javascript' src='https://unpkg.com/swiper/swiper-bundle.min.js')
     script(type='text/javascript').
       new Swiper('.swiper-container', {
