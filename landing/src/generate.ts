@@ -32,13 +32,19 @@ render('faq', getData('faq'));
 
 // Past events
 
-const years = getData('past-events').years;
+const yearsData = getData('past-events').years;
 
-for (const year of years) {
+for (const yearData of yearsData) {
   render(
     'past-event',
-    { years: years.map(year => year.year), ...year },
-    year.year.toString()
+    {
+      years: yearsData.map(yearData => yearData.year),
+      images: fs.existsSync(`images/${yearData.year}`)
+        ? fs.readdirSync(`images/${yearData.year}`)
+        : [],
+      ...yearData,
+    },
+    yearData.year.toString()
   );
 }
 

@@ -10,3 +10,7 @@
   text-decoration: none;
   padding: 0.5em;
 }
+
+.swiper-container {
+  width: 50vw;
+}
