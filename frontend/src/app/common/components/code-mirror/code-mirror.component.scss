@@ -1,6 +1,7 @@
 :host ::ng-deep {
   & .CodeMirror {
     border: thin solid #ddd;
+    box-sizing: border-box;
   }
 
   & .CodeMirror * {
