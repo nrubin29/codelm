@@ -40,6 +40,20 @@
 
 .description {
   line-height: 1.25em;
+  margin-bottom: 1em;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat img {
+  margin-bottom: 0.5em;
 }
 
 .swiper-container {
