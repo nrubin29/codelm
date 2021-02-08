@@ -16,13 +16,6 @@ export interface TestCaseModel {
   explanation?: string;
 }
 
-export enum TestCaseOutputMode {
-  CaseSensitive = 'Case Sensitive',
-  CaseInsensitive = 'Case Insensitive',
-  Number = 'Number',
-  Boolean = 'Boolean',
-}
-
 export enum ProblemType {
   Graded = 'Graded',
   OpenEnded = 'OpenEnded',
@@ -39,7 +32,6 @@ export interface ProblemModel {
 export interface GradedProblemModel extends ProblemModel {
   variables: Variable[];
   returnType: VariableType; // TODO: Return type could be an array
-  testCaseOutputMode: TestCaseOutputMode; // TODO: Determine test case output mode by return type.
   testCases: TestCaseModel[];
 }
 

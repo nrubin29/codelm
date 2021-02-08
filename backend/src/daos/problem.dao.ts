@@ -2,7 +2,6 @@ import * as mongoose from 'mongoose';
 import {
   isGradedProblem,
   ProblemModel,
-  TestCaseOutputMode,
 } from '@codelm/common/src/models/problem.model';
 import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 import { DivisionDao } from './division.dao';
@@ -38,10 +37,6 @@ const Problem = mongoose.model<ProblemType>(
     divisions: [ProblemDivisionSchema],
     variables: [VariableSchema],
     returnType: String,
-    testCaseOutputMode: {
-      type: String,
-      default: TestCaseOutputMode.CaseSensitive,
-    },
     testCases: [TestCaseSchema],
   })
 );

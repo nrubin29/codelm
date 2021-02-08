@@ -4,7 +4,6 @@ import {
   ProblemDivision,
   ProblemModel,
   ProblemType,
-  TestCaseOutputMode,
 } from '@codelm/common/src/models/problem.model';
 import {
   ClientProblemSubmission,
@@ -125,13 +124,6 @@ export class ProblemService extends GroupedEntityService<
             { name: 'explanation', type: 'multiline', optional: true },
             { name: 'hidden', type: 'boolean', optional: true },
           ],
-        },
-        {
-          name: 'testCaseOutputMode',
-          type: 'select',
-          options: Object.keys(TestCaseOutputMode).map(
-            mode => TestCaseOutputMode[mode]
-          ),
         },
       ],
       editable: true,

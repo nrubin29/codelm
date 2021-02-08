@@ -13,13 +13,13 @@ import {
 import {
   GradedProblemModel,
   ProblemType,
-  TestCaseOutputMode,
 } from '@codelm/common/src/models/problem.model';
 import { SocketManager } from '../socket.manager';
 import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 import { TeamDao } from './team.dao';
 import { ProblemDao } from './problem.dao';
 import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
+import { VariableType } from '@codelm/common/src/codegen/models';
 
 type SubmissionType = SubmissionModel & mongoose.Document;
 
@@ -53,31 +53,25 @@ export function isTestCaseSubmissionCorrect(
     return false;
   }
 
-  switch (problem.testCaseOutputMode) {
-    case TestCaseOutputMode.CaseSensitive: {
+  switch (problem.returnType) {
+    case VariableType.STRING: {
       return testCase.output === testCase.correctOutput;
     }
-    case TestCaseOutputMode.CaseInsensitive: {
-      return (
-        testCase.output.toLowerCase() === testCase.correctOutput.toLowerCase()
-      );
-    }
-    case TestCaseOutputMode.Number: {
+    case VariableType.FLOAT:
+    case VariableType.INTEGER: {
       return (
         parseFloat(testCase.output).toFixed(5) ===
         parseFloat(testCase.correctOutput).toFixed(5)
       );
     }
-    case TestCaseOutputMode.Boolean: {
+    case VariableType.BOOLEAN: {
       return (
         (isTrue(testCase.output) && isTrue(testCase.correctOutput)) ||
         (isFalse(testCase.output) && isFalse(testCase.correctOutput))
       );
     }
     default: {
-      throw new Error(
-        `No support for output mode ${problem.testCaseOutputMode}`
-      );
+      throw new Error(`No support for return type ${problem.returnType}`);
     }
   }
 }
