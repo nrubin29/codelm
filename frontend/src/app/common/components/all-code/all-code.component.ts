@@ -14,7 +14,9 @@ export class AllCodeComponent implements OnInit {
   ngOnInit() {
     this.code = {};
 
-    for (let problem of Object.keys(localStorage)) {
+    for (let problem of Object.keys(localStorage).filter(key =>
+      key.match(/^[\dabcdef]{24}$/g)
+    )) {
       const data = JSON.parse(localStorage.getItem(problem));
 
       for (let mode of Object.keys(data)) {
