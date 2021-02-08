@@ -8,25 +8,27 @@
     },
     {
       "year": 2016,
-      "description": "Our second event took place on February 9<sup>th</sup> and grew in many ways. We opened CodeLM up to other schools in the area and 10 schools signed up. We also gained a corporate sponsor, Susquehanna International Group, who sent some developers to help with the event. Finally, we introduced an open-ended problem that was hand-graded by the SIG developers. Competitors were tasked with implementing a modified version of Blackjack that we invented called Diecisiete. (First intro video)",
+      "description": "Our second event took place on February 9<sup>th</sup> and grew in many ways. We opened CodeLM up to other schools in the area and 10 schools signed up. We also gained a corporate sponsor, Susquehanna International Group, who sent some developers to help with the event. Finally, we introduced an open-ended problem that was hand-graded by the SIG developers. Competitors were tasked with implementing a modified version of Blackjack that we invented called Diecisiete.",
+      "introVideo": "914ysyH6AVw",
       "schools": 11,
       "competitors": 75
     },
     {
       "year": 2017,
-      "description": "The third event took place on March 8<sup>th</sup>. The dashboard was rewritten from scratch in Django. (Second intro video)",
+      "description": "The third event took place on March 8<sup>th</sup>. The dashboard was rewritten from scratch in Django. For the open-ended challenge, competitors implemented a bot to play Mastermind as efficiently as possible. At the end of the event, we tested the bots on the big screen to see how they performed.",
+      "introVideo": "HtPK5VwweZ4",
       "schools": 11,
       "competitors": 113
     },
     {
       "year": 2018,
-      "description": "Our fourth event took place on April 17<sup>th</sup>. We moved from the Lower Merion High School library to SIG's headquarters in Bala Cynwyd.",
+      "description": "Our fourth event took place on April 17<sup>th</sup>. We moved from the Lower Merion High School library to SIG's headquarters in Bala Cynwyd. The dashboard was rewritten for the final time on the MEAN stack. Competitors were challenged to implement a bot to play Battleship, and the bots played against each other on the big screen.",
       "schools": 9,
       "competitors": 96
     },
     {
       "year": 2019,
-      "description": "Our fifth event (and first major milestone) took place on March 29<sup>th</sup>. We had so many competitors that we had to spread out across two floors of the SIG building!",
+      "description": "Our fifth event (and first major milestone) took place on March 29<sup>th</sup>. We had so many competitors that we had to spread out across two floors of the SIG building! The open-ended challenge involved a game called Timesweeper &mdash; a modified version of Minesweeper where the goal is to find all of the &quot;mines&quot; as quickly as possible.",
       "schools": 11,
       "competitors": 107
     },

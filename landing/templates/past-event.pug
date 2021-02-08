@@ -14,6 +14,8 @@ block body
             .info
                 h1.maroon= year
                 p.description!= description
+                if introVideo
+                  a.description(href=`https://www.youtube.com/watch?v=${introVideo}` target='_blank') Intro Video
                 .stats
                     .stat
                         img(src='images/school-solid.svg' width='45px')
