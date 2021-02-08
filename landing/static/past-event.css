@@ -22,16 +22,28 @@
 
 .two-up {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
 }
 
-.two-up > * {
-  flex: 1;
+@media only screen and (min-width: 800px) {
+  .two-up {
+    flex-direction: row;
+  }
+
+  .two-up > * {
+    flex: 1;
+  }
+
+  .two-up > :not(:last-child) {
+    margin-right: 1em;
+  }
 }
 
-.two-up > :not(:last-child) {
-  margin-right: 1em;
+@media only screen and (max-width: 800px) {
+  .two-up > :not(:last-child) {
+    margin-bottom: 2em;
+  }
 }
 
 .info {
@@ -57,5 +69,11 @@
 }
 
 .swiper-container {
-  width: 50vw;
+  width: 95vw;
+}
+
+@media only screen and (min-width: 800px) {
+  .swiper-container {
+    width: 50vw;
+  }
 }
