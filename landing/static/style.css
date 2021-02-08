@@ -34,6 +34,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   cursor: default;
+  text-align: center;
 }
 
 .header h1 {
@@ -46,6 +47,7 @@ body {
 
 .header .divider {
   width: 500px;
+  max-width: 90vw;
   height: 1px;
   background: white;
   margin: 1em;
@@ -57,7 +59,9 @@ body {
 
 .buttons {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   margin: 0 2em;
 }
 

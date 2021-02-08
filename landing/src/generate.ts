@@ -29,7 +29,7 @@ fs.copy('static', '../dist/landing/static');
 
 // FAQ
 
-render('faq', getData('faq'));
+render('faq', getData('faq'), 'index');
 
 // Past events
 
