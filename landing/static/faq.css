@@ -1,3 +1,7 @@
+.body {
+  margin-top: 1em;
+}
+
 .faq-section > * {
   flex: 1;
 }

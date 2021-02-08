@@ -12,16 +12,16 @@ block body
     .body.flex(class=images.length > 0 ? 'large' : undefined)
         .two-up
             .info
-                h1= year
+                h1.maroon= year
                 p.description!= description
                 .stats
                     .stat
                         img(src='images/school-solid.svg' width='45px')
-                        h2= schools
+                        h2.maroon= schools
                         p= 'School' + (schools === 1 ? '' : 's')
                     .stat
                         img(src='images/users-solid.svg' width='45px')
-                        h2= competitors
+                        h2.maroon= competitors
                         p= 'Competitor' + (competitors === 1 ? '' : 's')
             if images.length > 0
                 .swiper-container
