@@ -9,3 +9,16 @@
 .faq-section h2 {
   margin-bottom: 0.5em;
 }
+
+.card {
+  margin: 0 0 1em 0;
+}
+
+.card .title {
+  color: maroon;
+  padding: 0.5em;
+}
+
+.card .content {
+  padding: 0.5em;
+}

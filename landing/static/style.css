@@ -97,20 +97,3 @@ body {
     padding: 0;
   }
 }
-
-.card {
-  border: thin solid maroon;
-  border-radius: 10px;
-  margin: 0 0 1em 0;
-}
-
-.card .title {
-  border-radius: 8px 8px 0 0;
-  background: maroon;
-  color: white;
-  padding: 0.35em;
-}
-
-.card .content {
-  padding: 0.5em;
-}
