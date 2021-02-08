@@ -52,13 +52,7 @@
             <ng-container matColumnDef="explanation">
               <mat-header-cell *matHeaderCellDef>Explanation</mat-header-cell>
               <mat-cell *matCellDef="let element">
-                <mat-icon
-                  *ngIf="element.explanation"
-                  [matTooltip]="element.explanation"
-                  matTooltipClass="app-tooltip"
-                  style="cursor: pointer;"
-                  >info</mat-icon
-                >
+                <p>{{ element.explanation }}</p>
               </mat-cell>
             </ng-container>
             <mat-header-row
