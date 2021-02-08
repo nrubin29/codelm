@@ -71,6 +71,10 @@ body {
   border-radius: 2px;
 }
 
+.button.selected {
+  font-weight: bold;
+}
+
 .body {
   padding: 1em;
 }

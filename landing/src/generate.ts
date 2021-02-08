@@ -10,6 +10,7 @@ function render(template: string, context?: object, output?: string) {
     `../dist/landing/${output ?? template}.html`,
     pug.renderFile(`templates/${template}.pug`, {
       pretty: true,
+      template,
       ...context,
     })
   );

@@ -10,8 +10,8 @@ html(lang='en')
             .divider
             .buttons
                 a.button.bordered(href='https://dashboard.newwavecomputers.com/') Dashboard
-                a.button(href='faq.html') Frequently Asked Questions
-                a.button(href='2015.html') Past Events
-                a.button(href='staff.html') Staff
-                a.button(href='sponsor.html') Sponsor
+                a.button(href='faq.html' class=template === 'faq' ? 'selected' : undefined) Frequently Asked Questions
+                a.button(href='2015.html' class=template === 'past-event' ? 'selected' : undefined) Past Events
+                a.button(href='staff.html' class=template === 'staff' ? 'selected' : undefined) Staff
+                a.button(href='sponsor.html' class=template === 'sponsor' ? 'selected' : undefined) Sponsor
         block body
