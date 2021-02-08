@@ -1,0 +1,19 @@
+doctype
+html(lang='en')
+    head
+        meta(charset='UTF-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1')
+        link(rel='stylesheet', href='static/style.css')
+        block head
+    body
+        .header
+            h1 Code#[span.maroon LM] 2021
+            h4 The hype is real
+            .divider
+            .buttons
+                a.button.bordered(href='https://dashboard.newwavecomputers.com/') Dashboard
+                a.button(href='index.html' class=template === 'faq' ? 'selected' : undefined) Frequently Asked Questions
+                a.button(href='2015.html' class=template === 'past-event' ? 'selected' : undefined) Past Events
+                a.button(href='staff.html' class=template === 'staff' ? 'selected' : undefined) Staff
+                a.button(href='sponsor.html' class=template === 'sponsor' ? 'selected' : undefined) Sponsor
+        block body

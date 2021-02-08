@@ -1,0 +1,40 @@
+{
+  "years": [
+    {
+      "year": 2015,
+      "description": "The first iteration of CodeLM was really more of an experiment. It took place on Thursday, May 28<sup>th</sup> in the Lower Merion High School library and was only open to LMHS students. Based on the success of the event and the positive feedback, we decided to hold CodeLM again in 2016.",
+      "schools": 1,
+      "competitors": 21
+    },
+    {
+      "year": 2016,
+      "description": "Our second event took place on February 9<sup>th</sup> and grew in many ways. We opened CodeLM up to other schools in the area and 10 schools signed up. We also gained a corporate sponsor, Susquehanna International Group, who sent some developers to help with the event. Finally, we introduced an open-ended problem that was hand-graded by the SIG developers. Competitors were tasked with implementing a modified version of Blackjack that we invented called Diecisiete. (First intro video)",
+      "schools": 11,
+      "competitors": 75
+    },
+    {
+      "year": 2017,
+      "description": "The third event took place on March 8<sup>th</sup>. The dashboard was rewritten from scratch in Django. (Second intro video)",
+      "schools": 11,
+      "competitors": 113
+    },
+    {
+      "year": 2018,
+      "description": "Our fourth event took place on April 17<sup>th</sup>. We moved from the Lower Merion High School library to SIG's headquarters in Bala Cynwyd.",
+      "schools": 9,
+      "competitors": 96
+    },
+    {
+      "year": 2019,
+      "description": "Our fifth event (and first major milestone) took place on March 29<sup>th</sup>. We had so many competitors that we had to spread out across two floors of the SIG building!",
+      "schools": 11,
+      "competitors": 107
+    },
+    {
+      "year": 2020,
+      "description": "Our sixth event took place on April 17<sup>th</sup>. Due to the coronavirus pandemic, we were forced to move the event online, but this didn't come without benefits. Because competitors didn't have to show up in person, we were able to open up the event to students all across the country. Over 200 students from 14 states competed - far more than any previous year.",
+      "schools": 42,
+      "competitors": 260
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+extends base.pug
+
+block head
+    link(rel='stylesheet' href='static/faq.css')
+    title Frequently Asked Questions &bull; CodeLM
+
+block body
+    .body
+        each section in sections
+            .faq-section
+                h2.maroon= section.title
+                .faq-qa
+                    each question in section.questions
+                      .card
+                          h3.title= question.title
+                          p.content!= question.answer

@@ -1,0 +1,17 @@
+{
+  "name": "@codelm/landing",
+  "version": "1.0.0",
+  "main": "src/generate.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc src/generate.ts && node src/generate.js"
+  },
+  "dependencies": {
+    "fs-extra": "^9.1.0",
+    "pug": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.6",
+    "@types/pug": "^2.0.4"
+  }
+}

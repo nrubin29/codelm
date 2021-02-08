@@ -1,0 +1,37 @@
+extends base.pug
+
+block head
+    link(rel='stylesheet' href='https://unpkg.com/swiper/swiper-bundle.min.css')
+    link(rel='stylesheet' href='static/past-event.css')
+    title #{year} Event &bull; CodeLM
+
+block body
+    .years
+      for y in years
+          a.year(href=`${y}.html` class=y === year ? 'selected' : undefined)= y
+    .body.flex(class=images.length > 0 ? 'large' : undefined)
+        .two-up
+            .info
+                h1.maroon= year
+                p.description!= description
+                .stats
+                    .stat
+                        img(src='images/school-solid.svg' width='45px')
+                        h2.maroon= schools
+                        p= 'School' + (schools === 1 ? '' : 's')
+                    .stat
+                        img(src='images/users-solid.svg' width='45px')
+                        h2.maroon= competitors
+                        p= 'Competitor' + (competitors === 1 ? '' : 's')
+            if images.length > 0
+                .swiper-container
+                    .swiper-wrapper
+                      for image in images
+                          .swiper-slide
+                              img(src=`images/${year}/${image}` width="100%")
+    script(type='text/javascript' src='https://unpkg.com/swiper/swiper-bundle.min.js')
+    script(type='text/javascript').
+      new Swiper('.swiper-container', {
+        autoplay: true,
+        loop: true,
+      });
