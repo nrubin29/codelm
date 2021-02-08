@@ -1,8 +1,12 @@
 extends base.pug
 
 block head
+    link(rel='stylesheet' href='static/sponsor.css')
     title Sponsor &bull; CodeLM
 
 block body
     .body
-      h1 Sponsor
+        h1.maroon Sponsor
+        .center
+            img.sig-logo(src='images/sig.svg' width='400px')
+            p #[a(href='https://sig.com' target='_blank') Susquehanna International Group] is a quantitative trading firm located in Bala Cynwyd, PA.
