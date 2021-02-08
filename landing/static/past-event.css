@@ -1,3 +1,25 @@
+.years {
+  background: black;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.years > *:not(:last-child) {
+  margin-right: 1em;
+}
+
+.year {
+  color: white;
+  text-decoration: none;
+  padding: 0.5em;
+}
+
+.year.selected {
+  font-weight: bold;
+}
+
 .two-up {
   display: flex;
   flex-direction: row;
@@ -12,17 +34,8 @@
   margin-right: 1em;
 }
 
-.years {
-  display: flex;
-}
-
-.years > *:not(:last-child) {
-  margin-right: 1em;
-}
-
-.year {
-  text-decoration: none;
-  padding: 0.5em;
+.info {
+  margin-top: 1em;
 }
 
 .description {

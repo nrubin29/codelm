@@ -6,12 +6,12 @@ block head
     title #{year} Event &bull; CodeLM
 
 block body
+    .years
+      for y in years
+          a.year(href=`${y}.html` class=y === year ? 'selected' : undefined)= y
     .body.large.flex
-        .years
-          for year in years
-              a.year(href=`${year}.html`)= year
         .two-up
-            div
+            .info
                 h1= year
                 p.description!= description
             if images.length > 0
