@@ -1,8 +1,28 @@
 extends base.pug
 
 block head
+    link(rel='stylesheet' href='static/staff.css')
     title Staff &bull; CodeLM
 
 block body
     .body
-      h1 Staff
+        h1.maroon Staff
+        .staff
+            .member
+                img(src='images/staff/noah.png' width='250px')
+                h1.name Noah Rubin
+                p.bio.
+                    Noah Rubin founded CodeLM in 2015 as a 10#[sup th] grader at Lower Merion High School. Since then,
+                    he has been heavily involved in the event, building the dashboard, writing questions, and hosting,
+                    among other things. He graduated from Lower Merion in 2017, then Penn State and the Schreyer Honors
+                    College in 2020 with a B.S. in Computer Science. He currently works as a Software Engineer for
+                    Google.
+            .member
+                img(src='images/staff/swope.jpg' width='250px')
+                h1.name Thomas Swope
+                p.bio.
+                    Thomas Swope is the Computer Science teacher at Lower Merion High School and has been heavily
+                    involved in running the event since its inception. He coordinates with our sponsor, reaches out to
+                    fellow Computer Science teachers to extend invitations, manages student volunteers, and helps write
+                    questions, among other things.
+
