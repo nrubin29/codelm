@@ -21,6 +21,7 @@ import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 import { CodeMirrorComponent } from '../../../common/components/code-mirror/code-mirror.component';
 import { debounceTime } from 'rxjs/operators';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-problem',
@@ -38,8 +39,12 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(CodeMirrorComponent) codeMirrors: QueryList<
     CodeMirrorComponent
   >;
+  codeEntryMode: string;
   language: string;
   documentationUrl: string;
+  fileExtension: string;
+
+  code = new BehaviorSubject<string>('');
 
   constructor(
     private problemService: ProblemService,
@@ -73,6 +78,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       this.problemPoints = ProblemUtil.getPoints(this.problem, this.team);
       this.documentationUrl = this.codeSaverService.getLanguage().documentationUrl;
+      this.fileExtension = this.codeSaverService.getLanguage().extension;
 
       if (this.codeMirrors !== undefined) {
         this.ngAfterViewInit();
@@ -80,10 +86,13 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.language = this.codeSaverService.getLanguage().name;
+    this.codeEntryMode = this.codeSaverService.getCodeEntryMode();
   }
 
   ngAfterViewInit() {
-    this.subscribeTo(this.codeMirrors.first);
+    if (this.codeMirrors.length > 0) {
+      this.subscribeTo(this.codeMirrors.first);
+    }
 
     this.codeMirrors.changes.subscribe(
       (codeMirrors: QueryList<CodeMirrorComponent>) => {
@@ -93,12 +102,20 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private subscribeTo(codeMirror: CodeMirrorComponent) {
-    codeMirror.writeValue(
-      this.codeSaverService.get(this.problem._id, codeMirror.mode)
-    );
+    const code = this.codeSaverService.get(this.problem._id, codeMirror.mode);
+    codeMirror.writeValue(code);
+    this.code.next(code);
+
+    codeMirror.change.subscribe(value => {
+      this.code.next(value);
+    });
     codeMirror.change.pipe(debounceTime(5000)).subscribe(() => {
       this.saveCode();
     });
+  }
+
+  onFileDropped(value: string) {
+    this.code.next(value);
   }
 
   ngOnDestroy() {
@@ -109,18 +126,25 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     return isGradedProblem(this.problem);
   }
 
+  onCodeEntryModeChange(event: MatButtonToggleChange) {
+    this.codeSaverService.setCodeEntryMode(event.value);
+  }
+
   onLanguageChange(event: MatButtonToggleChange) {
     this.codeSaverService.setLanguage(event.value);
     this.documentationUrl = this.codeSaverService.getLanguage().documentationUrl;
+    this.fileExtension = this.codeSaverService.getLanguage().extension;
     this.saveCode();
   }
 
   saveCode() {
-    this.codeSaverService.save(
-      this.problem._id,
-      this.codeMirrors.first.mode,
-      this.codeMirrors.first.value
-    );
+    if (this.codeEntryMode === 'editor') {
+      this.codeSaverService.save(
+        this.problem._id,
+        this.codeMirrors.first.mode,
+        this.codeMirrors.first.value
+      );
+    }
   }
 
   submitClicked(test: boolean) {
@@ -129,7 +153,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     this.problemService.problemSubmission = {
       problemId: this.problem._id,
       language: this.language,
-      code: this.codeMirrors.first.value,
+      code: this.code.value,
       test: test,
     };
 

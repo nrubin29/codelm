@@ -78,6 +78,15 @@ app-admin {
     }
   }
 
+  &.left {
+    justify-content: flex-start;
+    align-items: center;
+
+    & > :not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
   &.column {
     flex-direction: column;
   }

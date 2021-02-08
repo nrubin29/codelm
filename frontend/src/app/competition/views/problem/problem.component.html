@@ -83,36 +83,50 @@
     </mat-tab>
   </mat-tab-group>
   <div class="flex" style="flex-direction: column;">
-    <div class="flex right" style="height: 48px; margin-right: 1em;">
-      <mat-button-toggle-group
-        name="language"
-        [(ngModel)]="language"
-        (change)="onLanguageChange($event)"
-      >
-        <mat-button-toggle value="java">Java</mat-button-toggle>
-        <mat-button-toggle value="python">Python 3</mat-button-toggle>
-        <mat-button-toggle value="cpp">C++</mat-button-toggle>
-      </mat-button-toggle-group>
-      <a
-        mat-raised-button
-        color="accent"
-        [href]="documentationUrl"
-        target="_blank"
-      >
-        Documentation
-      </a>
+    <div class="flex display-side">
+      <div class="flex left" style="height: 48px;">
+        <mat-button-toggle-group
+          name="codeEntryMode"
+          [(ngModel)]="codeEntryMode"
+          (change)="onCodeEntryModeChange($event)"
+        >
+          <mat-button-toggle value="editor">Code Editor</mat-button-toggle>
+          <mat-button-toggle value="file">File Upload</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="flex right" style="height: 48px; margin-right: 1em;">
+        <mat-button-toggle-group
+          name="language"
+          [(ngModel)]="language"
+          (change)="onLanguageChange($event)"
+        >
+          <mat-button-toggle value="java">Java</mat-button-toggle>
+          <mat-button-toggle value="python">Python 3</mat-button-toggle>
+          <mat-button-toggle value="cpp">C++</mat-button-toggle>
+        </mat-button-toggle-group>
+        <a
+          mat-raised-button
+          color="accent"
+          [href]="documentationUrl"
+          target="_blank"
+        >
+          Documentation
+        </a>
+      </div>
     </div>
-    <app-code-mirror
-      mode="text/x-python"
-      *ngIf="language === 'python'"
-    ></app-code-mirror>
-    <app-code-mirror
-      mode="text/x-java"
-      *ngIf="language === 'java'"
-    ></app-code-mirror>
-    <app-code-mirror
-      mode="text/x-c++src"
-      *ngIf="language === 'cpp'"
-    ></app-code-mirror>
+    <app-file-drop
+      *ngIf="codeEntryMode === 'file'; else codeMirror"
+      [accept]="fileExtension"
+      (fileDropped)="onFileDropped($event)"
+    >
+    </app-file-drop>
+    <ng-template #codeMirror>
+      <app-code-mirror mode="text/x-python" *ngIf="language === 'python'">
+      </app-code-mirror>
+      <app-code-mirror mode="text/x-java" *ngIf="language === 'java'">
+      </app-code-mirror>
+      <app-code-mirror mode="text/x-c++src" *ngIf="language === 'cpp'">
+      </app-code-mirror>
+    </ng-template>
   </div>
 </div>
