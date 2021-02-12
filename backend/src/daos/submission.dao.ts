@@ -315,12 +315,19 @@ export class SubmissionDao {
     );
   }
 
-  static addSubmission(submission: SubmissionModel): Promise<SubmissionModel> {
-    // For some reason, Submission#create doesn't populate the team and then the points virtual gets messed up.
-    // Even manually populating it before calling s.toObject() doesn't work.
-    return Submission.create(submission).then(s =>
-      SubmissionDao.getSubmission(s._id.toString())
-    );
+  static async addSubmission(
+    submission: SubmissionModel
+  ): Promise<SubmissionModel> {
+    // For some reason, Submission#create doesn't populate the team and then the
+    // points virtual gets messed up. Even manually populating it before calling
+    // s.toObject() doesn't work.
+    const s = await Submission.create(submission);
+
+    SocketManager.instance.send(s.team._id.toString(), {
+      name: 'updateTeam',
+    });
+
+    return await SubmissionDao.getSubmission(s._id.toString());
   }
 
   static async updateSubmission(
