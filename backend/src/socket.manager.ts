@@ -38,11 +38,50 @@ import * as jwt from 'jsonwebtoken';
 import { JWT_PRIVATE_KEY } from './server';
 import { isTeamJwt, Jwt } from '../../common/src/models/auth.model';
 
+class Socket {
+  personId?: string;
+  teamId?: string;
+  adminId?: string;
+
+  constructor(private webSocket: WebSocket, jwt: Jwt) {
+    if (isTeamJwt(jwt)) {
+      this.personId = jwt.personId;
+      this.teamId = jwt.teamId;
+    } else {
+      this.adminId = jwt.adminId;
+    }
+  }
+
+  get _id() {
+    return this.teamId ?? this.adminId;
+  }
+
+  send(packet: Packet) {
+    if (this.webSocket.readyState !== WebSocket.OPEN) {
+      console.error('Bad socket');
+    } else {
+      this.webSocket.send(JSON.stringify(packet));
+    }
+  }
+
+  ping() {
+    if (this.webSocket.readyState === WebSocket.OPEN) {
+      this.webSocket.ping();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  close() {
+    this.webSocket.close();
+  }
+}
+
 export class SocketManager {
   private static _instance: SocketManager;
 
-  teamSockets: Map<string, WebSocket>;
-  adminSockets: Map<string, WebSocket>;
+  sockets: Socket[];
 
   static get instance(): SocketManager {
     if (!SocketManager._instance) {
@@ -60,139 +99,108 @@ export class SocketManager {
     SocketManager._instance = new SocketManager(app);
   }
 
-  public emit(teamId: string, packet: Packet) {
-    if (this.teamSockets.has(teamId)) {
-      this.emitToSocket(packet, this.teamSockets.get(teamId));
-    }
+  public send(teamId: string, packet: Packet) {
+    this.sockets
+      .filter(socket => socket.teamId === teamId)
+      .forEach(socket => {
+        socket.send(packet);
+      });
   }
 
-  public emitToSocket(packet: Packet, socket: WebSocket) {
-    if (socket.readyState !== WebSocket.OPEN) {
-      console.error('Bad socket');
-    } else {
-      socket.send(JSON.stringify(packet));
-    }
-  }
-
-  public emitToAll(packet: Packet) {
-    this.teamSockets.forEach(socket => this.emitToSocket(packet, socket));
-    this.adminSockets.forEach(socket => this.emitToSocket(packet, socket));
+  public sendToAll(packet: Packet) {
+    this.sockets.forEach(socket => {
+      socket.send(packet);
+    });
   }
 
   public kick(id: string) {
-    if (this.teamSockets.has(id)) {
-      this.teamSockets.get(id).close();
-      this.teamSockets.delete(id);
-    }
-
-    if (this.adminSockets.has(id)) {
-      this.adminSockets.get(id).close();
-      this.adminSockets.delete(id);
-    }
+    this.sockets = this.sockets.filter(socket => socket._id !== id);
   }
 
   public kickTeams() {
-    this.teamSockets.forEach(socket => socket.close());
-    this.teamSockets.clear();
+    this.sockets
+      .filter(socket => socket.teamId)
+      .forEach(socket => {
+        socket.close();
+      });
+
+    this.sockets = this.sockets.filter(socket => !socket.teamId);
   }
 
   protected constructor(app: Express) {
-    this.teamSockets = new Map<string, WebSocket>();
-    this.adminSockets = new Map<string, WebSocket>();
+    this.sockets = [];
 
     setInterval(() => {
       // This is apparently necessary to stop the random disconnecting.
-      this.teamSockets.forEach((socket, id) => {
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.ping();
-        } else {
-          // TODO: Maybe collect all of the ids to be deleted and then delete them afterwards.
-          this.teamSockets.delete(id);
-        }
-      });
-
-      this.adminSockets.forEach((socket, id) => {
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.ping();
-        } else {
-          this.adminSockets.delete(id);
-        }
-      });
+      this.sockets = this.sockets.filter(socket => socket.ping());
     }, 15 * 1000);
 
-    ((app as any) as WithWebsocketMethod).ws('/', socket => {
-      let _id: string;
+    ((app as any) as WithWebsocketMethod).ws('/', webSocket => {
+      let socket: Socket;
 
-      socket.onmessage = data => {
+      webSocket.onmessage = data => {
         const packet = JSON.parse(data.data as string);
-        socket.listeners(packet.name).map(listener => listener(packet));
+        webSocket.listeners(packet.name).map(listener => listener(packet));
       };
 
-      socket.on('connect', packet => {
-        this.onConnectPacket(packet as ConnectPacket, socket).then(__id => {
-          _id = __id;
-        });
+      webSocket.on('connect', packet => {
+        this.onConnectPacket(packet as ConnectPacket, webSocket).then(
+          _socket => {
+            socket = _socket;
+          }
+        );
       });
 
-      socket.on('submission', packet => {
+      webSocket.on('submission', packet => {
         this.onSubmissionPacket(packet as SubmissionPacket, socket);
       });
 
-      socket.on('replay', packet => {
+      webSocket.on('replay', packet => {
         this.onReplayPacket(packet as ReplayPacket, socket);
       });
 
-      socket.onclose = event => {
+      webSocket.onclose = event => {
         if (!event.wasClean) {
           console.error(
             'Socket closed not clean',
-            _id,
+            socket._id,
             event.code,
             event.reason
           );
         }
 
-        if (_id) {
-          this.teamSockets.delete(_id);
-          this.adminSockets.delete(_id);
+        if (socket) {
+          this.sockets = this.sockets.filter(
+            _socket => _socket._id !== socket._id
+          );
         }
       };
     });
   }
 
-  onConnectPacket(packet: ConnectPacket, socket: WebSocket): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
+  onConnectPacket(
+    packet: ConnectPacket,
+    webSocket: WebSocket
+  ): Promise<Socket> {
+    return new Promise<Socket>((resolve, reject) => {
       jwt.verify(packet.jwt, JWT_PRIVATE_KEY, (err, decoded) => {
         if (err) {
-          this.emitToSocket(
-            { name: 'connectResponse', success: false },
-            socket
+          webSocket.send(
+            JSON.stringify({ name: 'connectResponse', success: false })
           );
-          socket.close();
-
+          webSocket.close();
           reject(err);
         } else {
-          const jwt = decoded as Jwt;
-          let _id: string;
-
-          if (isTeamJwt(jwt)) {
-            _id = jwt.teamId;
-            this.teamSockets.set(_id, socket);
-          } else {
-            _id = jwt.adminId;
-            this.adminSockets.set(_id, socket);
-          }
-
-          this.emitToSocket({ name: 'connectResponse', success: true }, socket);
-
-          resolve(_id);
+          const socket = new Socket(webSocket, decoded as Jwt);
+          socket.send({ name: 'connectResponse', success: true });
+          resolve(socket);
         }
       });
     });
   }
 
   // TODO: Ensure that submissions are open (use PermissionsUtil).
-  async onSubmissionPacket(packet: SubmissionPacket, socket: WebSocket) {
+  async onSubmissionPacket(packet: SubmissionPacket, socket: Socket) {
     const problemSubmission = packet.submission;
     const problem = await ProblemDao.getProblem(problemSubmission.problemId);
 
@@ -241,11 +249,11 @@ export class SocketManager {
       submission = await SubmissionDao.addSubmission(submission);
     }
 
-    this.emitToSocket({ name: 'submissionCompleted', submission }, socket);
+    socket.send({ name: 'submissionCompleted', submission });
   }
 
   // TODO: Combine this with onSubmissionPacket
-  async onReplayPacket(packet: ReplayPacket, socket: WebSocket) {
+  async onReplayPacket(packet: ReplayPacket, socket: Socket) {
     const submission = await SubmissionDao.getSubmission(
       packet.replayRequest._id
     );
@@ -262,7 +270,7 @@ export class SocketManager {
     serverProblemSubmission.problemExtras = problem.extras;
 
     await this.runSubmission(serverProblemSubmission, socket);
-    this.emitToSocket({ name: 'submissionCompleted', submission }, socket);
+    socket.send({ name: 'submissionCompleted', submission });
   }
 
   private async runGradedSubmission(
@@ -315,7 +323,7 @@ export class SocketManager {
   private runOpenEndedSubmission(
     serverProblemSubmission: ServerProblemSubmission,
     connection: CodeRunnerConnection,
-    socket: WebSocket
+    socket: Socket
   ): Promise<{}> {
     return new Promise<{}>(resolve => {
       let packetStream: Observable<CodeRunnerPacket>;
@@ -335,10 +343,10 @@ export class SocketManager {
 
       packetStream.subscribe(
         value => {
-          this.emitToSocket(value, socket);
+          socket.send(value);
         },
         error => {
-          this.emitToSocket(error, socket);
+          socket.send(error);
         },
         () => {
           resolve({});
@@ -349,18 +357,15 @@ export class SocketManager {
 
   private async runSubmission(
     serverProblemSubmission: ServerProblemSubmission,
-    socket: WebSocket
+    socket: Socket
   ): Promise<{
     testCases?: TestCaseSubmissionModel[];
     compilationError?: string;
   }> {
-    this.emitToSocket(
-      {
-        name: 'submissionExtras',
-        extras: serverProblemSubmission.problemExtras,
-      },
-      socket
-    );
+    socket.send({
+      name: 'submissionExtras',
+      extras: serverProblemSubmission.problemExtras,
+    });
 
     let connection: CodeRunnerConnection;
 
@@ -375,10 +380,10 @@ export class SocketManager {
     }
 
     try {
-      this.emitToSocket(
-        { name: 'submissionStatus', status: SubmissionStatus.Compiling },
-        socket
-      );
+      socket.send({
+        name: 'submissionStatus',
+        status: SubmissionStatus.Compiling,
+      });
       const compilationResult = await connection.compile(
         serverProblemSubmission
       );
@@ -410,10 +415,7 @@ export class SocketManager {
       }
     }
 
-    this.emitToSocket(
-      { name: 'submissionStatus', status: SubmissionStatus.Running },
-      socket
-    );
+    socket.send({ name: 'submissionStatus', status: SubmissionStatus.Running });
 
     if (serverProblemSubmission.type === ProblemType.Graded) {
       return await this.runGradedSubmission(

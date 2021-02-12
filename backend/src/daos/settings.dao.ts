@@ -46,10 +46,10 @@ export class SettingsDao {
     ).exec();
 
     SettingsDao.scheduleJobs(newSettings);
-    SocketManager.instance.emitToAll({ name: 'updateSettings' });
+    SocketManager.instance.sendToAll({ name: 'updateSettings' });
 
     if (oldSettings.state !== newSettings.state) {
-      SocketManager.instance.emitToAll({
+      SocketManager.instance.sendToAll({
         name: 'stateSwitch',
         newState: newSettings.state,
       });
@@ -83,7 +83,7 @@ export class SettingsDao {
           Settings.updateOne({}, { $set: { state: newState } })
             .exec()
             .then(() => {
-              SocketManager.instance.emitToAll({
+              SocketManager.instance.sendToAll({
                 name: 'stateSwitch',
                 newState,
               });
@@ -110,7 +110,7 @@ export class SettingsDao {
     await Settings.deleteOne({}).exec();
     const settings = await Settings.create(defaultSettingsModel);
     SettingsDao.resetJobs();
-    SocketManager.instance.emitToAll({ name: 'updateSettings' });
+    SocketManager.instance.sendToAll({ name: 'updateSettings' });
     return settings;
   }
 }

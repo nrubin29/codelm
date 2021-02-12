@@ -332,7 +332,7 @@ export class SubmissionDao {
     })
       .populate(SubmissionDao.populationPaths)
       .exec();
-    SocketManager.instance.emit(subm.team._id.toString(), {
+    SocketManager.instance.send(subm.team._id.toString(), {
       name: 'updateTeam',
     });
     return subm.toObject();
@@ -341,7 +341,7 @@ export class SubmissionDao {
   static async deleteSubmission(id: string): Promise<void> {
     const submission = await SubmissionDao.getSubmission(id);
     await Submission.deleteOne({ _id: id }).exec();
-    SocketManager.instance.emit(submission.team._id.toString(), {
+    SocketManager.instance.send(submission.team._id.toString(), {
       name: 'updateTeam',
     });
   }

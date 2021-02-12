@@ -12,13 +12,13 @@ router.get(
     const sockets: SocketConnection[] = [];
 
     if (req.params.type === 'teams') {
-      SocketManager.instance.teamSockets.forEach((_, _id) =>
-        sockets.push({ _id })
-      );
+      SocketManager.instance.sockets
+        .filter(socket => socket.teamId)
+        .forEach(socket => sockets.push({ _id: socket._id }));
     } else {
-      SocketManager.instance.adminSockets.forEach((_, _id) =>
-        sockets.push({ _id })
-      );
+      SocketManager.instance.sockets
+        .filter(socket => socket.adminId)
+        .forEach(socket => sockets.push({ _id: socket._id }));
     }
 
     res.json(sockets);
