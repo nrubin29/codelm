@@ -23,7 +23,7 @@ export class SettingsService extends EntityService<SettingsModel> {
             state => SettingsState[state]
           ),
         },
-        { name: 'preliminaries', type: 'boolean' },
+        { name: 'practice', type: 'boolean' },
         { name: 'registration', type: 'boolean' },
         { name: 'endSurveyLink', optional: true },
         {

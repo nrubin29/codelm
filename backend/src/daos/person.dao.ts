@@ -109,12 +109,12 @@ export class PersonDao {
         settings.state === SettingsState.End
       ) {
         throw LoginResponseType.Closed;
-      } else if (settings.preliminaries) {
-        // Find the team for the person that is in a preliminaries division;
+      } else if (settings.practice) {
+        // Find the team for the person that is in a practice division;
         // create one if it does not exist.
 
         const team = teams.find(
-          team => team.division.type === DivisionType.Preliminaries
+          team => team.division.type === DivisionType.Practice
         );
 
         if (team) {

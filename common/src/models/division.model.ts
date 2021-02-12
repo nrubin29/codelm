@@ -1,6 +1,6 @@
 export enum DivisionType {
   Competition = 'Competition',
-  Preliminaries = 'Preliminaries',
+  Practice = 'Practice',
   Special = 'Special',
 }
 
