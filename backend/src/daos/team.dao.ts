@@ -72,7 +72,9 @@ export class TeamDao {
         await Team.findByIdAndUpdate(team._id, team, {
           new: true,
           omitUndefined: true,
-        }).exec()
+        })
+          .populate(TeamDao.populationPaths)
+          .exec()
       );
     }
   }
@@ -85,6 +87,7 @@ export class TeamDao {
     if (team) {
       const score = await SubmissionDao.getScoreForTeam(team._id);
       team.set('score', score, { strict: false });
+      team.populate(TeamDao.populationPaths);
       return team;
     } else {
       return null;
