@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { PersonService } from '../../../services/person.service';
 import { DialogResult } from '../../components/edit-entity/edit-entity.component';
 import { PersonModel } from '@codelm/common/src/models/person.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +24,9 @@ export class RegisterComponent {
             alert('Registration successful!');
             this.login();
           })
-          .catch(alert);
+          .catch((errorResponse: HttpErrorResponse) => {
+            alert(errorResponse.error.error);
+          });
       }
     }
   }

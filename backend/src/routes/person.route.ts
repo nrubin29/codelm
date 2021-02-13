@@ -46,7 +46,7 @@ router.put('/', async (req: Request, res: Response) => {
     res.json(sanitizePerson(person));
   } catch {
     // TODO: Standardize, type, and properly handle errors.
-    res.json({
+    res.status(403).json({
       error: 'This email address or username is already registered.',
     });
   }
