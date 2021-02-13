@@ -4,6 +4,7 @@ import { AdminDao } from './daos/admin.dao';
 import { DEBUG, JWT_PRIVATE_KEY } from './server';
 import { isTeamJwt, Jwt } from '../../common/src/models/auth.model';
 import * as jwt from 'jsonwebtoken';
+import { PersonDao } from './daos/person.dao';
 
 export class AuthUtil {
   private static verifyJwt(req: Request): Promise<Jwt> {
@@ -39,9 +40,14 @@ export class AuthUtil {
 
     if (isTeamJwt(jwt)) {
       const team = await TeamDao.getTeam(jwt.teamId);
+      const person = await PersonDao.getPerson(jwt.personId);
 
       if (team) {
         req.params.team = team;
+      }
+
+      if (person) {
+        req.params.person = person;
       }
     } else {
       const admin = await AdminDao.getAdmin(jwt.adminId);
