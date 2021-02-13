@@ -66,7 +66,7 @@ export class TeamDao {
 
   static async addOrUpdateTeam(team: TeamModel): Promise<TeamModel> {
     if (!team._id) {
-      return await TeamDao.addScore(await Team.create(team as TeamModel));
+      return await TeamDao.addScore(await Team.create(team));
     } else {
       return await TeamDao.addScore(
         await Team.findByIdAndUpdate(team._id, team, {

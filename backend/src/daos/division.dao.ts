@@ -3,12 +3,14 @@ import {
   DivisionModel,
   DivisionType,
 } from '@codelm/common/src/models/division.model';
+import { PersonExperience } from '@codelm/common/src/models/person.model';
 
 type DivisionDocumentType = DivisionModel & mongoose.Document;
 
 const DivisionSchema = new mongoose.Schema({
   name: String,
   type: { type: String, default: DivisionType.Competition },
+  experience: String,
 });
 
 const Division = mongoose.model<DivisionDocumentType>(
@@ -33,6 +35,12 @@ export class DivisionDao {
     divisionType: DivisionType
   ): Promise<DivisionModel[]> {
     return Division.find({ type: divisionType }).exec();
+  }
+
+  static getDivisionsByExperience(
+    experience: PersonExperience
+  ): Promise<DivisionModel[]> {
+    return Division.find({ experience: experience }).exec();
   }
 
   static addOrUpdateDivision(division: DivisionModel): Promise<DivisionModel> {

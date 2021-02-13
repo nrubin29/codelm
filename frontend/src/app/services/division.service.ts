@@ -5,6 +5,7 @@ import {
   DivisionType,
 } from '@codelm/common/src/models/division.model';
 import { SingleEntityService } from './entity.service';
+import { PersonExperience } from '@codelm/common/src/models/person.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,12 @@ export class DivisionService extends SingleEntityService<DivisionModel> {
           name: 'type',
           type: 'select',
           options: Object.values(DivisionType),
+        },
+        {
+          name: 'experience',
+          type: 'select',
+          options: Object.values(PersonExperience),
+          optional: true,
         },
       ],
       editable: true,

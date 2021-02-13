@@ -9,7 +9,6 @@ import { TeamDao } from './team.dao';
 import { SettingsDao } from './settings.dao';
 import { SettingsState } from '@codelm/common/src/models/settings.model';
 import { DivisionType } from '@codelm/common/src/models/division.model';
-import { DivisionDao } from './division.dao';
 
 type PersonType = PersonModel & mongoose.Document;
 
@@ -111,7 +110,7 @@ export class PersonDao {
         throw LoginResponseType.Closed;
       } else if (settings.practice) {
         // Find the team for the person that is in a practice division;
-        // create one if it does not exist.
+        // reject one if it does not exist.
 
         const team = teams.find(
           team => team.division.type === DivisionType.Practice
@@ -120,15 +119,7 @@ export class PersonDao {
         if (team) {
           return team;
         } else {
-          // TODO: The division name is basically hardcoded.
-          const division = await DivisionDao.getDivisionByName(
-            person.experience + ' Practice'
-          );
-
-          return await TeamDao.addOrUpdateTeam({
-            members: [person],
-            division,
-          });
+          throw LoginResponseType.NoTeam;
         }
       } else {
         // Find the team for the person that is in a competition division;
@@ -162,7 +153,10 @@ export class PersonDao {
 
     if (!person._id) {
       try {
-        return (await Person.create(person)).toObject();
+        // For some reason, the object returned by Person.create() has a null
+        // _id, so I have to query it again.
+        await Person.create(person);
+        return (await Person.findOne({ username: person.username })).toObject();
       } catch (err) {
         if (err.code !== undefined && err.code === 11000) {
           // It's a MongoError for non-unique username.
