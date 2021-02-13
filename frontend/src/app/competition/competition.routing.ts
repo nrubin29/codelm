@@ -14,6 +14,8 @@ import { SubmissionResolve } from '../resolves/submission.resolve';
 import { NgModule } from '@angular/core';
 import { SubmittingGuard } from '../guards/submitting.guard';
 import { GameComponent } from '../common/views/game/game.component';
+import { TeamMatchingComponent } from './views/team-matching/team-matching.component';
+import { PracticeGuard } from '../guards/practice.guard';
 
 const routes: Routes = [
   {
@@ -22,6 +24,11 @@ const routes: Routes = [
     canActivate: [SocketGuard, TeamGuard, IsNotEndGuard],
     children: [
       { path: '', component: StandingsComponent },
+      {
+        path: 'team-matching',
+        component: TeamMatchingComponent,
+        canActivate: [PracticeGuard],
+      },
       {
         path: 'problem/:id',
         component: ProblemComponent,

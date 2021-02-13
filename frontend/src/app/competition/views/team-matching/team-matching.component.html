@@ -1,0 +1,39 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Team Matching</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="main container" *ngIf="competitionTeam">
+  <app-card header="Current Team">
+    <p>Your current team members are {{ members }}.</p>
+  </app-card>
+  <div class="flex display-side">
+    <app-card header="Invite">
+      <p>To invite someone to your team, give them your team code:</p>
+      <br />
+      <h3>{{ competitionTeam._id }}</h3>
+    </app-card>
+    <app-card header="Join">
+      <p>To join a team, enter the team code below.</p>
+      <br />
+      <form>
+        <mat-form-field color="accent">
+          <input
+            matInput
+            placeholder="Team Code"
+            name="teamCode"
+            [(ngModel)]="targetTeamId"
+          />
+        </mat-form-field>
+        <button
+          type="submit"
+          mat-raised-button
+          color="accent"
+          (click)="joinTeam()"
+        >
+          Join Team
+        </button>
+      </form>
+    </app-card>
+  </div>
+</div>

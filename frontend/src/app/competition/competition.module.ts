@@ -6,6 +6,7 @@ import { StandingsComponent } from './views/standings/standings.component';
 import { SubmitComponent } from './views/submit/submit.component';
 import { SharedModule } from '../shared.module';
 import { CompetitionRoutingModule } from './competition.routing';
+import { TeamMatchingComponent } from './views/team-matching/team-matching.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { CompetitionRoutingModule } from './competition.routing';
     ProblemComponent,
     StandingsComponent,
     SubmitComponent,
+    TeamMatchingComponent,
   ],
   imports: [SharedModule, CompetitionRoutingModule],
 })

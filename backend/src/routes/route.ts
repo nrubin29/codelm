@@ -12,6 +12,7 @@ import settingsRoute from './settings.route';
 import socketsRoute from './sockets.route';
 import submissionRoute from './submission.route';
 import teamRoute from './team.route';
+import teamMatchingRoute from './team-matching.route';
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use('/settings', settingsRoute);
 router.use('/sockets', socketsRoute);
 router.use('/submissions', submissionRoute);
 router.use('/teams', teamRoute);
+router.use('/team-matching', teamMatchingRoute);
 
 export default router;
