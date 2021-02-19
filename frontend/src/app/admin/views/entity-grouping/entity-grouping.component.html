@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <app-drawer-toggle></app-drawer-toggle>
-    <span>{{ entityName | title | pluralize }}</span>
+    <span>{{ entityName | pluralize | title }}</span>
     <ng-container *ngIf="editable">
       <span class="spacer"></span>
       <button mat-raised-button color="accent" (click)="openEditComponent()">
