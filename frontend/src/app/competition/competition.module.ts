@@ -7,6 +7,7 @@ import { SubmitComponent } from './views/submit/submit.component';
 import { SharedModule } from '../shared.module';
 import { CompetitionRoutingModule } from './competition.routing';
 import { TeamMatchingComponent } from './views/team-matching/team-matching.component';
+import { FileDropComponent } from './components/file-drop/file-drop.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { TeamMatchingComponent } from './views/team-matching/team-matching.compo
     StandingsComponent,
     SubmitComponent,
     TeamMatchingComponent,
+    FileDropComponent,
   ],
   imports: [SharedModule, CompetitionRoutingModule],
 })
