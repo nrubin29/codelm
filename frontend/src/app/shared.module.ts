@@ -34,7 +34,6 @@ import { AllCodeComponent } from './common/components/all-code/all-code.componen
 import { TitlePipe } from './pipes/title.pipe';
 import { GameComponent } from './common/views/game/game.component';
 import { FileDropComponent } from './common/components/file-drop/file-drop.component';
-import { PluralizeSentencePipe } from './pipes/pluralize-sentence.pipe';
 import { AlertComponent } from './common/components/alert/alert.component';
 import { EditEntityComponent } from './common/components/edit-entity/edit-entity.component';
 import { DynamicFormFieldComponent } from './common/components/dynamic-form-field/dynamic-form-field.component';
@@ -59,7 +58,6 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     DynamicFormFieldComponent,
     DrawerToggleComponent,
     PluralizePipe,
-    PluralizeSentencePipe,
     TitlePipe,
   ],
   imports: [
@@ -103,7 +101,6 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     DynamicFormFieldComponent,
     DrawerToggleComponent,
     PluralizePipe,
-    PluralizeSentencePipe,
     TitlePipe,
     CommonModule,
     FormsModule,
