@@ -24,7 +24,11 @@ export class TeamDao {
     { path: 'members', populate: { path: 'group' } },
   ];
 
-  static async getTeam(id: string): Promise<TeamModel> {
+  static async getTeam(id: string): Promise<TeamModel | null> {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return null;
+    }
+
     return await TeamDao.addScore(
       await Team.findById(id).populate(TeamDao.populationPaths).exec()
     );
