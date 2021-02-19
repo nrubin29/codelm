@@ -75,7 +75,7 @@ export class CountdownComponent implements OnInit {
       this.end = schedule[0];
 
       tick();
-      this.interval = setInterval(tick, 500);
+      this.interval = window.setInterval(tick, 500);
     }
   }
 

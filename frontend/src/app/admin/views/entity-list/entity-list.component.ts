@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   Column,
   Entity,
@@ -43,7 +43,7 @@ export class EntityListComponent implements OnInit, OnDestroy {
       this.refreshData();
 
       if (this.entityService.config.refresh) {
-        this.intervalHandle = setInterval(
+        this.intervalHandle = window.setInterval(
           this.refreshData.bind(this),
           30 * 1000
         );
