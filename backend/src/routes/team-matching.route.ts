@@ -34,6 +34,11 @@ router.post('/', AuthUtil.requireAuth, async (req: Request, res: Response) => {
         result: TeamMatchingResult.WrongExperience,
       } as TeamMatchingResponse);
       return;
+    } else if (targetTeam.division.type !== DivisionType.Competition) {
+      res.json({
+        result: TeamMatchingResult.WrongType,
+      } as TeamMatchingResponse);
+      return;
     } else if (targetTeam.members.length >= 3) {
       res.json({ result: TeamMatchingResult.TeamFull } as TeamMatchingResponse);
       return;
