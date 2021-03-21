@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsModel } from '@codelm/common/src/models/settings.model';
 import { SettingsService } from '../../../services/settings.service';
 import { DialogResult } from '../../../common/components/edit-entity/edit-entity.component';
+import { DialogComponent } from '../../../common/components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-settings',
@@ -11,7 +13,10 @@ import { DialogResult } from '../../../common/components/edit-entity/edit-entity
 export class SettingsComponent implements OnInit {
   settings: SettingsModel;
 
-  constructor(public settingsService: SettingsService) {}
+  constructor(
+    public settingsService: SettingsService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.settingsService.getSettings().then(settings => {
@@ -24,14 +29,20 @@ export class SettingsComponent implements OnInit {
       this.settingsService
         .addOrUpdate(result[1])
         .then(() => {
-          alert('Updated');
+          DialogComponent.showSuccess(
+            this.dialog,
+            'Successfully updated settings!'
+          );
         })
         .catch(alert);
     } else if (result[0] === 'delete') {
       this.settingsService
         .delete()
         .then(() => {
-          alert('Reset');
+          DialogComponent.showSuccess(
+            this.dialog,
+            'Successfully reset settings!'
+          );
           this.settingsService.getSettings().then(settings => {
             this.settings = settings;
           });

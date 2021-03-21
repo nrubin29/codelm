@@ -4,6 +4,8 @@ import { TeamService } from '../../../services/team.service';
 import { Router } from '@angular/router';
 import { DialogResult } from '../../../common/components/edit-entity/edit-entity.component';
 import { TeamUtil } from '@codelm/common/src/utils/team.util';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../../../common/components/dialog/dialog.component';
 
 @Component({
   selector: 'app-edit-team',
@@ -13,7 +15,11 @@ import { TeamUtil } from '@codelm/common/src/utils/team.util';
 export class EditTeamComponent implements OnInit {
   @Input() team: TeamModel;
 
-  constructor(public teamService: TeamService, private router: Router) {}
+  constructor(
+    public teamService: TeamService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {}
 
@@ -26,7 +32,7 @@ export class EditTeamComponent implements OnInit {
       this.teamService
         .addOrUpdate(result[1])
         .then(() => {
-          alert('Added team');
+          DialogComponent.showSuccess(this.dialog, 'Successfully added team!');
         })
         .catch(alert);
     } else if (result[0] === 'delete') {

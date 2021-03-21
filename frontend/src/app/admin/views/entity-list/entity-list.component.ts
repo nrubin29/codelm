@@ -12,6 +12,7 @@ import {
   DialogResult,
   EditEntityComponent,
 } from '../../../common/components/edit-entity/edit-entity.component';
+import { DialogComponent } from '../../../common/components/dialog/dialog.component';
 
 // TODO: Add searching
 
@@ -100,28 +101,31 @@ export class EntityListComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
 
-    ref.afterClosed().subscribe((r?: [DialogResult, any]) => {
+    ref.afterClosed().subscribe(async (r?: [DialogResult, any]) => {
       if (r) {
         const result: DialogResult = r[0];
         const data: Entity = r[1];
 
         if (result === 'save') {
-          this.entityService
-            .addOrUpdate(data)
-            .then(response => {
-              // TODO: If this is an error, display it.
-              console.log(response);
-              this.refreshData();
-            })
-            .catch(alert);
+          try {
+            await this.entityService.addOrUpdate(data);
+            this.refreshData();
+          } catch (e) {
+            DialogComponent.showError(this.dialog, e);
+          }
         } else if (result === 'delete') {
-          if (confirm('Are you sure you want to delete this?')) {
-            this.entityService
-              .delete(data)
-              .then(() => {
-                this.refreshData();
-              })
-              .catch(alert);
+          if (
+            await DialogComponent.confirm(
+              this.dialog,
+              'Are you sure you want to delete this?'
+            )
+          ) {
+            try {
+              await this.entityService.delete(data);
+              this.refreshData();
+            } catch (e) {
+              DialogComponent.showError(this.dialog, e);
+            }
           }
         }
       }

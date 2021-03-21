@@ -17,6 +17,8 @@ import { ProblemService } from '../../../services/problem.service';
 import { MatRadioButton } from '@angular/material/radio';
 import { rubric } from './rubric';
 import { LANGUAGES } from '@codelm/common/src/language';
+import { DialogComponent } from '../../components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-upload-submission',
@@ -37,7 +39,8 @@ export class UploadSubmissionComponent implements OnInit, AfterViewInit {
     private submissionService: SubmissionService,
     private problemService: ProblemService,
     private codeSaverService: CodeSaverService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -63,9 +66,9 @@ export class UploadSubmissionComponent implements OnInit, AfterViewInit {
       .updateSubmission(this.submission)
       .then(submission => {
         this.submission = submission as UploadSubmissionModel;
-        alert('Updated');
+        DialogComponent.showSuccess(this.dialog, 'Updated');
       })
-      .catch(alert);
+      .catch(e => DialogComponent.showError(this.dialog, e));
   }
 
   replay() {

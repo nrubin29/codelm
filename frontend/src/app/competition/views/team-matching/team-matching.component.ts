@@ -3,6 +3,8 @@ import { TeamMatchingService } from '../../../services/team-matching.service';
 import { TeamModel } from '@codelm/common/src/models/team.model';
 import { TeamUtil } from '@codelm/common/src/utils/team.util';
 import { TeamMatchingResult } from '@codelm/common/src/models/team-matching.model';
+import { DialogComponent } from '../../../common/components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-team-matching',
@@ -13,7 +15,10 @@ export class TeamMatchingComponent implements OnInit {
   competitionTeam: TeamModel;
   targetTeamId: string;
 
-  constructor(private teamMatchingService: TeamMatchingService) {}
+  constructor(
+    private teamMatchingService: TeamMatchingService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.teamMatchingService.getCompetitionTeam().then(team => {
@@ -28,7 +33,7 @@ export class TeamMatchingComponent implements OnInit {
         this.targetTeamId = '';
       }
 
-      alert(response.result);
+      DialogComponent.show(this.dialog, response.result);
     });
   }
 

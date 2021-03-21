@@ -1,0 +1,22 @@
+<h2 mat-dialog-title *ngIf="options.title || options.icon">
+  <mat-icon *ngIf="options.icon">{{ options.icon }}</mat-icon>
+  <span *ngIf="options.title">{{ options.title }}</span>
+</h2>
+<mat-dialog-content>
+  <p>{{ options.body }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <ng-container *ngIf="options.confirm; else notConfirm">
+    <button mat-button color="accent" type="button" [matDialogClose]="true">
+      Yes
+    </button>
+    <button mat-button color="accent" type="button" [matDialogClose]="false">
+      No
+    </button>
+  </ng-container>
+  <ng-template #notConfirm>
+    <button mat-button color="accent" type="button" matDialogClose>
+      Close
+    </button>
+  </ng-template>
+</mat-dialog-actions>

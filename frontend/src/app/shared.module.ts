@@ -39,6 +39,7 @@ import { DynamicFormFieldComponent } from './common/components/dynamic-form-fiel
 import { DrawerToggleComponent } from './common/components/drawer-toggle/drawer-toggle.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { DialogComponent } from './common/components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     EditEntityComponent,
     DynamicFormFieldComponent,
     DrawerToggleComponent,
+    DialogComponent,
     PluralizePipe,
     TitlePipe,
   ],
@@ -97,6 +99,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     EditEntityComponent,
     DynamicFormFieldComponent,
     DrawerToggleComponent,
+    DialogComponent,
     PluralizePipe,
     TitlePipe,
     CommonModule,

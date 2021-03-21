@@ -2,11 +2,12 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { GradedSubmissionModel } from '@codelm/common/src/models/submission.model';
 import { CodeMirrorComponent } from '../../components/code-mirror/code-mirror.component';
 import { SubmissionService } from '../../../services/submission.service';
-import { CodeSaverService } from '../../../services/code-saver.service';
 import { SubmissionComponent } from '../submission/submission.component';
 import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
 import { TeamUtil } from '@codelm/common/src/utils/team.util';
 import { LANGUAGES } from '@codelm/common/src/language';
+import { DialogComponent } from '../../components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-graded-submission',
@@ -25,7 +26,7 @@ export class GradedSubmissionComponent implements OnInit {
   constructor(
     private submissionComponent: SubmissionComponent,
     private submissionService: SubmissionService,
-    private codeSaverService: CodeSaverService
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -53,12 +54,15 @@ export class GradedSubmissionComponent implements OnInit {
       .then(s => {
         this.submission = <GradedSubmissionModel>s;
       })
-      .catch(alert);
+      .catch(e => DialogComponent.showError(this.dialog, e));
   }
 
   sendDispute() {
     if (!this.disputeMessage) {
-      alert('Please provide a message explaining your dispute.');
+      DialogComponent.showError(
+        this.dialog,
+        'Please provide a message explaining your dispute.'
+      );
     }
 
     const submission = { ...this.submission } as GradedSubmissionModel;

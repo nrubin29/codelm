@@ -7,6 +7,7 @@ import { SettingsModel } from '@codelm/common/src/models/settings.model';
 import { VERSION } from '@codelm/common/version';
 import { MatDialog } from '@angular/material/dialog';
 import { AllCodeComponent } from '../../components/all-code/all-code.component';
+import { DialogComponent } from '../../components/dialog/dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +38,10 @@ export class LoginComponent implements OnInit {
 
   async login(form: NgForm) {
     if (!form.value.username || !form.value.password) {
-      alert('Please enter a username and password');
+      DialogComponent.showError(
+        this.dialog,
+        'Please enter a username and password.'
+      );
       return;
     }
 
@@ -53,7 +57,7 @@ export class LoginComponent implements OnInit {
         await this.router.navigate(['dashboard']);
       }
     } catch (e) {
-      alert(e);
+      DialogComponent.showError(this.dialog, e);
     }
   }
 
