@@ -3,6 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { PersonModel } from '@codelm/common/src/models/person.model';
 import { GroupModel } from '@codelm/common/src/models/group.model';
 import { EmailService } from '../../../services/email.service';
+import {
+  EmailTemplate,
+  emailTemplates,
+} from '@codelm/common/src/models/email.model';
+import { DialogComponent } from '../../../common/components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-email',
@@ -12,27 +18,31 @@ import { EmailService } from '../../../services/email.service';
 export class EmailComponent implements OnInit {
   persons: PersonModel[];
   groups: GroupModel[];
-  readonly templates = ['info', 'info-teachers', 'reminder', 'wrapup'];
 
-  template: string;
+  template: EmailTemplate;
   to: PersonModel[];
-  subject: string;
 
   constructor(
     private emailService: EmailService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
+
+  get templates() {
+    return emailTemplates;
+  }
 
   ngOnInit() {
     this.persons = this.activatedRoute.snapshot.data.persons;
     this.groups = this.activatedRoute.snapshot.data.groups;
   }
 
-  send() {
-    this.emailService.send({
+  async send() {
+    await this.emailService.send({
       template: this.template,
       to: this.to.map(person => person._id),
-      subject: this.subject,
     });
+
+    await DialogComponent.showSuccess(this.dialog, 'Email sent!');
   }
 }

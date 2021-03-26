@@ -4,6 +4,7 @@ import { PersonDao, sanitizePerson } from '../daos/person.dao';
 import { DivisionDao } from '../daos/division.dao';
 import { TeamDao } from '../daos/team.dao';
 import { DivisionType } from '@codelm/common/src/models/division.model';
+import { sendEmail } from '../email';
 
 const router = Router();
 
@@ -20,6 +21,8 @@ router.get(
 );
 
 router.put('/', async (req: Request, res: Response) => {
+  // TODO: If the person is being updated, we don't want to create new teams
+  //  and stuff.
   try {
     const person = await PersonDao.addOrUpdatePerson(req.body);
 
@@ -42,6 +45,8 @@ router.put('/', async (req: Request, res: Response) => {
         ),
       }),
     ]);
+
+    await sendEmail([person], 'registered');
 
     res.json(sanitizePerson(person));
   } catch {
