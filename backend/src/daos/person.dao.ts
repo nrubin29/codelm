@@ -21,6 +21,13 @@ const PersonSchema = new mongoose.Schema({
   year: String,
   experience: String,
   group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group' },
+  photoRelease: { type: Boolean, default: false },
+  addressRelease: { type: Boolean, default: false },
+  addressLine1: { type: String, required: false },
+  addressLine2: { type: String, required: false },
+  city: { type: String, required: false },
+  state: { type: String, required: false },
+  zipCode: { type: String, required: false },
 });
 
 const Person = mongoose.model<PersonType>('Person', PersonSchema);

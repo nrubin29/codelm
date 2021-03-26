@@ -48,6 +48,13 @@ export class PersonService extends GroupedEntityService<
               }))
             ),
         },
+        { name: 'photoRelease', type: 'boolean' },
+        { name: 'addressRelease', type: 'boolean' },
+        { name: 'addressLine1', optional: true },
+        { name: 'addressLine2', optional: true },
+        { name: 'city', optional: true },
+        { name: 'state', optional: true },
+        { name: 'zipCode', optional: true },
       ],
       editable: true,
     });

@@ -40,6 +40,7 @@ import { DrawerToggleComponent } from './common/components/drawer-toggle/drawer-
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { DialogComponent } from './common/components/dialog/dialog.component';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { DialogComponent } from './common/components/dialog/dialog.component';
     MatRadioModule,
     MatTooltipModule,
     MatButtonToggleModule,
+    MatStepperModule,
   ],
   exports: [
     SubmissionComponent,
@@ -128,6 +130,7 @@ import { DialogComponent } from './common/components/dialog/dialog.component';
     MatRadioModule,
     MatTooltipModule,
     MatButtonToggleModule,
+    MatStepperModule,
   ],
 })
 export class SharedModule {}

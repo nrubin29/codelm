@@ -7,12 +7,36 @@
   background: #fafafa;
 
   & ::ng-deep {
-    .mat-form-field {
+    p {
+      font-size: 16px;
+    }
+
+    .mat-form-field,
+    .mat-checkbox {
       font-size: 20px;
     }
   }
 }
 
 app-card {
-  width: 30vw;
+  width: 90vw;
+}
+
+.step-container-outer {
+  display: flex;
+  justify-content: center;
+}
+
+.step-container {
+  width: 90vw;
+}
+
+@media screen and (min-width: 1200px) {
+  app-card {
+    width: 75vw;
+  }
+
+  .step-container {
+    width: 50vw;
+  }
 }

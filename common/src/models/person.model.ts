@@ -20,4 +20,11 @@ export interface PersonModel extends UserModel {
   year: PersonYear;
   experience: PersonExperience;
   group: GroupModel;
+  photoRelease: boolean;
+  addressRelease: boolean;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
 }

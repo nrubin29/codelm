@@ -9,6 +9,7 @@ import { DisconnectGuard } from './guards/disconnect.guard';
 import { EndComponent } from './common/views/end/end.component';
 import { SettingsResolve } from './resolves/settings.resolve';
 import { OpenRegistrationGuard } from './guards/open-registration.guard';
+import { GroupsResolve } from './resolves/groups.resolve';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -31,6 +32,7 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent,
     canActivate: [IsNotEndGuard, OpenRegistrationGuard],
+    resolve: { groups: GroupsResolve },
   },
   {
     path: 'disconnected',

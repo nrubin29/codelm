@@ -1,7 +1,187 @@
 <app-card header="Register">
-  <app-edit-entity
-    [entityService]="personService"
-    [isModal]="false"
-    (action)="action($event)"
-  ></app-edit-entity>
+  <mat-horizontal-stepper [linear]="true" #stepper>
+    <mat-step>
+      <div class="step-container-outer">
+        <div class="step-container">
+          <ng-template matStepLabel>Welcome</ng-template>
+          <p>
+            Thanks for expressing interest in CodeLM! Fill out this form to get
+            registered.
+          </p>
+          <br />
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="generalInfoForm" label="General Info">
+      <div class="step-container-outer">
+        <div class="step-container">
+          <form [formGroup]="generalInfoForm">
+            <mat-form-field>
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="name" required />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" required />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Year</mat-label>
+              <mat-select formControlName="year" required>
+                <mat-option value="Freshman">Freshman</mat-option>
+                <mat-option value="Sophomore">Sophomore</mat-option>
+                <mat-option value="Junior">Junior</mat-option>
+                <mat-option value="Senior">Senior</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>School</mat-label>
+              <mat-select formControlName="group" required>
+                <mat-option *ngFor="let group of groups" [value]="group._id">
+                  {{ group.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="experienceForm" label="Division">
+      <div class="step-container-outer">
+        <div class="step-container">
+          <form [formGroup]="experienceForm">
+            <p>
+              Read the following description of the divisions and choose the one
+              that applies to you. You may compete up a division, but you may
+              not compete down a division.
+            </p>
+            <mat-list role="list">
+              <mat-list-item role="listitem">
+                The Intermediate division is meant for students who have not yet
+                taken AP Computer Science.
+              </mat-list-item>
+              <mat-list-item role="listitem">
+                The Advanced division is meant for students who are currently
+                taking AP Computer Science.
+              </mat-list-item>
+              <mat-list-item role="listitem">
+                The Expert division is meant for students who have already
+                completed AP Computer Science.
+              </mat-list-item>
+            </mat-list>
+            <mat-form-field>
+              <mat-label>Division</mat-label>
+              <mat-select formControlName="experience" required>
+                <mat-option value="Intermediate">Intermediate</mat-option>
+                <mat-option value="Advanced">Advanced</mat-option>
+                <mat-option value="Expert">Expert</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="agreementsForm" label="Agreements">
+      <div class="step-container-outer">
+        <div class="step-container">
+          <form [formGroup]="agreementsForm">
+            <mat-checkbox formControlName="photoRelease">
+              Photo release
+            </mat-checkbox>
+            <p>
+              By agreeing above, I hereby grant Susquehanna International Group,
+              LLP (SIG) permission in perpetuity to publish or reproduce in
+              print, electronic or video format my name, likeness or image in
+              any and all forms of media. I will make no claim (including any
+              claim for compensation) against SIG and do hereby release any such
+              claim in any way arising from or related to these materials. SIG
+              anticipates such materials may be used in connection with, among
+              other things, its marketing and/or recruiting related efforts.
+            </p>
+            <br />
+            <mat-checkbox formControlName="addressRelease">
+              Do you have parental permission to receive a gift in the mail from
+              SIG?
+            </mat-checkbox>
+            <mat-form-field>
+              <mat-label>Address Line 1</mat-label>
+              <input matInput formControlName="addressLine1" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Address Line 2</mat-label>
+              <input matInput formControlName="addressLine2" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>City</mat-label>
+              <input matInput formControlName="city" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>State</mat-label>
+              <input matInput formControlName="state" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Zip Code</mat-label>
+              <input matInput formControlName="zipCode" />
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="accountForm" label="Account">
+      <div class="step-container-outer">
+        <div class="step-container">
+          <form [formGroup]="accountForm">
+            <mat-form-field>
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="username" required />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                type="password"
+                formControlName="password"
+                required
+              />
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button color="accent" (click)="submit()">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step label="Done">
+      <div class="step-container-outer">
+        <div class="step-container">
+          <p>
+            You are now registered for CodeLM! Check your email for a
+            confirmation and instructions for team matching and accessing
+            practice problems.
+          </p>
+          <br />
+          <div>
+            <button mat-button type="button" (click)="login()">Home</button>
+          </div>
+        </div>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
 </app-card>
