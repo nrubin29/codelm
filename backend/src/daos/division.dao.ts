@@ -4,8 +4,9 @@ import {
   DivisionType,
 } from '@codelm/common/src/models/division.model';
 import { PersonExperience } from '@codelm/common/src/models/person.model';
+import { ModelDocument } from './dao';
 
-type DivisionDocumentType = DivisionModel & mongoose.Document;
+type DivisionDocument = ModelDocument<DivisionModel>;
 
 const DivisionSchema = new mongoose.Schema({
   name: String,
@@ -13,43 +14,44 @@ const DivisionSchema = new mongoose.Schema({
   experience: String,
 });
 
-const Division = mongoose.model<DivisionDocumentType>(
-  'Division',
-  DivisionSchema
-);
+const Division = mongoose.model<DivisionDocument>('Division', DivisionSchema);
 
 export class DivisionDao {
   static getDivision(id: string): Promise<DivisionModel> {
-    return Division.findById(id).exec();
+    return Division.findById(id).lean().exec();
   }
 
   static getDivisionByName(name: string): Promise<DivisionModel> {
-    return Division.findOne({ name }).exec();
+    return Division.findOne({ name }).lean().exec();
   }
 
   static getDivisions(): Promise<DivisionModel[]> {
-    return Division.find().exec();
+    return Division.find().lean().exec();
   }
 
   static getDivisionsOfType(
     divisionType: DivisionType
   ): Promise<DivisionModel[]> {
-    return Division.find({ type: divisionType }).exec();
+    return Division.find({ type: divisionType }).lean().exec();
   }
 
   static getDivisionsByExperience(
     experience: PersonExperience
   ): Promise<DivisionModel[]> {
-    return Division.find({ experience: experience }).exec();
+    return Division.find({ experience: experience }).lean().exec();
   }
 
-  static addOrUpdateDivision(division: DivisionModel): Promise<DivisionModel> {
+  static async addOrUpdateDivision(
+    division: DivisionModel
+  ): Promise<DivisionModel> {
     if (!division._id) {
-      return Division.create(division);
+      return (await Division.create(division)).toObject();
     } else {
-      return Division.findByIdAndUpdate(division._id, division, {
+      return await Division.findByIdAndUpdate(division._id, division, {
         new: true,
-      }).exec();
+      })
+        .lean()
+        .exec();
     }
   }
 

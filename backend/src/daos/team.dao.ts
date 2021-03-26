@@ -2,8 +2,9 @@ import * as mongoose from 'mongoose';
 import { QueryPopulateOptions } from 'mongoose';
 import { TeamModel } from '@codelm/common/src/models/team.model';
 import { SubmissionDao } from './submission.dao';
+import { ModelDocument } from './dao';
 
-type TeamType = TeamModel & mongoose.Document;
+type TeamDocument = ModelDocument<TeamModel>;
 
 const TeamSchema = new mongoose.Schema(
   {
@@ -16,7 +17,7 @@ const TeamSchema = new mongoose.Schema(
   }
 );
 
-const Team = mongoose.model<TeamType>('Team', TeamSchema);
+const Team = mongoose.model<TeamDocument>('Team', TeamSchema);
 
 export class TeamDao {
   private static readonly populationPaths: QueryPopulateOptions[] = [
@@ -29,43 +30,38 @@ export class TeamDao {
       return null;
     }
 
-    return await TeamDao.addScore(
-      await Team.findById(id).populate(TeamDao.populationPaths).exec()
-    );
+    return await TeamDao.addScore(await Team.findById(id).exec());
   }
 
-  static async getTeams(): Promise<TeamType[]> {
-    return await TeamDao.addScores(
-      await Team.find().populate(TeamDao.populationPaths).exec()
-    );
+  static async getTeams(): Promise<TeamModel[]> {
+    return await TeamDao.addScores(await Team.find().exec());
   }
 
   static async getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
-    return (
-      await TeamDao.addScores(
-        await Team.find({ division: { _id: divisionId } })
-          .populate(TeamDao.populationPaths)
-          .exec()
-      )
-    ).map(team => team.toObject());
+    return await TeamDao.addScores(
+      await Team.find({ division: { _id: divisionId } }).exec()
+    );
   }
 
   static async getTeamsForPerson(personId: string): Promise<TeamModel[]> {
-    return (
-      await TeamDao.addScores(
-        await Team.find({ members: personId })
-          .populate(TeamDao.populationPaths)
-          .exec()
-      )
-    ).map(team => team.toObject());
+    return await TeamDao.addScores(
+      await Team.find({ members: personId })
+        .populate(TeamDao.populationPaths)
+        .exec()
+    );
   }
 
-  static async deleteTeams(teamUsernames: readonly string[]) {
+  static async deleteTeams(teamUsernames: readonly string[]): Promise<void> {
     await Team.deleteMany({ username: { $in: teamUsernames } });
   }
 
-  static async createTeams(teams: Omit<TeamModel, '_id'>[]) {
-    return await Team.create(teams);
+  static async createTeams(
+    teams: Omit<TeamModel, '_id'>[]
+  ): Promise<TeamModel[]> {
+    const teamDocuments = await Promise.all(
+      teams.map(team => Team.create(team))
+    );
+    return await TeamDao.addScores(teamDocuments);
   }
 
   static async addOrUpdateTeam(team: TeamModel): Promise<TeamModel> {
@@ -76,9 +72,7 @@ export class TeamDao {
         await Team.findByIdAndUpdate(team._id, team, {
           new: true,
           omitUndefined: true,
-        })
-          .populate(TeamDao.populationPaths)
-          .exec()
+        }).exec()
       );
     }
   }
@@ -87,20 +81,19 @@ export class TeamDao {
     return Team.deleteOne({ _id: id }).exec();
   }
 
-  private static async addScore(team: TeamType): Promise<TeamType> {
+  private static async addScore(team: TeamDocument): Promise<TeamModel> {
     if (team) {
-      const score = await SubmissionDao.getScoreForTeam(team._id);
+      const score = await SubmissionDao.getScoreForTeam(team._id.toString());
       team.set('score', score, { strict: false });
       team.populate(TeamDao.populationPaths);
-      return team;
+      await team.execPopulate();
+      return team.toObject();
     } else {
       return null;
     }
   }
 
-  private static async addScores(teams: TeamType[]): Promise<TeamType[]> {
-    return await Promise.all(
-      teams.map(async team => await TeamDao.addScore(team))
-    );
+  private static async addScores(teams: TeamDocument[]): Promise<TeamModel[]> {
+    return await Promise.all(teams.map(team => TeamDao.addScore(team)));
   }
 }

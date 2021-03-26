@@ -85,7 +85,7 @@ export class ProblemService extends GroupedEntityService<
                 this.divisionService.getAll().then(divisions =>
                   divisions.map(division => ({
                     name: division.name,
-                    value: division._id.toString(),
+                    value: division._id,
                   }))
                 ),
               transform: (value?: Partial<ProblemDivision>) =>
@@ -156,7 +156,7 @@ export class ProblemService extends GroupedEntityService<
   }
 
   getChildren(parent: DivisionModel): Promise<ProblemModel[]> {
-    return this.getProblems(parent._id.toString());
+    return this.getProblems(parent._id);
   }
 
   getData(

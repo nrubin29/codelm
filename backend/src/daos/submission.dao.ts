@@ -20,8 +20,9 @@ import { TeamDao } from './team.dao';
 import { ProblemDao } from './problem.dao';
 import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
 import { VariableType } from '@codelm/common/src/codegen/models';
+import { ModelDocument } from './dao';
 
-type SubmissionType = SubmissionModel & mongoose.Document;
+type SubmissionDocument = ModelDocument<SubmissionModel>;
 
 const TestCaseSubmissionSchema = new mongoose.Schema(
   {
@@ -174,7 +175,7 @@ SubmissionSchema.virtual('points').get(function () {
   }
 });
 
-const Submission = mongoose.model<SubmissionType>(
+const Submission = mongoose.model<SubmissionDocument>(
   'Submission',
   SubmissionSchema
 );
@@ -196,40 +197,37 @@ export class SubmissionDao {
     },
   ];
 
-  static getSubmissionRaw(id: string): Promise<SubmissionType | null> {
+  static getSubmissionRaw(id: string): Promise<SubmissionDocument | null> {
     return Submission.findById(id)
       .populate(SubmissionDao.populationPaths)
       .exec();
   }
 
-  static async getSubmission(id: string): Promise<SubmissionModel> {
-    return (
-      await Submission.findById(id)
-        .populate(SubmissionDao.populationPaths)
-        .exec()
-    ).toObject();
-  }
-
-  static async getSubmissionsForTeam(
-    teamId: string
-  ): Promise<SubmissionModel[]> {
-    const submissions = await Submission.find({ team: teamId })
+  static getSubmission(id: string): Promise<SubmissionModel> {
+    return Submission.findById(id)
+      .lean()
       .populate(SubmissionDao.populationPaths)
       .exec();
-    return submissions.map(submission => submission.toObject());
   }
 
-  static async getSubmissionsForTeamAndProblem(
+  static getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
+    return Submission.find({ team: teamId })
+      .lean()
+      .populate(SubmissionDao.populationPaths)
+      .exec();
+  }
+
+  static getSubmissionsForTeamAndProblem(
     teamId: string,
     problemId: string
   ): Promise<SubmissionModel[]> {
-    const submissions = await Submission.find({
+    return Submission.find({
       team: teamId,
       problem: problemId,
     })
+      .lean()
       .populate(SubmissionDao.populationPaths)
       .exec();
-    return submissions.map(submission => submission.toObject());
   }
 
   static async getSubmissionOverview(
@@ -254,7 +252,7 @@ export class SubmissionDao {
         let error = false;
 
         for (let submission of submissions) {
-          if (submission.problem._id.toString() !== problem._id.toString()) {
+          if (submission.problem._id !== problem._id) {
             continue;
           }
 
@@ -296,21 +294,19 @@ export class SubmissionDao {
     return result;
   }
 
-  static async getDisputedSubmissions(): Promise<SubmissionModel[]> {
-    const submissions = await Submission.find({ 'dispute.open': true })
+  static getDisputedSubmissions(): Promise<SubmissionModel[]> {
+    return Submission.find({ 'dispute.open': true })
+      .lean()
       .populate(SubmissionDao.populationPaths)
       .exec();
-    return submissions.map(submission => submission.toObject());
   }
 
   static async getScoreForTeam(teamId: string): Promise<number> {
     // This is needed because if the score is calculated in team.dao, there is circular population.
-    const submissions = await Submission.find({ team: teamId })
-      .populate(SubmissionDao.populationPaths)
-      .exec();
+    const submissions = await SubmissionDao.getSubmissionsForTeam(teamId);
     return submissions.reduce(
-      (previousValue: number, currentValue: SubmissionType) =>
-        previousValue + (currentValue.toObject().points || 0),
+      (previousValue: number, currentValue) =>
+        previousValue + (currentValue.points || 0),
       0
     );
   }
@@ -334,21 +330,24 @@ export class SubmissionDao {
     id: string,
     submission: SubmissionModel
   ): Promise<SubmissionModel> {
-    const subm = await Submission.findOneAndUpdate({ _id: id }, submission, {
-      new: true,
-    })
+    const updatedSubmission = await Submission.findOneAndUpdate(
+      { _id: id },
+      submission,
+      { new: true }
+    )
+      .lean()
       .populate(SubmissionDao.populationPaths)
       .exec();
-    SocketManager.instance.send(subm.team._id.toString(), {
+    SocketManager.instance.send(updatedSubmission.team._id, {
       name: 'updateTeam',
     });
-    return subm.toObject();
+    return updatedSubmission;
   }
 
   static async deleteSubmission(id: string): Promise<void> {
     const submission = await SubmissionDao.getSubmission(id);
     await Submission.deleteOne({ _id: id }).exec();
-    SocketManager.instance.send(submission.team._id.toString(), {
+    SocketManager.instance.send(submission.team._id, {
       name: 'updateTeam',
     });
   }

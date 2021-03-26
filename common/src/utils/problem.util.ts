@@ -5,8 +5,7 @@ import { DivisionModel } from '../models/division.model';
 export class ProblemUtil {
   static getProblemDivisionForTeam(problem: ProblemModel, team: TeamModel) {
     return problem.divisions.find(
-      division =>
-        division.division._id.toString() === team.division._id.toString()
+      division => division.division._id === team.division._id
     );
   }
 
@@ -14,9 +13,7 @@ export class ProblemUtil {
     problem: ProblemModel,
     division: DivisionModel
   ) {
-    return problem.divisions.find(
-      div => div.division._id.toString() === division._id.toString()
-    );
+    return problem.divisions.find(div => div.division._id === division._id);
   }
 
   static getProblemNumberForTeam(problem: ProblemModel, team: TeamModel) {

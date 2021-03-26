@@ -2,8 +2,9 @@ import * as mongoose from 'mongoose';
 import * as crypto from 'crypto';
 import { AdminModel } from '@codelm/common/src/models/admin.model';
 import { LoginResponseType } from '@codelm/common/src/models/auth.model';
+import { ModelDocument } from './dao';
 
-type AdminType = AdminModel & mongoose.Document;
+type AdminDocument = ModelDocument<AdminModel>;
 
 const AdminSchema = new mongoose.Schema({
   username: String,
@@ -13,19 +14,19 @@ const AdminSchema = new mongoose.Schema({
   superUser: { type: Boolean, default: false },
 });
 
-const Admin = mongoose.model<AdminType>('Admin', AdminSchema);
+const Admin = mongoose.model<AdminDocument>('Admin', AdminSchema);
 
 export class AdminDao {
   static getAdmin(id: string): Promise<AdminModel> {
-    return Admin.findById(id).exec();
+    return Admin.findById(id).lean().exec();
   }
 
-  static getAdmins(): Promise<AdminModel[]> {
-    return Admin.find().exec();
+  static async getAdmins(): Promise<AdminModel[]> {
+    return await Admin.find().lean().exec();
   }
 
   static async login(username: string, password: string): Promise<AdminModel> {
-    const admin = await Admin.findOne({ username: username });
+    const admin = await Admin.findOne({ username: username }).lean().exec();
 
     if (!admin) {
       throw LoginResponseType.NotFound;
@@ -42,7 +43,7 @@ export class AdminDao {
     }
   }
 
-  static addOrUpdateAdmin(admin: any): Promise<AdminModel> {
+  static async addOrUpdateAdmin(admin: AdminModel): Promise<AdminModel> {
     if (admin.password) {
       const salt = crypto.randomBytes(16).toString('hex');
       const hash = crypto
@@ -56,12 +57,14 @@ export class AdminDao {
     }
 
     if (!admin._id) {
-      return Admin.create(admin as AdminModel);
+      return (await Admin.create(admin as AdminModel)).toObject();
     } else {
-      return Admin.findByIdAndUpdate(admin._id, admin, {
+      return await Admin.findByIdAndUpdate(admin._id, admin, {
         new: true,
         omitUndefined: true,
-      }).exec();
+      })
+        .lean()
+        .exec();
     }
   }
 

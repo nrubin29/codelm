@@ -5,8 +5,10 @@ import {
 } from '@codelm/common/src/models/problem.model';
 import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 import { DivisionDao } from './division.dao';
+import { QueryPopulateOptions } from 'mongoose';
+import { ModelDocument } from './dao';
 
-type ProblemType = ProblemModel & mongoose.Document;
+type ProblemDocument = ModelDocument<ProblemModel>;
 
 const ProblemDivisionSchema = new mongoose.Schema({
   division: { type: mongoose.Schema.Types.ObjectId, ref: 'Division' },
@@ -26,7 +28,7 @@ const TestCaseSchema = new mongoose.Schema({
   explanation: { type: String, default: undefined },
 });
 
-const Problem = mongoose.model<ProblemType>(
+const Problem = mongoose.model<ProblemDocument>(
   'Problem',
   new mongoose.Schema({
     title: String,
@@ -50,8 +52,15 @@ export function sanitizeProblem(problem: ProblemModel): ProblemModel {
 }
 
 export class ProblemDao {
+  private static readonly populationPaths: QueryPopulateOptions[] = [
+    { path: 'divisions', populate: { path: 'division' } },
+  ];
+
   static getProblem(id: string): Promise<ProblemModel> {
-    return Problem.findById(id).populate('divisions.division').exec();
+    return Problem.findById(id)
+      .lean()
+      .populate(ProblemDao.populationPaths)
+      .exec();
   }
 
   static async getProblemsForDivision(
@@ -59,22 +68,37 @@ export class ProblemDao {
   ): Promise<ProblemModel[]> {
     const division = await DivisionDao.getDivision(divisionId);
     const problems = await Problem.find({ 'divisions.division': divisionId })
-      .populate('divisions.division')
+      .lean()
+      .populate(ProblemDao.populationPaths)
       .exec();
+
+    for (const problem of problems) {
+      try {
+        ProblemUtil.getProblemNumberForDivision(problem, division);
+      } catch (e) {
+        console.log(problem);
+      }
+    }
+
     return problems.sort(
-      (a: ProblemModel, b: ProblemModel) =>
+      (a, b) =>
         ProblemUtil.getProblemNumberForDivision(a, division) -
         ProblemUtil.getProblemNumberForDivision(b, division)
     );
   }
 
-  static addOrUpdateProblem(problem: ProblemModel): Promise<ProblemModel> {
+  static async addOrUpdateProblem(
+    problem: ProblemModel
+  ): Promise<ProblemModel> {
     if (!problem._id) {
-      return Problem.create(problem);
+      return (await Problem.create(problem)).toObject();
     } else {
-      return Problem.findByIdAndUpdate(problem._id, problem, {
+      return await Problem.findByIdAndUpdate(problem._id, problem, {
         new: true,
-      }).exec();
+      })
+        .lean()
+        .populate(ProblemDao.populationPaths)
+        .exec();
     }
   }
 

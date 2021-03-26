@@ -44,7 +44,7 @@ export class PersonService extends GroupedEntityService<
             this.groupService.getAll().then(groups =>
               groups.map(group => ({
                 name: group.name,
-                value: group._id.toString(),
+                value: group._id,
               }))
             ),
         },

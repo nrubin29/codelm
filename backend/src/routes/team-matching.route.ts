@@ -13,7 +13,7 @@ const router = Router();
 
 router.get('/', AuthUtil.requireAuth, async (req: Request, res: Response) => {
   const person = req.params.person as PersonModel;
-  const teams = await TeamDao.getTeamsForPerson(person._id.toString());
+  const teams = await TeamDao.getTeamsForPerson(person._id);
   res.json(teams.find(team => team.division.type === DivisionType.Competition));
 });
 
@@ -21,12 +21,12 @@ router.post('/', AuthUtil.requireAuth, async (req: Request, res: Response) => {
   const person = req.params.person as PersonModel;
   const targetTeamId = (req.body as TeamMatchingRequest).targetTeamId;
   const targetTeam = await TeamDao.getTeam(targetTeamId);
-  const currentTeam = (
-    await TeamDao.getTeamsForPerson(person._id.toString())
-  ).find(team => team.division.type === DivisionType.Competition);
+  const currentTeam = (await TeamDao.getTeamsForPerson(person._id)).find(
+    team => team.division.type === DivisionType.Competition
+  );
 
   if (targetTeam) {
-    if (targetTeam._id.toString() === currentTeam._id.toString()) {
+    if (targetTeam._id === currentTeam._id) {
       res.json({ result: TeamMatchingResult.SameTeam } as TeamMatchingResponse);
       return;
     } else if (targetTeam.division.experience !== person.experience) {
@@ -50,7 +50,7 @@ router.post('/', AuthUtil.requireAuth, async (req: Request, res: Response) => {
     } else {
       // Remove this person from their current team
       currentTeam.members = currentTeam.members.filter(
-        member => member._id.toString() !== person._id.toString()
+        member => member._id !== person._id
       );
       await TeamDao.addOrUpdateTeam(currentTeam);
     }

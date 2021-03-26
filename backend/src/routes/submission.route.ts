@@ -56,8 +56,7 @@ router.get(
     const submission = await SubmissionDao.getSubmission(req.params.id);
 
     if (req.params.team) {
-      // The toString() calls are needed because both _ids are objects.
-      if (submission.team._id.toString() === req.params.team._id.toString()) {
+      if (submission.team._id === req.params.team._id) {
         res.json(sanitizeSubmission(submission));
       } else {
         res.sendStatus(403);

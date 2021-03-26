@@ -9,8 +9,9 @@ import { TeamDao } from './team.dao';
 import { SettingsDao } from './settings.dao';
 import { SettingsState } from '@codelm/common/src/models/settings.model';
 import { DivisionType } from '@codelm/common/src/models/division.model';
+import { ModelDocument } from './dao';
 
-type PersonType = PersonModel & mongoose.Document;
+type PersonDocument = ModelDocument<PersonModel>;
 
 const PersonSchema = new mongoose.Schema({
   name: String,
@@ -23,7 +24,7 @@ const PersonSchema = new mongoose.Schema({
   group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group' },
 });
 
-const Person = mongoose.model<PersonType>('Person', PersonSchema);
+const Person = mongoose.model<PersonDocument>('Person', PersonSchema);
 
 export function sanitizePerson(person: PersonModel): PersonModel {
   delete person.password;
@@ -36,32 +37,36 @@ export class PersonDao {
     { path: 'group' },
   ];
 
-  static async getPerson(_id: string): Promise<PersonModel> {
-    return (
-      await Person.findById(_id).populate(PersonDao.populationPaths).exec()
-    ).toObject();
+  static getPerson(_id: string): Promise<PersonModel> {
+    return Person.findById(_id)
+      .lean()
+      .populate(PersonDao.populationPaths)
+      .exec();
   }
 
-  static async getPeople(): Promise<PersonModel[]> {
-    return (
-      await Person.find().populate(PersonDao.populationPaths).exec()
-    ).map(person => person.toObject());
+  private static getPersonByUsername(username: string): Promise<PersonModel> {
+    return Person.findOne({ username })
+      .lean()
+      .populate(PersonDao.populationPaths)
+      .exec();
   }
 
-  static async getPeopleByIds(_ids: string[]): Promise<PersonModel[]> {
-    return (
-      await Person.find({ _id: { $in: _ids } })
-        .populate(PersonDao.populationPaths)
-        .exec()
-    ).map(person => person.toObject());
+  static getPeople(): Promise<PersonModel[]> {
+    return Person.find().lean().populate(PersonDao.populationPaths).exec();
+  }
+
+  static getPeopleByIds(_ids: string[]): Promise<PersonModel[]> {
+    return Person.find({ _id: { $in: _ids } })
+      .lean()
+      .populate(PersonDao.populationPaths)
+      .exec();
   }
 
   static async getPeopleForGroup(groupId: string): Promise<PersonModel[]> {
-    return (
-      await Person.find({ group: groupId })
-        .populate(PersonDao.populationPaths)
-        .exec()
-    ).map(person => person.toObject());
+    return Person.find({ group: groupId })
+      .lean()
+      .populate(PersonDao.populationPaths)
+      .exec();
   }
 
   static async login(username: string, password: string): Promise<PersonModel> {
@@ -69,9 +74,7 @@ export class PersonDao {
       throw LoginResponseType.NotFound;
     }
 
-    const person = await Person.findOne({ username }).populate(
-      PersonDao.populationPaths
-    );
+    const person = await PersonDao.getPersonByUsername(username);
 
     if (!person) {
       throw LoginResponseType.NotFound;
@@ -156,7 +159,7 @@ export class PersonDao {
         // For some reason, the object returned by Person.create() has a null
         // _id, so I have to query it again.
         await Person.create(person);
-        return (await Person.findOne({ username: person.username })).toObject();
+        return await PersonDao.getPersonByUsername(person.username);
       } catch (err) {
         if (err.code !== undefined && err.code === 11000) {
           // It's a MongoError for non-unique username.
@@ -166,11 +169,10 @@ export class PersonDao {
         }
       }
     } else {
-      return (
-        await Person.findByIdAndUpdate(person._id, person, { new: true })
-          .populate(PersonDao.populationPaths)
-          .exec()
-      ).toObject();
+      return await Person.findByIdAndUpdate(person._id, person, { new: true })
+        .lean()
+        .populate(PersonDao.populationPaths)
+        .exec();
     }
   }
 

@@ -53,9 +53,7 @@ router.get(
       problems = problems.filter(
         problem =>
           problem.divisions.findIndex(
-            pD =>
-              pD.division._id.toString() ===
-              req.params.team.division._id.toString()
+            pD => pD.division._id === req.params.team.division._id
           ) !== -1
       );
 

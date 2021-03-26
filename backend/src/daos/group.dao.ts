@@ -1,37 +1,32 @@
 import * as mongoose from 'mongoose';
 import { GroupModel } from '@codelm/common/src/models/group.model';
+import { ModelDocument } from './dao';
 
-type GroupType = GroupModel & mongoose.Document;
+type GroupDocument = ModelDocument<GroupModel>;
 
 const GroupSchema = new mongoose.Schema({
   name: String,
   special: { type: Boolean, default: false },
 });
 
-const Group = mongoose.model<GroupType>('Group', GroupSchema);
+const Group = mongoose.model<GroupDocument>('Group', GroupSchema);
 
 export class GroupDao {
-  static async getGroup(_id: string): Promise<GroupModel> {
-    return (await Group.findById(_id).exec()).toObject();
+  static getGroups(): Promise<GroupModel[]> {
+    return Group.find().lean().exec();
   }
 
-  static async getGroups(): Promise<GroupModel[]> {
-    return (await Group.find().exec()).map(group => group.toObject());
-  }
-
-  static async getNonSpecialGroups(): Promise<GroupModel[]> {
-    return (await Group.find({ special: false }).exec()).map(group =>
-      group.toObject()
-    );
+  static getNonSpecialGroups(): Promise<GroupModel[]> {
+    return Group.find({ special: false }).lean().exec();
   }
 
   static async addOrUpdateGroup(group: GroupModel): Promise<GroupModel> {
     if (!group._id) {
       return (await Group.create(group)).toObject();
     } else {
-      return (
-        await Group.findByIdAndUpdate(group._id, group, { new: true }).exec()
-      ).toObject();
+      return await Group.findByIdAndUpdate(group._id, group, { new: true })
+        .lean()
+        .exec();
     }
   }
 

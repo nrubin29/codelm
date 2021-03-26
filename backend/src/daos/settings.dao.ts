@@ -6,8 +6,9 @@ import {
 } from '@codelm/common/src/models/settings.model';
 import { Job, scheduleJob } from 'node-schedule';
 import { SocketManager } from '../socket.manager';
+import { ModelDocument } from './dao';
 
-type SettingsType = SettingsModel & mongoose.Document;
+type SettingsDocument = ModelDocument<SettingsModel>;
 
 const ScheduleSchema = new mongoose.Schema({
   newState: String,
@@ -22,18 +23,18 @@ const SettingsSchema = new mongoose.Schema({
   endSurveyLink: { type: String, default: '#' },
 });
 
-const Settings = mongoose.model<SettingsType>('Settings', SettingsSchema);
+const Settings = mongoose.model<SettingsDocument>('Settings', SettingsSchema);
 
 export class SettingsDao {
   private static jobs: Job[];
 
   static async getSettings(): Promise<SettingsModel> {
-    const settings = await Settings.findOne().exec();
+    const settings = await Settings.findOne().lean().exec();
 
     if (settings) {
       return settings;
     } else {
-      return await Settings.create(defaultSettingsModel);
+      return (await Settings.create(defaultSettingsModel)).toObject();
     }
   }
 
@@ -43,7 +44,9 @@ export class SettingsDao {
       {},
       settings,
       { upsert: true, new: true }
-    ).exec();
+    )
+      .lean()
+      .exec();
 
     SettingsDao.scheduleJobs(newSettings);
     SocketManager.instance.sendToAll({ name: 'updateSettings' });
@@ -67,7 +70,9 @@ export class SettingsDao {
 
   private static resetJobs() {
     if (SettingsDao.jobs !== undefined) {
-      SettingsDao.jobs.forEach(job => job.cancel());
+      SettingsDao.jobs.forEach(job => {
+        job.cancel();
+      });
     }
 
     SettingsDao.jobs = [];
@@ -81,6 +86,7 @@ export class SettingsDao {
         schedule.when,
         function (newState: SettingsState) {
           Settings.updateOne({}, { $set: { state: newState } })
+            .lean()
             .exec()
             .then(() => {
               SocketManager.instance.sendToAll({
@@ -108,7 +114,7 @@ export class SettingsDao {
 
   static async resetSettings(): Promise<SettingsModel> {
     await Settings.deleteOne({}).exec();
-    const settings = await Settings.create(defaultSettingsModel);
+    const settings = (await Settings.create(defaultSettingsModel)).toObject();
     SettingsDao.resetJobs();
     SocketManager.instance.sendToAll({ name: 'updateSettings' });
     return settings;

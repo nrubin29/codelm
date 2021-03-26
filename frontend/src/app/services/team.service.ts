@@ -30,7 +30,7 @@ export class TeamService extends EntityService<TeamModel> {
             this.personService.getAll().then(people =>
               people.map(person => ({
                 name: person.name,
-                value: person._id.toString(),
+                value: person._id,
               }))
             ),
         },
@@ -41,7 +41,7 @@ export class TeamService extends EntityService<TeamModel> {
             this.divisionService.getAll().then(divisions =>
               divisions.map(division => ({
                 name: division.name,
-                value: division._id.toString(),
+                value: division._id,
               }))
             ),
           transform: (value?: Partial<TeamModel>) => value?.division?._id,
