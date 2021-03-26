@@ -7,6 +7,7 @@ import { DivisionType } from '@codelm/common/src/models/division.model';
 import { sendEmail } from '../email';
 import { isUniquenessError } from '../daos/dao';
 import { PersonModel } from '../../../common/src/models/person.model';
+import { GroupDao } from '../daos/group.dao';
 
 const router = Router();
 
@@ -23,10 +24,28 @@ router.get(
 );
 
 router.put('/', async (req: Request, res: Response) => {
+  let request = req.body as Omit<PersonModel, 'group'> & {
+    group: string;
+    groupName: string;
+  };
+
+  if (request.group === '-1') {
+    if (request.groupName == null) {
+      res.status(403).send('Please provide a school.');
+      return;
+    }
+
+    const group = await GroupDao.addOrUpdateGroup({
+      name: request.groupName,
+      special: false,
+    });
+    request.group = group._id.toString();
+  }
+
   let person: PersonModel;
 
   try {
-    person = await PersonDao.addOrUpdatePerson(req.body);
+    person = await PersonDao.addOrUpdatePerson((request as any) as PersonModel);
   } catch (err) {
     // TODO: Standardize, type, and properly handle errors.
     if (isUniquenessError(err)) {

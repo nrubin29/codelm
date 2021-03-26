@@ -4,7 +4,7 @@ import { PersonService } from '../../../services/person.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DialogComponent } from '../../components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GroupModel } from '@codelm/common/src/models/group.model';
 import { GroupService } from '../../../services/group.service';
 import { MatStepper } from '@angular/material/stepper';
@@ -37,9 +37,10 @@ export class RegisterComponent implements OnInit {
 
     this.generalInfoForm = new FormGroup({
       name: new FormControl(),
-      email: new FormControl(),
+      email: new FormControl('', Validators.email),
       year: new FormControl(),
       group: new FormControl(),
+      groupName: new FormControl(),
     });
 
     this.experienceForm = new FormGroup({

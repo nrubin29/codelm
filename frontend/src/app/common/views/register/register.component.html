@@ -39,10 +39,19 @@
             <mat-form-field>
               <mat-label>School</mat-label>
               <mat-select formControlName="group" required>
+                <mat-option value="-1">My school isn't listed</mat-option>
                 <mat-option *ngFor="let group of groups" [value]="group._id">
                   {{ group.name }}
                 </mat-option>
               </mat-select>
+            </mat-form-field>
+            <p>
+              If your school isn't listed in the dropdown, please enter it here:
+            </p>
+            <br />
+            <mat-form-field>
+              <mat-label>School</mat-label>
+              <input matInput formControlName="groupName" />
             </mat-form-field>
             <div>
               <button mat-button matStepperPrevious>Back</button>
@@ -71,8 +80,8 @@
                 taking AP Computer Science A.
               </mat-list-item>
               <mat-list-item role="listitem">
-                The Expert division is meant for students who have already
-                taken AP Computer Science A.
+                The Expert division is meant for students who have already taken
+                AP Computer Science A.
               </mat-list-item>
             </mat-list>
             <mat-form-field>
