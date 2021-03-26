@@ -8,7 +8,8 @@
 }
 
 img {
-  width: 30vw;
+  width: 450px;
+  max-width: 80vw;
   margin-bottom: 1em;
 }
 
@@ -31,4 +32,8 @@ p.right {
   & a {
     color: black;
   }
+}
+
+app-card {
+  text-align: center;
 }
