@@ -159,19 +159,10 @@ export class PersonDao {
     }
 
     if (!person._id) {
-      try {
-        // For some reason, the object returned by Person.create() has a null
-        // _id, so I have to query it again.
-        await Person.create(person);
-        return (await Person.findOne({ username: person.username })).toObject();
-      } catch (err) {
-        if (err.code !== undefined && err.code === 11000) {
-          // It's a MongoError for non-unique username.
-          throw Error('This email address or username is already registered.');
-        } else {
-          throw err;
-        }
-      }
+      // For some reason, the object returned by Person.create() has a null
+      // _id, so I have to query it again.
+      await Person.create(person);
+      return (await Person.findOne({ username: person.username })).toObject();
     } else {
       return (
         await Person.findByIdAndUpdate(person._id, person, { new: true })

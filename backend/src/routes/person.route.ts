@@ -5,6 +5,8 @@ import { DivisionDao } from '../daos/division.dao';
 import { TeamDao } from '../daos/team.dao';
 import { DivisionType } from '@codelm/common/src/models/division.model';
 import { sendEmail } from '../email';
+import { isUniquenessError } from '../daos/dao';
+import { PersonModel } from '../../../common/src/models/person.model';
 
 const router = Router();
 
@@ -21,40 +23,47 @@ router.get(
 );
 
 router.put('/', async (req: Request, res: Response) => {
+  let person: PersonModel;
+
+  try {
+    person = await PersonDao.addOrUpdatePerson(req.body);
+  } catch (err) {
+    // TODO: Standardize, type, and properly handle errors.
+    if (isUniquenessError(err)) {
+      res
+        .status(403)
+        .send('This email address and/or username is already registered.');
+      return;
+    } else {
+      throw err;
+    }
+  }
+
+  // Create a practice team and a competition team for the new person.
   // TODO: If the person is being updated, we don't want to create new teams
   //  and stuff.
-  try {
-    const person = await PersonDao.addOrUpdatePerson(req.body);
+  const divisions = await DivisionDao.getDivisionsByExperience(
+    person.experience
+  );
 
-    // Create a practice team and a competition team for the new person.
-    const divisions = await DivisionDao.getDivisionsByExperience(
-      person.experience
-    );
+  await Promise.all([
+    TeamDao.addOrUpdateTeam({
+      members: [person],
+      division: divisions.find(
+        division => division.type === DivisionType.Practice
+      ),
+    }),
+    TeamDao.addOrUpdateTeam({
+      members: [person],
+      division: divisions.find(
+        division => division.type === DivisionType.Competition
+      ),
+    }),
+  ]);
 
-    await Promise.all([
-      TeamDao.addOrUpdateTeam({
-        members: [person],
-        division: divisions.find(
-          division => division.type === DivisionType.Practice
-        ),
-      }),
-      TeamDao.addOrUpdateTeam({
-        members: [person],
-        division: divisions.find(
-          division => division.type === DivisionType.Competition
-        ),
-      }),
-    ]);
+  await sendEmail([person], 'registered');
 
-    await sendEmail([person], 'registered');
-
-    res.json(sanitizePerson(person));
-  } catch {
-    // TODO: Standardize, type, and properly handle errors.
-    res
-      .status(403)
-      .send('This email address and/or username is already registered.');
-  }
+  res.json(sanitizePerson(person));
 });
 
 router.delete(
