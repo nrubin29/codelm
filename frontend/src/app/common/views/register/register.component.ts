@@ -94,7 +94,7 @@ export class RegisterComponent implements OnInit {
         this.stepper.next();
       })
       .catch((errorResponse: HttpErrorResponse) => {
-        DialogComponent.showError(this.dialog, errorResponse);
+        DialogComponent.showError(this.dialog, errorResponse.error);
       });
   }
 
