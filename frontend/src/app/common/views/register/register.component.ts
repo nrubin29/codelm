@@ -34,6 +34,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.groups = this.activatedRoute.snapshot.data.groups;
+    this.groups.sort((a, b) => a.name.localeCompare(b.name));
 
     this.generalInfoForm = new FormGroup({
       name: new FormControl(),
