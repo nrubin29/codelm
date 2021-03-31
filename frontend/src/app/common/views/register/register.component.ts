@@ -42,6 +42,7 @@ export class RegisterComponent implements OnInit {
       year: new FormControl(),
       group: new FormControl(),
       groupName: new FormControl(),
+      teacherEmail: new FormControl('', Validators.email),
     });
 
     this.experienceForm = new FormGroup({

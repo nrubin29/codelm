@@ -21,6 +21,7 @@ const PersonSchema = new mongoose.Schema({
   year: String,
   experience: String,
   group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group' },
+  teacherEmail: String,
   photoRelease: { type: Boolean, default: false },
   addressRelease: { type: Boolean, default: false },
   addressLine1: { type: String, required: false },

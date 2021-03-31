@@ -20,6 +20,7 @@ export interface PersonModel extends UserModel {
   year: PersonYear;
   experience: PersonExperience;
   group: GroupModel;
+  teacherEmail: string;
   photoRelease: boolean;
   addressRelease: boolean;
   addressLine1?: string;
