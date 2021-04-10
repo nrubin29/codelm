@@ -22,6 +22,7 @@ import { CodeMirrorComponent } from '../../../common/components/code-mirror/code
 import { debounceTime } from 'rxjs/operators';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { BehaviorSubject } from 'rxjs';
+import { Language } from '@codelm/common/src/language';
 
 @Component({
   selector: 'app-problem',
@@ -40,7 +41,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     CodeMirrorComponent
   >;
   codeEntryMode: string;
-  language: string;
+  language: Language;
   documentationUrl: string;
   fileExtension: string;
 
@@ -77,15 +78,15 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
         this.team
       );
       this.problemPoints = ProblemUtil.getPoints(this.problem, this.team);
-      this.documentationUrl = this.codeSaverService.getLanguage().documentationUrl;
-      this.fileExtension = this.codeSaverService.getLanguage().extension;
+      this.documentationUrl = this.codeSaverService.language.documentationUrl;
+      this.fileExtension = this.codeSaverService.language.extension;
 
       if (this.codeMirrors !== undefined) {
         this.ngAfterViewInit();
       }
     });
 
-    this.language = this.codeSaverService.getLanguage().name;
+    this.language = this.codeSaverService.language;
     this.codeEntryMode = this.codeSaverService.getCodeEntryMode();
   }
 
@@ -102,7 +103,10 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private subscribeTo(codeMirror: CodeMirrorComponent) {
-    const code = this.codeSaverService.get(this.problem._id, codeMirror.mode);
+    const code = this.codeSaverService.get(
+      this.problem._id,
+      codeMirror.language.name
+    );
     codeMirror.writeValue(code);
     this.code.next(code);
 
@@ -132,8 +136,8 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onLanguageChange(event: MatButtonToggleChange) {
     this.codeSaverService.setLanguage(event.value);
-    this.documentationUrl = this.codeSaverService.getLanguage().documentationUrl;
-    this.fileExtension = this.codeSaverService.getLanguage().extension;
+    this.documentationUrl = this.codeSaverService.language.documentationUrl;
+    this.fileExtension = this.codeSaverService.language.extension;
     this.saveCode();
   }
 
@@ -141,7 +145,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.codeEntryMode === 'editor') {
       this.codeSaverService.save(
         this.problem._id,
-        this.codeMirrors.first.mode,
+        this.codeMirrors.first.language.name,
         this.codeMirrors.first.value
       );
     }
@@ -152,7 +156,7 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.problemService.problemSubmission = {
       problemId: this.problem._id,
-      language: this.language,
+      language: this.language.name,
       code: this.code.value,
       test: test,
     };

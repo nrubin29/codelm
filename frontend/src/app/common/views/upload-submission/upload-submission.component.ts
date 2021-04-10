@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import { ProblemService } from '../../../services/problem.service';
 import { MatRadioButton } from '@angular/material/radio';
 import { rubric } from './rubric';
-import { LANGUAGES } from '@codelm/common/src/language';
+import { Language, LANGUAGES } from '@codelm/common/src/language';
 import { DialogComponent } from '../../components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -27,7 +27,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class UploadSubmissionComponent implements OnInit, AfterViewInit {
   @Input() submission: UploadSubmissionModel;
-  mode: string;
+  language: Language;
   rubric = rubric;
 
   @ViewChild(CodeMirrorComponent, { static: true })
@@ -44,7 +44,7 @@ export class UploadSubmissionComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.mode = LANGUAGES[this.submission.language].codeMirrorMode;
+    this.language = LANGUAGES[this.submission.language];
     this.codeMirror.writeValue(this.submission.code);
   }
 

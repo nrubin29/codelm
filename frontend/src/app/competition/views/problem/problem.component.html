@@ -115,11 +115,12 @@
     >
     </app-file-drop>
     <ng-template #codeMirror>
-      <app-code-mirror mode="text/x-python" *ngIf="language === 'python'">
+      <!-- TODO: Clean this up hopefully. -->
+      <app-code-mirror [language]="language" *ngIf="language.name === 'python'">
       </app-code-mirror>
-      <app-code-mirror mode="text/x-java" *ngIf="language === 'java'">
+      <app-code-mirror [language]="language" *ngIf="language.name === 'java'">
       </app-code-mirror>
-      <app-code-mirror mode="text/x-c++src" *ngIf="language === 'cpp'">
+      <app-code-mirror [language]="language" *ngIf="language.name === 'cpp'">
       </app-code-mirror>
     </ng-template>
   </div>

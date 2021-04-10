@@ -5,7 +5,7 @@ import { SubmissionService } from '../../../services/submission.service';
 import { SubmissionComponent } from '../submission/submission.component';
 import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
 import { TeamUtil } from '@codelm/common/src/utils/team.util';
-import { LANGUAGES } from '@codelm/common/src/language';
+import { Language, LANGUAGES } from '@codelm/common/src/language';
 import { DialogComponent } from '../../components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class GradedSubmissionComponent implements OnInit {
   @Input() submission: GradedSubmissionModel;
 
-  mode: string;
+  language: Language;
   @ViewChild(CodeMirrorComponent, { static: true })
   codeMirror: CodeMirrorComponent;
 
@@ -30,7 +30,7 @@ export class GradedSubmissionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.mode = LANGUAGES[this.submission.language].codeMirrorMode;
+    this.language = LANGUAGES[this.submission.language];
     this.codeMirror.writeValue(this.submission.code);
   }
 

@@ -1,5 +1,6 @@
 import { ProblemType, TestCaseModel } from './models/problem.model';
 import { GameType } from './models/game.model';
+import { LanguageName } from './language';
 
 export interface ClientReplayRequest {
   _id: string;
@@ -7,7 +8,7 @@ export interface ClientReplayRequest {
 
 export interface ClientProblemSubmission {
   problemId: string;
-  language: string;
+  language: LanguageName;
   code: string;
   test: boolean;
 }

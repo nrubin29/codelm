@@ -37,7 +37,6 @@
             ],
             "styles": [
               "src/material.scss",
-              "node_modules/codemirror/lib/codemirror.css",
               "node_modules/spinkit/spinkit.min.css",
               "src/styles.scss"
             ]
@@ -98,7 +97,6 @@
             "karmaConfig": "src/karma.conf.js",
             "styles": [
               "src/material.scss",
-              "node_modules/codemirror/lib/codemirror.css",
               "node_modules/spinkit/spinkit.min.css",
               "src/styles.scss"
             ],
