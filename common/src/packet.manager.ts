@@ -80,6 +80,7 @@ interface WebSocketLike {
   onclose: ((ev: any) => any) | null;
   onmessage: ((ev: any) => any) | null;
   onopen: ((ev: any) => any) | null;
+  onerror: ((ev: any) => any) | null;
   readyState: number;
   send(message: string);
 }
@@ -120,6 +121,10 @@ export abstract class SocketPacketManager<
 
       this.socket.onmessage = data => {
         this.onData(data.data as string);
+      };
+
+      this.socket.onerror = error => {
+        console.error(error);
       };
 
       this.socket.onopen = () => {

@@ -130,8 +130,8 @@ export class SocketManager {
   protected constructor(app: Express) {
     this.sockets = [];
 
+    // Ping each connected socket every 15 seconds to keep them open.
     setInterval(() => {
-      // This is apparently necessary to stop the random disconnecting.
       this.sockets = this.sockets.filter(socket => socket.ping());
     }, 15 * 1000);
 
@@ -140,7 +140,7 @@ export class SocketManager {
 
       webSocket.onmessage = data => {
         const packet = JSON.parse(data.data as string);
-        webSocket.listeners(packet.name).map(listener => listener(packet));
+        webSocket.listeners(packet.name).forEach(listener => listener(packet));
       };
 
       webSocket.on('connect', packet => {
@@ -159,21 +159,16 @@ export class SocketManager {
         this.onReplayPacket(packet as ReplayPacket, socket);
       });
 
-      webSocket.onclose = event => {
-        if (!event.wasClean) {
-          console.error(
-            'Socket closed not clean',
-            socket._id,
-            event.code,
-            event.reason
-          );
-        }
-
+      webSocket.onclose = () => {
         if (socket) {
           this.sockets = this.sockets.filter(
             _socket => _socket._id !== socket._id
           );
         }
+      };
+
+      webSocket.onerror = event => {
+        console.error(event.type, event.message, event.error);
       };
     });
   }
@@ -192,6 +187,7 @@ export class SocketManager {
           reject(err);
         } else {
           const socket = new Socket(webSocket, decoded as Jwt);
+          this.sockets.push(socket);
           socket.send({ name: 'connectResponse', success: true });
           resolve(socket);
         }
