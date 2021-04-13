@@ -13,7 +13,10 @@ import { DivisionModel } from '@codelm/common/src/models/division.model';
 import { DivisionService } from './division.service';
 import { Column, GroupedEntityService } from './entity.service';
 import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
-import { VariableType } from '@codelm/common/src/codegen/models';
+import {
+  VariableDimension,
+  VariableType,
+} from '@codelm/common/src/codegen/models';
 
 @Injectable({
   providedIn: 'root',
@@ -108,12 +111,22 @@ export class ProblemService extends GroupedEntityService<
                 type => VariableType[type]
               ),
             },
+            {
+              name: 'dimension',
+              type: 'select',
+              options: Object.values(VariableDimension),
+            },
           ],
         },
         {
           name: 'returnType',
           type: 'select',
           options: Object.keys(VariableType).map(type => VariableType[type]),
+        },
+        {
+          name: 'returnDimension',
+          type: 'select',
+          options: Object.values(VariableDimension),
         },
         {
           name: 'testCases',

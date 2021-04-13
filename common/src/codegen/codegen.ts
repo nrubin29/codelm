@@ -5,27 +5,22 @@ import { CodegenUtils } from './utils';
 export abstract class CodeGenerator {
   protected constructor(
     protected problem: GradedProblemModel,
-    private mainIndentation: number,
-    private fileTemplate: string,
-    private declarationTemplate: string
+    protected mainIndentation: number,
+    private fileTemplate: string
   ) {}
 
   generate(): string {
     return this.fileTemplate
       .replace(/%prob_name%/g, this.getProblemName())
-      .replace(/%fn_ret%/g, this.getFunctionReturn())
+      .replace(/%fn_ret%/g, this.getVariableType(this.problemVariable))
       .replace(/%fn_name%/g, this.getFunctionName())
       .replace(/%fn_params%/g, this.getFunctionParams())
       .replace(/%fn_args%/g, this.getFunctionArgs())
+      .replace(/%print%/g, this.getPrint())
       .replace(
         /%declarations%/g,
         this.problem.variables
-          .map(variable =>
-            this.declarationTemplate
-              .replace(/%var_type%/g, this.getVariableType(variable))
-              .replace(/%var_name%/g, this.getVariableName(variable))
-              .replace(/%var_assign%/g, this.getVariableAssignment(variable))
-          )
+          .map(variable => this.getVariableDeclaration(variable))
           .join('\n' + ' '.repeat(this.mainIndentation))
       );
   }
@@ -34,11 +29,12 @@ export abstract class CodeGenerator {
     return CodegenUtils.toPascalCase(this.problem.title);
   }
 
-  getFunctionReturn(): string {
-    return this.getVariableType({
+  get problemVariable(): Variable {
+    return {
       type: this.problem.returnType,
-      name: undefined,
-    });
+      name: this.getProblemName(),
+      dimension: this.problem.returnDimension,
+    };
   }
 
   abstract getFunctionName(): string;
@@ -47,4 +43,6 @@ export abstract class CodeGenerator {
   abstract getVariableType(variable: Variable): string;
   abstract getVariableName(variable: Variable): string;
   abstract getVariableAssignment(variable: Variable): string;
+  abstract getVariableDeclaration(variable: Variable): string;
+  abstract getPrint(): string;
 }

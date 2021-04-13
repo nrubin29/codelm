@@ -1,5 +1,5 @@
 import { CodeGenerator } from './codegen';
-import { Variable, VariableType } from './models';
+import { Variable, VariableDimension, VariableType } from './models';
 import { GradedProblemModel } from '../models/problem.model';
 import { CodegenUtils } from './utils';
 
@@ -7,21 +7,20 @@ const FILE_TEMPLATE = `#include <iostream>
 
 using namespace std;
 
-%fn_ret% %fn_name%(%fn_params%) {
-  // Your code here
-}
-
 int main() {
   %declarations%
+  
+  // BEGIN: your code
+  // Name the variable that contains the answer \`result\`.
+  
+  // END: your code
 
-  cout << %fn_name%(%fn_args%);
+  %print%
 }`;
-
-const DECLARATION_TEMPLATE = `%var_type% %var_name%;\n  %var_assign%`;
 
 export class CppCodeGenerator extends CodeGenerator {
   constructor(problem: GradedProblemModel) {
-    super(problem, 2, FILE_TEMPLATE, DECLARATION_TEMPLATE);
+    super(problem, 2, FILE_TEMPLATE);
   }
 
   getFunctionName(): string {
@@ -45,16 +44,30 @@ export class CppCodeGenerator extends CodeGenerator {
   }
 
   getVariableType(variable: Variable): string {
+    let type;
+
     switch (variable.type) {
       case VariableType.STRING:
-        return 'string';
+        type = 'string';
+        break;
       case VariableType.INTEGER:
-        return 'int';
+        type = 'int';
+        break;
       case VariableType.FLOAT:
-        return 'double';
+        type = 'double';
+        break;
       case VariableType.BOOLEAN:
-        return 'bool';
+        type = 'bool';
+        break;
     }
+
+    if (variable.dimension === VariableDimension.ONE) {
+      type += '[]';
+    } else if (variable.dimension === VariableDimension.TWO) {
+      type += '[][]';
+    }
+
+    return type;
   }
 
   getVariableName(variable: Variable): string {
@@ -63,5 +76,68 @@ export class CppCodeGenerator extends CodeGenerator {
 
   getVariableAssignment(variable: Variable): string {
     return `cin >> ${this.getVariableName(variable)};`;
+  }
+
+  getVariableDeclaration(variable: Variable): string {
+    const variableName = this.getVariableName(variable);
+    const variableType = this.getVariableType(variable);
+    const scalarVariableType = this.getVariableType({
+      ...variable,
+      dimension: VariableDimension.SCALAR,
+    });
+
+    if (variable.dimension === VariableDimension.SCALAR) {
+      return `${variableType} ${variableName};\n  ${this.getVariableAssignment(
+        variable
+      )}`;
+    } else if (variable.dimension === VariableDimension.ONE) {
+      const counterName = `${variableName}Length`;
+      return [
+        `int ${counterName};`,
+        `cin >> ${counterName};`,
+        `${scalarVariableType} ${variableName}[${counterName}];`,
+        `for (int i = 0; i < ${counterName}; i++) {`,
+        `  cin >> ${variableName}[i];`,
+        `}`,
+      ].join('\n' + ' '.repeat(this.mainIndentation));
+    } else {
+      const rowName = `${variableName}Row`;
+      const colName = `${variableName}Col`;
+      return [
+        `int ${rowName};`,
+        `cin >> ${rowName};`,
+        `int ${colName};`,
+        `cin >> ${colName};`,
+        `${scalarVariableType} ${variableName}[${rowName}][${colName}];`,
+        `for (int i = 0; i < ${rowName}; i++) {`,
+        `  for (int j = 0; j < ${colName}; j++) {`,
+        `    cin >> ${variableName}[i][j];`,
+        `  }`,
+        `}`,
+      ].join('\n' + ' '.repeat(this.mainIndentation));
+    }
+  }
+
+  getPrint(): string {
+    if (this.problemVariable.dimension === VariableDimension.SCALAR) {
+      return 'cout << result;';
+    } else if (this.problemVariable.dimension === VariableDimension.ONE) {
+      return [
+        'int resultLength = sizeof(result) / sizeof(result[0]);',
+        'for (int i = 0; i < resultLength; i++) {',
+        '  cout << result[i] << endl;',
+        '}',
+      ].join('\n' + ' '.repeat(this.mainIndentation));
+    } else {
+      return [
+        'int resultLength = sizeof(result) / sizeof(result[0]);',
+        'for (int i = 0; i < resultLength; i++) {',
+        '  int resultLengthInner = sizeof(result[i]) / sizeof(result[i][0]);',
+        '  for (int j = 0; j < resultLengthInner; j++) {',
+        '    cout << result[i][j] << endl;',
+        '  }',
+        '}',
+      ].join('\n' + ' '.repeat(this.mainIndentation));
+    }
   }
 }
