@@ -1,53 +1,70 @@
 import { CodeGenerator } from './codegen';
-import { Variable, VariableType } from './models';
+import { VariableType } from './models';
 import { GradedProblemModel } from '../models/problem.model';
 import { CodegenUtils } from './utils';
-
-const FILE_TEMPLATE = `import java.util.Scanner;
-
-class %prob_name% {
-  static %fn_ret% %fn_name%(%fn_params%) {
-    // Your code here
-  }
-
-  public static void main(String[] args) {
-    Scanner s = new Scanner(System.in);
-
-    %declarations%
-
-    System.out.println(%fn_name%(%fn_args%));
-  }
-}`;
-
-const DECLARATION_TEMPLATE = `%var_type% %var_name% = %var_assign%`;
+import {
+  FileNode,
+  PreambleNode,
+  FunctionDeclarationNode,
+  CommentNode,
+  MainNode,
+  VariableDeclarationNode,
+  RootNode,
+  VariableAssignmentNode,
+  VariableInitializerNode,
+  VariableNameNode,
+  VariableTypeNode,
+} from './tree';
 
 export class JavaCodeGenerator extends CodeGenerator {
-  constructor(problem: GradedProblemModel) {
-    super(problem, 4, FILE_TEMPLATE, DECLARATION_TEMPLATE);
+  visitRootNode(node: RootNode): string {
+    return node.children.map(child => this.visit(child)).join('\n');
   }
 
-  getFunctionName(): string {
-    return CodegenUtils.toCamelCase(this.problem.title);
+  visitFileNode(node: FileNode): string {
+    return `class ${node.className} {\n${node.children
+      .map(child => this.visit(child))
+      .join('\n')}\n}`;
   }
 
-  getFunctionParams(): string {
-    return this.problem.variables
-      .map(variable =>
-        [this.getVariableType(variable), this.getVariableName(variable)].join(
-          ' '
-        )
-      )
-      .join(', ');
+  visitPreambleNode(preambleNode: PreambleNode): string {
+    return 'import java.util.Scanner;';
   }
 
-  getFunctionArgs(): string {
-    return this.problem.variables
-      .map(variable => this.getVariableName(variable))
-      .join(', ');
+  visitFunctionDeclarationNode(node: FunctionDeclarationNode): string {
+    return `static ${this.visit(
+      node.variableTypeNode
+    )} ${this.visitVariableNameNode(
+      node.variableNameNode
+    )}(${node.paramNodes
+      .map(paramNode => this.visit(paramNode))
+      .join(', ')}) { ${node.children.map(child => this.visit(child))} }`;
   }
 
-  getVariableType(variable: Variable): string {
-    switch (variable.type) {
+  visitCommentNode(node: CommentNode): string {
+    return `// ${node.comment}`;
+  }
+
+  visitMainNode(mainNode: MainNode): string {
+    return `public static void main(String[] args) { ${mainNode.children
+      .map(child => this.visit(child))
+      .join('\n')} }`;
+  }
+
+  visitVariableDeclarationNode(node: VariableDeclarationNode): string {
+    return `${this.visit(node.variableTypeNode)} ${this.visit(
+      node.variableNameNode
+    )};`;
+  }
+
+  visitVariableAssignmentNode(node: VariableAssignmentNode): string {
+    return `${this.visit(node.variableTypeNode)} ${this.visit(
+      node.variableNameNode
+    )} = ${this.visit(node.variableInitializerNode)};`;
+  }
+
+  visitVariableTypeNode(node: VariableTypeNode): string {
+    switch (node.variableType) {
       case VariableType.STRING:
         return 'String';
       case VariableType.INTEGER:
@@ -59,12 +76,12 @@ export class JavaCodeGenerator extends CodeGenerator {
     }
   }
 
-  getVariableName(variable: Variable): string {
-    return CodegenUtils.toCamelCase(variable.name);
+  visitVariableNameNode(node: VariableNameNode): string {
+    return CodegenUtils.toCamelCase(node.variableName);
   }
 
-  getVariableAssignment(variable: Variable): string {
-    switch (variable.type) {
+  visitVariableInitializerNode(node: VariableInitializerNode): string {
+    switch (node.variableType) {
       case VariableType.STRING:
         return 's.nextLine();';
       case VariableType.INTEGER:
@@ -74,5 +91,9 @@ export class JavaCodeGenerator extends CodeGenerator {
       case VariableType.BOOLEAN:
         return 'Boolean.parseBoolean(s.nextLine());';
     }
+  }
+
+  constructor(problem: GradedProblemModel) {
+    super(problem);
   }
 }

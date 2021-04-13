@@ -17,6 +17,7 @@ const ProblemDivisionSchema = new mongoose.Schema({
 const VariableSchema = new mongoose.Schema({
   name: String,
   type: String,
+  dimension: String,
 });
 
 const TestCaseSchema = new mongoose.Schema({
@@ -37,6 +38,7 @@ const Problem = mongoose.model<ProblemType>(
     divisions: [ProblemDivisionSchema],
     variables: [VariableSchema],
     returnType: String,
+    returnDimension: String,
     testCases: [TestCaseSchema],
   })
 );
