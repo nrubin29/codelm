@@ -25,6 +25,7 @@ const TestCaseSchema = new mongoose.Schema({
   input: String,
   output: String,
   explanation: { type: String, default: undefined },
+  inputDisplay: { type: String, required: false },
 });
 
 const Problem = mongoose.model<ProblemType>(

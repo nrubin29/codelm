@@ -133,6 +133,7 @@ export class ProblemService extends GroupedEntityService<
           type: 'table',
           columns: [
             { name: 'input', type: 'multiline' },
+            { name: 'inputDisplay', type: 'multiline', optional: true },
             { name: 'output', type: 'multiline' },
             { name: 'explanation', type: 'multiline', optional: true },
             { name: 'hidden', type: 'boolean', optional: true },
