@@ -22,15 +22,15 @@
       <mat-table #table [dataSource]="submission.testCases">
         <ng-container matColumnDef="input">
           <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
-          <mat-cell *matCellDef="let element"
-            ><code>{{ element.input }}</code></mat-cell
-          >
+          <mat-cell *matCellDef="let element">
+            <code>{{ element.inputDisplay || element.input }}</code>
+          </mat-cell>
         </ng-container>
         <ng-container matColumnDef="correctOutput">
           <mat-header-cell *matHeaderCellDef>Correct Output</mat-header-cell>
-          <mat-cell *matCellDef="let element"
-            ><code>{{ element.correctOutput }}</code></mat-cell
-          >
+          <mat-cell *matCellDef="let element">
+            <code>{{ element.correctOutput }}</code>
+          </mat-cell>
         </ng-container>
         <ng-container matColumnDef="yourOutput">
           <mat-header-cell *matHeaderCellDef>Your Output</mat-header-cell>

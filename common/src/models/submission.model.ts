@@ -11,10 +11,16 @@ export interface TestCaseSubmissionModel {
   hidden: boolean;
   input: string;
   output: string;
-  correctOutput: string; // TODO: Don't store this here, get the value from the corresponding TestCaseModel.
+  correctOutput: string;
+  inputDisplay?: string;
   error?: string;
   correct?: boolean;
 }
+
+// TODO: correctOutput and inputDisplay shouldn't be stored here; they should be
+//  populated from the corresponding TestCaseModel. However, because
+//  TestCaseModels aren't stored in their own collection, Mongoose's populate()
+//  won't work here.
 
 export interface DisputeModel {
   open: boolean;

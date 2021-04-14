@@ -288,6 +288,7 @@ export class SocketManager {
           input: testCase.input,
           output: '',
           correctOutput: testCase.output,
+          inputDisplay: testCase.inputDisplay,
         };
 
         if (e.name === 'dockerKilled') {

@@ -30,6 +30,7 @@ const TestCaseSubmissionSchema = new mongoose.Schema(
     correctOutput: String,
     output: String,
     error: { type: String, default: undefined },
+    inputDisplay: { type: String, required: false },
   },
   {
     toJSON: { virtuals: true },
@@ -195,6 +196,7 @@ export class SubmissionDao {
         { path: 'members', model: 'Person' },
       ],
     },
+    { path: 'testCases.testCase', model: 'TestCase' },
   ];
 
   static getSubmissionRaw(id: string): Promise<SubmissionType | null> {

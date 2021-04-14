@@ -184,6 +184,7 @@ export class CodeRunner extends StdioPacketManager {
       input: testCase.input,
       output,
       correctOutput: testCase.output,
+      inputDisplay: testCase.inputDisplay,
       error: error || undefined, // If there's no error, error='', so we don't want it in our TestCaseSubmissionModel.
     };
   }
