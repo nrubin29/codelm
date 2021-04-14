@@ -39,17 +39,15 @@
           <mat-table #table [dataSource]="problem.testCases">
             <ng-container matColumnDef="input">
               <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
-              <mat-cell *matCellDef="let element"
-                ><code>{{
-                  element.inputDisplay || element.input
-                }}</code></mat-cell
-              >
+              <mat-cell *matCellDef="let element">
+                <code>{{ element.inputDisplay || element.input }}</code>
+              </mat-cell>
             </ng-container>
             <ng-container matColumnDef="output">
               <mat-header-cell *matHeaderCellDef>Output</mat-header-cell>
-              <mat-cell *matCellDef="let element"
-                ><code>{{ element.output }}</code></mat-cell
-              >
+              <mat-cell *matCellDef="let element">
+                <code>{{ element.outputDisplay || element.output }}</code>
+              </mat-cell>
             </ng-container>
             <ng-container matColumnDef="explanation">
               <mat-header-cell *matHeaderCellDef>Explanation</mat-header-cell>

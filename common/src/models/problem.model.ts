@@ -15,6 +15,7 @@ export interface TestCaseModel {
   output: string;
   explanation?: string;
   inputDisplay?: string;
+  outputDisplay?: string;
 }
 
 export enum ProblemType {

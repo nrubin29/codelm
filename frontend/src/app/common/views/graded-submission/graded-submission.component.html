@@ -29,7 +29,7 @@
         <ng-container matColumnDef="correctOutput">
           <mat-header-cell *matHeaderCellDef>Correct Output</mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <code>{{ element.correctOutput }}</code>
+            <code>{{ element.outputDisplay || element.correctOutput }}</code>
           </mat-cell>
         </ng-container>
         <ng-container matColumnDef="yourOutput">

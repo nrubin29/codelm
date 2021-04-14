@@ -135,6 +135,7 @@ export class ProblemService extends GroupedEntityService<
             { name: 'input', type: 'multiline' },
             { name: 'inputDisplay', type: 'multiline', optional: true },
             { name: 'output', type: 'multiline' },
+            { name: 'outputDisplay', type: 'multiline', optional: true },
             { name: 'explanation', type: 'multiline', optional: true },
             { name: 'hidden', type: 'boolean', optional: true },
           ],
