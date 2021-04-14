@@ -59,6 +59,9 @@ export class CppCodeGenerator extends CodeGenerator {
       case VariableType.BOOLEAN:
         type = 'bool';
         break;
+      case VariableType.CHARACTER:
+        type = 'char';
+        break;
     }
 
     if (variable.dimension === VariableDimension.ONE) {

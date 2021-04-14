@@ -3,6 +3,7 @@ export enum VariableType {
   INTEGER = 'Integer',
   FLOAT = 'Float',
   BOOLEAN = 'Boolean',
+  CHARACTER = 'Character',
 }
 
 export enum VariableDimension {

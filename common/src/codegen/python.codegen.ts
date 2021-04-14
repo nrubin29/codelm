@@ -35,6 +35,7 @@ export class PythonCodeGenerator extends CodeGenerator {
   getVariableType(variable: Variable): string {
     switch (variable.type) {
       case VariableType.STRING:
+      case VariableType.CHARACTER:
         return 'str';
       case VariableType.INTEGER:
         return 'int';
@@ -52,6 +53,7 @@ export class PythonCodeGenerator extends CodeGenerator {
   getVariableAssignment(variable: Variable): string {
     switch (variable.type) {
       case VariableType.STRING:
+      case VariableType.CHARACTER:
         return 'input()';
       case VariableType.INTEGER:
         return 'int(input())';

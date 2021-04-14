@@ -54,7 +54,8 @@ export function isTestCaseSubmissionCorrect(
   }
 
   switch (problem.returnType) {
-    case VariableType.STRING: {
+    case VariableType.STRING:
+    case VariableType.CHARACTER: {
       return testCase.output === testCase.correctOutput;
     }
     case VariableType.FLOAT:

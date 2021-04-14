@@ -61,6 +61,9 @@ export class JavaCodeGenerator extends CodeGenerator {
       case VariableType.BOOLEAN:
         type = 'boolean';
         break;
+      case VariableType.CHARACTER:
+        type = 'char';
+        break;
     }
 
     if (variable.dimension === VariableDimension.ONE) {
@@ -86,6 +89,8 @@ export class JavaCodeGenerator extends CodeGenerator {
         return 'Double.parseDouble(s.nextLine());';
       case VariableType.BOOLEAN:
         return 'Boolean.parseBoolean(s.nextLine());';
+      case VariableType.CHARACTER:
+        return 's.nextLine().charAt(0);';
     }
   }
 
