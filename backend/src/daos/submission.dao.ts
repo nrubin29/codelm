@@ -19,7 +19,10 @@ import { ProblemUtil } from '@codelm/common/src/utils/problem.util';
 import { TeamDao } from './team.dao';
 import { ProblemDao } from './problem.dao';
 import { SubmissionUtil } from '@codelm/common/src/utils/submission.util';
-import { VariableType } from '@codelm/common/src/codegen/models';
+import {
+  VariableDimension,
+  VariableType,
+} from '@codelm/common/src/codegen/models';
 
 type SubmissionType = SubmissionModel & mongoose.Document;
 
@@ -47,6 +50,34 @@ export function isFalse(str: string): boolean {
   return str === 'false' || str === 'False' || str === '0';
 }
 
+function isOutputCorrect(
+  output: string,
+  correctOutput: string,
+  type: VariableType
+) {
+  switch (type) {
+    case VariableType.STRING:
+    case VariableType.CHARACTER: {
+      return output === correctOutput;
+    }
+    case VariableType.FLOAT:
+    case VariableType.INTEGER: {
+      return (
+        parseFloat(output).toFixed(5) === parseFloat(correctOutput).toFixed(5)
+      );
+    }
+    case VariableType.BOOLEAN: {
+      return (
+        (isTrue(output) && isTrue(correctOutput)) ||
+        (isFalse(output) && isFalse(correctOutput))
+      );
+    }
+    default: {
+      throw new Error(`No support for type ${type}`);
+    }
+  }
+}
+
 export function isTestCaseSubmissionCorrect(
   testCase: TestCaseSubmissionModel,
   problem: GradedProblemModel
@@ -55,27 +86,64 @@ export function isTestCaseSubmissionCorrect(
     return false;
   }
 
-  switch (problem.returnType) {
-    case VariableType.STRING:
-    case VariableType.CHARACTER: {
-      return testCase.output === testCase.correctOutput;
+  if (problem.returnDimension === VariableDimension.SCALAR) {
+    return isOutputCorrect(
+      testCase.output,
+      testCase.correctOutput,
+      problem.returnType
+    );
+  } else if (problem.returnDimension === VariableDimension.ONE) {
+    const outputLines = testCase.output
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line);
+    const correctOutputLines = testCase.correctOutput
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line);
+
+    if (outputLines.length !== correctOutputLines.length) {
+      return false;
     }
-    case VariableType.FLOAT:
-    case VariableType.INTEGER: {
-      return (
-        parseFloat(testCase.output).toFixed(5) ===
-        parseFloat(testCase.correctOutput).toFixed(5)
+
+    return outputLines.every((line, i) =>
+      isOutputCorrect(line, correctOutputLines[i], problem.returnType)
+    );
+  } else {
+    const outputCells = testCase.output
+      .split('\n')
+      .map(row => row.trim())
+      .filter(row => row)
+      .map(row =>
+        row
+          .split(' ')
+          .map(cell => cell.trim())
+          .filter(cell => cell)
       );
-    }
-    case VariableType.BOOLEAN: {
-      return (
-        (isTrue(testCase.output) && isTrue(testCase.correctOutput)) ||
-        (isFalse(testCase.output) && isFalse(testCase.correctOutput))
+
+    const correctOutputCells = testCase.correctOutput
+      .split('\n')
+      .map(row => row.trim())
+      .filter(row => row)
+      .map(row =>
+        row
+          .split(' ')
+          .map(cell => cell.trim())
+          .filter(cell => cell)
       );
+
+    if (
+      outputCells.length !== correctOutputCells.length ||
+      outputCells.some((row, i) => row.length !== correctOutputCells[i].length)
+    ) {
+      return false;
     }
-    default: {
-      throw new Error(`No support for return type ${problem.returnType}`);
-    }
+
+    return outputCells.every((row, i) =>
+      row.every((cell, j) =>
+        isOutputCorrect(cell, correctOutputCells[i][j], problem.returnType)
+      )
+    );
   }
 }
 
