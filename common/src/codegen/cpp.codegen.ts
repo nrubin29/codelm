@@ -78,7 +78,24 @@ export class CppCodeGenerator extends CodeGenerator {
   }
 
   getVariableAssignment(variable: Variable): string {
+    if (variable.type === VariableType.STRING) {
+      return `getline(cin, ${this.getVariableName(variable)});`;
+    }
+
     return `cin >> ${this.getVariableName(variable)};`;
+  }
+
+  private getVariableAssignmentWithSuffix(
+    variable: Variable,
+    suffix: string
+  ): string {
+    if (variable.type === VariableType.STRING) {
+      return `cin >> ws; getline(cin, ${this.getVariableName(
+        variable
+      )}${suffix});`;
+    }
+
+    return `cin >> ${this.getVariableName(variable)}${suffix};`;
   }
 
   getVariableDeclaration(variable: Variable): string {
@@ -100,7 +117,7 @@ export class CppCodeGenerator extends CodeGenerator {
         `cin >> ${counterName};`,
         `${scalarVariableType} ${variableName}[${counterName}];`,
         `for (int i = 0; i < ${counterName}; i++) {`,
-        `  cin >> ${variableName}[i];`,
+        `  ${this.getVariableAssignmentWithSuffix(variable, '[i]')}`,
         `}`,
       ].join('\n' + ' '.repeat(this.mainIndentation));
     } else {
@@ -114,7 +131,7 @@ export class CppCodeGenerator extends CodeGenerator {
         `${scalarVariableType} ${variableName}[${rowName}][${colName}];`,
         `for (int i = 0; i < ${rowName}; i++) {`,
         `  for (int j = 0; j < ${colName}; j++) {`,
-        `    cin >> ${variableName}[i][j];`,
+        `    ${this.getVariableAssignmentWithSuffix(variable, '[i][j]')}`,
         `  }`,
         `}`,
       ].join('\n' + ' '.repeat(this.mainIndentation));
