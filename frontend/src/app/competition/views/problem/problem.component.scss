@@ -17,6 +17,29 @@ mat-chip-list {
   margin-left: 0.5em;
 }
 
+mat-table {
+  border: thin solid #e0e0e0;
+  margin-top: 1em;
+}
+
+mat-header-row,
+mat-row {
+  align-items: normal;
+}
+
+mat-cell {
+  padding: 0.5em;
+}
+
+mat-header-cell {
+  padding: 0 0.5em;
+}
+
+mat-cell:not(:last-child),
+mat-header-cell:not(:last-child) {
+  border-right: thin solid #e0e0e0;
+}
+
 app-code-mirror {
   flex: 1;
   overflow-y: scroll;

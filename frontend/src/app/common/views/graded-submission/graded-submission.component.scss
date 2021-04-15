@@ -1,3 +1,25 @@
 .fix-size {
   max-width: 50%;
 }
+
+mat-table {
+  margin-top: 1em !important;
+}
+
+mat-header-row,
+mat-row {
+  align-items: normal;
+}
+
+mat-cell {
+  padding: 0.5em;
+}
+
+mat-header-cell {
+  padding: 0 0.5em;
+}
+
+mat-cell:not(:last-child),
+mat-header-cell:not(:last-child) {
+  border-right: thin solid #e0e0e0;
+}
