@@ -5,7 +5,10 @@ import { ProblemService } from '../../../services/problem.service';
 import { LANGUAGES } from '@codelm/common/src/language';
 import * as JSZip from 'jszip';
 import { CodegenUtils } from '@codelm/common/src/codegen/utils';
-import { GradedProblemModel } from '@codelm/common/src/models/problem.model';
+import {
+  GradedProblemModel,
+  isGradedProblem,
+} from '@codelm/common/src/models/problem.model';
 
 @Component({
   selector: 'app-standings',
@@ -46,6 +49,18 @@ export class StandingsComponent implements OnInit {
           language.codegen(problem as GradedProblemModel).generate()
         );
       }
+    }
+
+    for (const problem of problems.filter(isGradedProblem)) {
+      zip.file(
+        `Sample Data/${CodegenUtils.toPascalCase(problem.title)}.txt`,
+        problem.testCases
+          .map(
+            testCase =>
+              `Input:\n${testCase.input}\n\nOutput:\n${testCase.output}`
+          )
+          .join('\n\n=====\n\n')
+      );
     }
 
     const zipData = await zip.generateAsync({ type: 'blob' });
