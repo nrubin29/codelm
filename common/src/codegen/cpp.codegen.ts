@@ -137,8 +137,9 @@ export class CppCodeGenerator extends CodeGenerator {
         'for (int i = 0; i < resultLength; i++) {',
         '  int resultLengthInner = sizeof(result[i]) / sizeof(result[i][0]);',
         '  for (int j = 0; j < resultLengthInner; j++) {',
-        '    cout << result[i][j] << endl;',
+        '    cout << result[i][j] << " ";',
         '  }',
+        '  cout << endl;',
         '}',
       ].join('\n' + ' '.repeat(this.mainIndentation));
     }

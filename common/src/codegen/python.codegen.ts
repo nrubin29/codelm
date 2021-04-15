@@ -100,7 +100,12 @@ export class PythonCodeGenerator extends CodeGenerator {
     } else if (this.problemVariable.dimension === VariableDimension.ONE) {
       return 'for x in function_call_result:\n    print(x)';
     } else {
-      return 'for x in function_call_result:\n    for y in x:\n      print(y)';
+      return [
+        `for x in function_call_result:`,
+        `  for y in x:`,
+        `    print(y, end=' ')`,
+        `  print()`,
+      ].join('\n' + ' '.repeat(this.mainIndentation));
     }
   }
 }

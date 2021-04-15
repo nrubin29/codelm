@@ -146,8 +146,10 @@ export class JavaCodeGenerator extends CodeGenerator {
       return [
         'for (int i = 0; i < functionCallResult.length; i++) {',
         '    for (int j = 0; j < functionCallResult[i].length; j++) {',
-        '        System.out.println(functionCallResult[i][j]);',
+        '        System.out.print(functionCallResult[i][j]);',
+        '        System.out.print(" ");',
         '    }',
+        '    System.out.println();',
         '}',
       ].join('\n' + ' '.repeat(this.mainIndentation));
     }
