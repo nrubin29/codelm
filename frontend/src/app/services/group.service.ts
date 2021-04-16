@@ -12,7 +12,10 @@ export class GroupService extends SingleEntityService<GroupModel> {
   constructor(private restService: RestService) {
     super({
       entityName: 'group',
-      columns: [{ name: 'name', isEditColumn: true }],
+      columns: [
+        { name: 'name', isEditColumn: true },
+        { name: 'special', display: 'boolean' },
+      ],
       attributes: [
         { name: '_id', readonly: true, optional: true },
         { name: 'name' },

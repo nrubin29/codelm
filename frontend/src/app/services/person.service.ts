@@ -24,7 +24,11 @@ export class PersonService extends GroupedEntityService<
   ) {
     super({
       entityName: 'person',
-      columns: [{ name: 'name', isEditColumn: true }, { name: 'email' }],
+      columns: [
+        { name: 'name', isEditColumn: true },
+        { name: 'email' },
+        { name: 'username' },
+      ],
       attributes: [
         { name: '_id', readonly: true, optional: true },
         { name: 'name' },
