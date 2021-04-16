@@ -6,6 +6,7 @@ import { CodegenUtils } from './utils';
 const FILE_TEMPLATE = `def %fn_name%(%fn_params%):
   # Your code here
 
+
 if __name__ == '__main__':
   %declarations%
 
@@ -81,8 +82,8 @@ export class PythonCodeGenerator extends CodeGenerator {
       const rowName = `${variableName}_row`;
       const colName = `${variableName}_col`;
       return [
-        `${rowName} = int(input());`,
-        `${colName} = int(input());`,
+        `${rowName} = int(input())`,
+        `${colName} = int(input())`,
         `${variableName} = []`,
         `for _ in range(${rowName}):`,
         `  ${variableName}.append([])`,
