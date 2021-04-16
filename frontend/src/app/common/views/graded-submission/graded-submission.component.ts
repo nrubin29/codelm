@@ -1,5 +1,9 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { GradedSubmissionModel } from '@codelm/common/src/models/submission.model';
+import {
+  GradedSubmissionModel,
+  GradedSubmissionModelSanitized,
+  TestCaseSubmissionModel,
+} from '@codelm/common/src/models/submission.model';
 import { CodeMirrorComponent } from '../../components/code-mirror/code-mirror.component';
 import { SubmissionService } from '../../../services/submission.service';
 import { SubmissionComponent } from '../submission/submission.component';
@@ -15,7 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./graded-submission.component.scss'],
 })
 export class GradedSubmissionComponent implements OnInit {
-  @Input() submission: GradedSubmissionModel;
+  @Input() submission: GradedSubmissionModelSanitized;
 
   mode: string;
   @ViewChild(CodeMirrorComponent, { static: true })
@@ -41,8 +45,9 @@ export class GradedSubmissionComponent implements OnInit {
   get submissionError() {
     const error =
       this.submission.compilationError ??
-      this.submission.testCases.find(testCase => testCase.error !== undefined)
-        .error;
+      (this.submission.testCases.find(
+        testCase => testCase.error !== undefined
+      ) as TestCaseSubmissionModel).error;
     return error.replace(/\n/g, '<br />');
   }
 

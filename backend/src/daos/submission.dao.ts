@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import { QueryPopulateOptions } from 'mongoose';
 import {
   GradedSubmissionModel,
+  GradedSubmissionModelSanitized,
   isGradedSubmission,
   SubmissionModel,
   SubmissionOverview,
@@ -184,8 +185,11 @@ export function sanitizeSubmission(
     );
 
     if (submission.testCases) {
-      submission.testCases = submission.testCases.filter(
-        testCase => !testCase.hidden
+      (submission as GradedSubmissionModelSanitized).testCases = submission.testCases.map(
+        testCase =>
+          testCase.hidden
+            ? { hidden: true, correct: testCase.correct }
+            : testCase
       );
     }
   }

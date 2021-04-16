@@ -23,20 +23,29 @@
         <ng-container matColumnDef="input">
           <mat-header-cell *matHeaderCellDef>Input</mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <code>{{ element.inputDisplay || element.input }}</code>
+            <code *ngIf="!element.hidden || admin; else inputHidden">{{
+              element.inputDisplay || element.input
+            }}</code>
+            <ng-template #inputHidden><i>Hidden</i></ng-template>
           </mat-cell>
         </ng-container>
         <ng-container matColumnDef="correctOutput">
           <mat-header-cell *matHeaderCellDef>Correct Output</mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <code>{{ element.outputDisplay || element.correctOutput }}</code>
+            <code *ngIf="!element.hidden || admin; else outputHidden">{{
+              element.outputDisplay || element.correctOutput
+            }}</code>
+            <ng-template #outputHidden><i>Hidden</i></ng-template>
           </mat-cell>
         </ng-container>
         <ng-container matColumnDef="yourOutput">
           <mat-header-cell *matHeaderCellDef>Your Output</mat-header-cell>
-          <mat-cell *matCellDef="let element"
-            ><code>{{ element.output }}</code></mat-cell
-          >
+          <mat-cell *matCellDef="let element">
+            <code *ngIf="!element.hidden || admin; else yourOutputHidden">{{
+              element.output
+            }}</code>
+            <ng-template #yourOutputHidden><i>Hidden</i></ng-template>
+          </mat-cell>
         </ng-container>
         <ng-container matColumnDef="status">
           <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>

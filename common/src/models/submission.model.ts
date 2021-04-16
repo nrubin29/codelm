@@ -18,6 +18,17 @@ export interface TestCaseSubmissionModel {
   correct?: boolean;
 }
 
+interface TestCaseSubmissionModelHidden {
+  hidden: true;
+  correct?: boolean;
+}
+
+export type TestCaseSubmissionModelSanitized =
+  | (Omit<TestCaseSubmissionModel, 'hidden'> & {
+      hidden: false;
+    })
+  | TestCaseSubmissionModelHidden;
+
 // TODO: correctOutput, inputDisplay, and outputDisplay shouldn't be stored
 //  here; they should be populated from the corresponding TestCaseModel.
 //  However, because TestCaseModels aren't stored in their own collection,
@@ -49,6 +60,12 @@ export interface GradedSubmissionModel extends SubmissionModel {
   dispute?: DisputeModel;
   testCases?: TestCaseSubmissionModel[];
 }
+
+export type GradedSubmissionModelSanitized =
+  | (Omit<GradedSubmissionModel, 'testCases'> & {
+      testCases?: TestCaseSubmissionModelSanitized[];
+    })
+  | GradedSubmissionModel;
 
 export function isGradedSubmission(
   submission: SubmissionModel
