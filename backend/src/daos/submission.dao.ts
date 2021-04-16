@@ -64,6 +64,7 @@ function isOutputCorrect(
     case VariableType.FLOAT:
     case VariableType.INTEGER: {
       return (
+        !isNaN(output as any) &&
         parseFloat(output).toFixed(5) === parseFloat(correctOutput).toFixed(5)
       );
     }
