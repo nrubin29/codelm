@@ -38,6 +38,12 @@
       "description": "Our sixth event took place on April 17<sup>th</sup>. Due to the coronavirus pandemic, we were forced to move the event online, but this didn't come without benefits. Because competitors didn't have to show up in person, we were able to open up the event to students all across the country. Over 200 students from 14 states competed - far more than any previous year.",
       "schools": 42,
       "competitors": 260
+    },
+    {
+      "year": 2021,
+      "description": "The seventh annual CodeLM event took place on April 16<sup>th</sup>. We held the event online again due to the pandemic and welcomed well over 100 students from across the country. Our theme was Casino Night.",
+      "schools": 32,
+      "competitors": 185
     }
   ]
 }
