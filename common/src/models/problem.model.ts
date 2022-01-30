@@ -23,7 +23,9 @@ export enum ProblemType {
   OpenEnded = 'OpenEnded',
 }
 
-export interface ProblemModel {
+export type ProblemModel  = GradedProblemModel | OpenEndedProblemModel;
+
+interface BaseProblemModel {
   _id?: string;
   title: string;
   description: string;
@@ -31,7 +33,7 @@ export interface ProblemModel {
   divisions: ProblemDivision[];
 }
 
-export interface GradedProblemModel extends ProblemModel {
+export interface GradedProblemModel extends BaseProblemModel {
   variables: Variable[];
   returnType: VariableType;
   returnDimension: VariableDimension;
@@ -44,7 +46,7 @@ export function isGradedProblem(
   return problem.type === ProblemType.Graded;
 }
 
-export interface OpenEndedProblemModel extends ProblemModel {
+export interface OpenEndedProblemModel extends BaseProblemModel {
   gameType: GameType;
   extras?: any;
 }

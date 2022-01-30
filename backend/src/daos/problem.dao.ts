@@ -35,7 +35,7 @@ const Problem = mongoose.model<ProblemType>(
     title: String,
     description: String,
     type: String,
-    game: String,
+    gameType: String,
     extras: Object,
     divisions: [ProblemDivisionSchema],
     variables: [VariableSchema],

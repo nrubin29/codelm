@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { QueryPopulateOptions } from 'mongoose';
+import { PopulateOptions } from 'mongoose';
 import { TeamModel } from '@codelm/common/src/models/team.model';
 import { SubmissionDao } from './submission.dao';
 
@@ -19,7 +19,7 @@ const TeamSchema = new mongoose.Schema(
 const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
 export class TeamDao {
-  private static readonly populationPaths: QueryPopulateOptions[] = [
+  private static readonly populationPaths: PopulateOptions[] = [
     { path: 'division' },
     { path: 'members', populate: { path: 'group' } },
   ];

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { Router } from 'express';
+import { RequestHandler, Router } from 'express';
 import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
@@ -41,11 +41,11 @@ app.set('json replacer', (key: string, value: any) => {
 const expressWs = require('express-ws')(app);
 
 app.use(
-  morgan('[:date[clf]] :method :url :status :response-time ms :remote-addr')
+  morgan('[:date[clf]] :method :url :status :response-time ms :remote-addr') as RequestHandler
 );
-app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' })); // parse application/x-www-form-urlencoded
-app.use(bodyParser.json({ limit: '5mb' })); // parse application/json
-app.use(bodyParser.json({ type: 'application/vnd.api+json', limit: '5mb' })); // Parse application/vnd.api+json as json
+app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }) as RequestHandler); // parse application/x-www-form-urlencoded
+app.use(bodyParser.json({ limit: '5mb' }) as RequestHandler); // parse application/json
+app.use(bodyParser.json({ type: 'application/vnd.api+json', limit: '5mb' }) as RequestHandler); // Parse application/vnd.api+json as json
 app.use('/api', apiRoutes);
 
 if (process.env.NODE_ENV !== 'development') {
@@ -59,12 +59,9 @@ console.log(
   `Starting CodeLM server build ${VERSION}${DEBUG ? ' in debug mode' : ''}`
 );
 
-mongoose.set('useFindAndModify', false);
+// For some reason, using localhost instead of 127.0.0.1 doesn't work on my Mac.
 mongoose
-  .connect('mongodb://localhost/codelm', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect('mongodb://127.0.0.1/codelm')
   .then(() => {
     console.log('Connected to MongoDB');
 

@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { QueryPopulateOptions } from 'mongoose';
+import { PopulateOptions } from 'mongoose';
 import { PersonModel } from '@codelm/common/src/models/person.model';
 import { LoginResponseType } from '@codelm/common/src/models/auth.model';
 import * as crypto from 'crypto';
@@ -40,7 +40,7 @@ export function sanitizePerson(person: PersonModel): PersonModel {
 }
 
 export class PersonDao {
-  private static readonly populationPaths: QueryPopulateOptions[] = [
+  private static readonly populationPaths: PopulateOptions[] = [
     { path: 'group' },
   ];
 

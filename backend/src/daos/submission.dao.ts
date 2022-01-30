@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { QueryPopulateOptions } from 'mongoose';
+import { PopulateOptions } from 'mongoose';
 import {
   GradedSubmissionModel,
   GradedSubmissionModelSanitized,
@@ -256,7 +256,7 @@ const Submission = mongoose.model<SubmissionType>(
 );
 
 export class SubmissionDao {
-  private static readonly populationPaths: QueryPopulateOptions[] = [
+  private static readonly populationPaths: PopulateOptions[] = [
     {
       path: 'problem',
       model: 'Problem',

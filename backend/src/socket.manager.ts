@@ -1,7 +1,7 @@
 import {
   ConnectPacket,
   ReplayPacket,
-  SubmissionPacket,
+  SubmissionPacket
 } from '@codelm/common/src/packets/client.packet';
 import { Packet } from '@codelm/common/src/packets/packet';
 import { SubmissionStatus } from '@codelm/common/src/packets/server.packet';
@@ -11,19 +11,19 @@ import {
   isGradedProblem,
   isOpenEndedProblem,
   OpenEndedProblemModel,
-  ProblemType,
+  ProblemType
 } from '@codelm/common/src/models/problem.model';
 import {
   isFalse,
   isTestCaseSubmissionCorrect,
   SubmissionDao,
-  submissionResult,
+  submissionResult
 } from './daos/submission.dao';
 import {
   GradedSubmissionModel,
   isGradedSubmission,
   SubmissionModel,
-  TestCaseSubmissionModel,
+  TestCaseSubmissionModel
 } from '@codelm/common/src/models/submission.model';
 import * as WebSocket from 'ws';
 import { Express } from 'express';
@@ -57,7 +57,7 @@ class Socket {
   }
 
   send(packet: Packet) {
-    if (this.webSocket.readyState !== WebSocket.OPEN) {
+    if (this.webSocket.readyState !== this.webSocket.OPEN) {
       console.error('Bad socket');
     } else {
       this.webSocket.send(JSON.stringify(packet));
@@ -204,7 +204,7 @@ export class SocketManager {
       problemTitle: problem.title,
       type: problem.type,
       language: problemSubmission.language,
-      code: problemSubmission.code,
+      code: problemSubmission.code
     };
 
     if (isGradedProblem(problem)) {
@@ -230,7 +230,7 @@ export class SocketManager {
       code: problemSubmission.code,
       testCases: testCases ?? [],
       compilationError,
-      test: problemSubmission.test,
+      test: problemSubmission.test
     } as GradedSubmissionModel;
 
     if (problemSubmission.test) {
@@ -258,7 +258,7 @@ export class SocketManager {
       problemTitle: submission.problem.title,
       type: submission.problem.type,
       language: submission.language,
-      code: submission.code,
+      code: submission.code
     };
 
     const problem = submission.problem as OpenEndedProblemModel;
@@ -289,7 +289,7 @@ export class SocketManager {
           output: '',
           correctOutput: testCase.output,
           inputDisplay: testCase.inputDisplay,
-          outputDisplay: testCase.outputDisplay,
+          outputDisplay: testCase.outputDisplay
         };
 
         if (e.name === 'dockerKilled') {
@@ -362,7 +362,7 @@ export class SocketManager {
   }> {
     socket.send({
       name: 'submissionExtras',
-      extras: serverProblemSubmission.problemExtras,
+      extras: serverProblemSubmission.problemExtras
     });
 
     let connection: CodeRunnerConnection;
@@ -373,14 +373,14 @@ export class SocketManager {
       return {
         compilationError:
           'The server is overloaded. Please send the following error to a judge: ' +
-          JSON.stringify(e),
+          JSON.stringify(e)
       };
     }
 
     try {
       socket.send({
         name: 'submissionStatus',
-        status: SubmissionStatus.Compiling,
+        status: SubmissionStatus.Compiling
       });
       const compilationResult = await connection.compile(
         serverProblemSubmission
@@ -396,19 +396,19 @@ export class SocketManager {
       if (e.name === 'dockerKilled') {
         return {
           compilationError:
-            'Your code could not compile. Maybe the server is overloaded?',
+            'Your code could not compile. Maybe the server is overloaded?'
         };
       } else if (e.name === 'unexpectedData') {
         return {
           compilationError:
             'An unexpected error occurred. Maybe the server is overloaded? Please send the following error to a judge: ' +
-            e.data,
+            e.data
         };
       } else {
         return {
           compilationError:
             'An unknown occurred. Please send the following error to a judge: ' +
-            JSON.stringify(e),
+            JSON.stringify(e)
         };
       }
     }
