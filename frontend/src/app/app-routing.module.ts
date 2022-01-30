@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './common/views/login/login.component';
-import { DisconnectedComponent } from './common/views/disconnected/disconnected.component';
 import { RegisterComponent } from './common/views/register/register.component';
 import { IsEndGuard } from './guards/is-end.guard';
 import { IsNotEndGuard } from './guards/is-not-end.guard';
-import { DisconnectGuard } from './guards/disconnect.guard';
 import { EndComponent } from './common/views/end/end.component';
 import { SettingsResolve } from './resolves/settings.resolve';
 import { OpenRegistrationGuard } from './guards/open-registration.guard';
@@ -33,11 +31,6 @@ const routes: Routes = [
     component: RegisterComponent,
     canActivate: [IsNotEndGuard, OpenRegistrationGuard],
     resolve: { groups: GroupsResolve },
-  },
-  {
-    path: 'disconnected',
-    component: DisconnectedComponent,
-    canActivate: [DisconnectGuard, IsNotEndGuard],
   },
   {
     path: 'end',
