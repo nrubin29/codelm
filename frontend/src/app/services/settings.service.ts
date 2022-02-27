@@ -25,6 +25,7 @@ export class SettingsService extends EntityService<SettingsModel> {
         },
         { name: 'practice', type: 'boolean' },
         { name: 'registration', type: 'boolean' },
+        { name: 'allowSimultaneousTeamMemberLogin', type: 'boolean' },
         { name: 'endSurveyLink', optional: true },
         {
           name: 'schedule',

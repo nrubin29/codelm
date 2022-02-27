@@ -16,6 +16,7 @@ export interface SettingsModel {
   schedule: ScheduleModel[];
   practice: boolean;
   registration: boolean;
+  allowSimultaneousTeamMemberLogin: boolean;
   endSurveyLink: string;
 }
 
@@ -24,5 +25,6 @@ export const defaultSettingsModel: SettingsModel = Object.freeze({
   schedule: [],
   practice: false,
   registration: false,
+  allowSimultaneousTeamMemberLogin: false,
   endSurveyLink: '#',
 });

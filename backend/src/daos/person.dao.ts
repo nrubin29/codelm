@@ -9,6 +9,7 @@ import { TeamDao } from './team.dao';
 import { SettingsDao } from './settings.dao';
 import { SettingsState } from '@codelm/common/src/models/settings.model';
 import { DivisionType } from '@codelm/common/src/models/division.model';
+import { SocketManager } from '../socket.manager';
 
 type PersonType = PersonModel & mongoose.Document;
 
@@ -116,32 +117,35 @@ export class PersonDao {
         settings.state === SettingsState.End
       ) {
         throw LoginResponseType.Closed;
-      } else if (settings.practice) {
-        // Find the team for the person that is in a practice division;
-        // reject one if it does not exist.
+      }
 
-        const team = teams.find(
-          team => team.division.type === DivisionType.Practice
-        );
+      let team: TeamModel;
 
-        if (team) {
-          return team;
-        } else {
-          throw LoginResponseType.NoTeam;
-        }
+      if (settings.practice) {
+        // Find the person's practice team.
+
+        team = teams.find(team => team.division.type === DivisionType.Practice);
       } else {
-        // Find the team for the person that is in a competition division;
-        // reject if one does not exist.
+        // Find the person's competition team.
 
-        const team = teams.find(
-          team => team.division.type === DivisionType.Competition
+        team = teams.find(
+          team => team.division.type === DivisionType.Competition,
         );
+      }
 
-        if (team) {
-          return team;
-        } else {
-          throw LoginResponseType.NoTeam;
+      if (team) {
+        if (
+          !settings.allowSimultaneousTeamMemberLogin &&
+          SocketManager.instance.sockets.some(
+            socket => socket._id === team._id.toString(),
+          )
+        ) {
+          throw LoginResponseType.TeamMemberAlreadyLoggedIn;
         }
+
+        return team;
+      } else {
+        throw LoginResponseType.NoTeam;
       }
     }
   }

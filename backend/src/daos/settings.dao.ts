@@ -19,6 +19,7 @@ const SettingsSchema = new mongoose.Schema({
   schedule: [ScheduleSchema],
   practice: { type: Boolean, default: false },
   registration: { type: Boolean, default: false },
+  allowSimultaneousTeamMemberLogin: { type: Boolean, default: false },
   endSurveyLink: { type: String, default: '#' },
 });
 
