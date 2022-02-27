@@ -64,8 +64,8 @@ class Socket {
     }
   }
 
-  ping() {
-    if (this.webSocket.readyState === WebSocket.OPEN) {
+  ping(): boolean {
+    if (this.webSocket.readyState === this.webSocket.OPEN) {
       this.webSocket.ping();
       return true;
     } else {
