@@ -42,7 +42,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { DialogComponent } from './common/components/dialog/dialog.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { PluralizeSentencePipe } from './pipes/pluralize-sentence.pipe';
-import { FileDropComponent } from './competition/components/file-drop/file-drop.component';
+import { FileDropComponent } from './common/components/file-drop/file-drop.component';
 
 @NgModule({
   declarations: [
