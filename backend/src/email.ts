@@ -14,16 +14,18 @@ const mg = mailgun(env.mailgun);
 
 export function sendEmail(to: PersonModel[], template: EmailTemplate) {
   return Promise.all(
-    to.map(person =>
-      mg.messages().send({
-        from: 'CodeLM Team <team@newwavecomputers.com>',
-        to: person.email,
-        subject: emailTemplateToSubject[template],
-        template: template,
-        'h:X-Mailgun-Variables': JSON.stringify({
-          firstName: person.name.split(' ')[0],
-        } as MailgunVariables),
-      })
-    )
+    to
+      .filter(person => person.email)
+      .map(person =>
+        mg.messages().send({
+          from: 'CodeLM Team <team@newwavecomputers.com>',
+          to: person.email,
+          subject: emailTemplateToSubject[template],
+          template: template,
+          'h:X-Mailgun-Variables': JSON.stringify({
+            firstName: person.name.split(' ')[0],
+          } as MailgunVariables),
+        }),
+      ),
   );
 }

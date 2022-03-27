@@ -10,6 +10,7 @@ import { EntityGroupingComponent } from './views/entity-grouping/entity-grouping
 import { EntityListComponent } from './views/entity-list/entity-list.component';
 import { LeaderboardCellComponent } from './components/leaderboard-cell/leaderboard-cell.component';
 import { EmailComponent } from './views/email/email.component';
+import { BatchImportComponent } from './views/batch-import/batch-import.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { EmailComponent } from './views/email/email.component';
     EntityListComponent,
     LeaderboardCellComponent,
     EmailComponent,
+    BatchImportComponent,
   ],
   imports: [SharedModule, AdminRoutingModule],
 })

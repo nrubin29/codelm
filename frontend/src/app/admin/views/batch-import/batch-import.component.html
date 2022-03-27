@@ -1,0 +1,114 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <app-drawer-toggle></app-drawer-toggle>
+    <span>Batch Import</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <app-file-drop
+    *ngIf="!finished"
+    accept="csv"
+    (fileDropped)="handleFile($event)"
+  ></app-file-drop>
+  <br />
+  <ng-container *ngIf="data">
+    <ng-container *ngIf="!finished; else showFinished">
+      <app-card header="Ready to submit">
+        <p>
+          There
+          {{ data.length | pluralizeSentence: 'is $$ school':'are $$ schools' }}
+          to import. If everything looks good, click the Upload button below.
+        </p>
+        <br />
+        <button mat-raised-button color="primary" (click)="upload()">
+          Upload
+        </button>
+      </app-card>
+      <mat-table [dataSource]="data">
+        <ng-container matColumnDef="school">
+          <mat-header-cell *matHeaderCellDef>School</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.schoolName }}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="intermediateTeams">
+          <mat-header-cell *matHeaderCellDef>
+            Intermediate Teams
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-chip-list>
+              <mat-chip *ngFor="let team of element.intermediateTeams">
+                <ng-container *ngFor="let person of team; last as isLast">
+                  {{ person }}
+                  <ng-container *ngIf="!isLast">&comma;&nbsp;</ng-container>
+                </ng-container>
+              </mat-chip>
+            </mat-chip-list>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="advancedTeams">
+          <mat-header-cell *matHeaderCellDef> Advanced Teams</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-chip-list>
+              <mat-chip *ngFor="let team of element.advancedTeams">
+                <ng-container *ngFor="let person of team; last as isLast">
+                  {{ person }}
+                  <ng-container *ngIf="!isLast">&comma;&nbsp;</ng-container>
+                </ng-container>
+              </mat-chip>
+            </mat-chip-list>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="expertTeams">
+          <mat-header-cell *matHeaderCellDef> Expert Teams</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-chip-list>
+              <mat-chip *ngFor="let team of element.expertTeams">
+                <ng-container *ngFor="let person of team; last as isLast">
+                  {{ person }}
+                  <ng-container *ngIf="!isLast">&comma;&nbsp;</ng-container>
+                </ng-container>
+              </mat-chip>
+            </mat-chip-list>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row
+          *matHeaderRowDef="[
+            'school',
+            'intermediateTeams',
+            'advancedTeams',
+            'expertTeams'
+          ]"
+        ></mat-header-row>
+        <mat-row
+          *matRowDef="
+            let row;
+            columns: [
+              'school',
+              'intermediateTeams',
+              'advancedTeams',
+              'expertTeams'
+            ]
+          "
+        ></mat-row>
+      </mat-table>
+    </ng-container>
+    <ng-template #showFinished>
+      <app-card header="Finished" display="info">
+        <p>
+          {{
+            successes.length
+              | pluralizeSentence: '$$ person was':'$$ people were'
+          }}
+          successfully added! Click the button below to download a CSV file of
+          their usernames and passwords.
+        </p>
+        <br />
+        <button mat-raised-button color="primary" (click)="download()">
+          Download CSV
+        </button>
+        <a #a download="people.csv" hidden></a>
+      </app-card>
+    </ng-template>
+  </ng-container>
+</div>

@@ -1,14 +1,23 @@
-<mat-toolbar color="primary">
+<mat-toolbar color='primary'>
   <mat-toolbar-row>
     <app-drawer-toggle></app-drawer-toggle>
     <span>{{ team ? 'Edit ' + teamName : 'Add Team' }}</span>
+    <span class='spacer'></span>
+    <a
+      mat-raised-button
+      color='accent'
+      [routerLink]="['/admin', 'batch-import']"
+    >
+      <mat-icon>publish</mat-icon>
+      &nbsp;Batch Import
+    </a>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="container">
+<div class='container'>
   <app-edit-entity
-    [entity]="team"
-    [entityService]="teamService"
-    [isModal]="false"
-    (action)="action($event)"
+    [entity]='team'
+    [entityService]='teamService'
+    [isModal]='false'
+    (action)='action($event)'
   ></app-edit-entity>
 </div>

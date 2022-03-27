@@ -18,6 +18,8 @@ import { EntityListComponent } from './views/entity-list/entity-list.component';
 import { EmailComponent } from './views/email/email.component';
 import { PersonsResolve } from '../resolves/persons.resolve';
 import { GroupsResolve } from '../resolves/groups.resolve';
+import { BatchImportComponent } from './views/batch-import/batch-import.component';
+import { DivisionsResolve } from '../resolves/divisions.resolve';
 
 const routes: Routes = [
   {
@@ -90,6 +92,11 @@ const routes: Routes = [
         resolve: { entityService: EntityServiceResolve },
       },
       { path: 'add-team', component: EditTeamComponent },
+      {
+        path: 'batch-import',
+        component: BatchImportComponent,
+        resolve: { divisions: DivisionsResolve, groups: GroupsResolve },
+      },
       {
         path: 'email',
         component: EmailComponent,

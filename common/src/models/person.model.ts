@@ -14,13 +14,18 @@ export enum PersonExperience {
   Expert = 'Expert',
 }
 
+export type BasicPersonModel = Omit<
+  Exclude<PersonModel, null>,
+  'photoRelease' | 'addressRelease' | 'salt'
+>;
+
 export interface PersonModel extends UserModel {
   name: string;
-  email: string;
-  year: PersonYear;
+  email?: string;
+  year?: PersonYear;
   experience: PersonExperience;
   group: GroupModel;
-  teacherEmail: string;
+  teacherEmail?: string;
   photoRelease: boolean;
   addressRelease: boolean;
   addressLine1?: string;

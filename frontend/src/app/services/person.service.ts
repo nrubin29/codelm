@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { GroupedEntityService } from './entity.service';
 import {
+  BasicPersonModel,
   PersonExperience,
   PersonModel,
   PersonYear,
@@ -20,7 +21,7 @@ export class PersonService extends GroupedEntityService<
 
   constructor(
     private restService: RestService,
-    private groupService: GroupService
+    private groupService: GroupService,
   ) {
     super({
       entityName: 'person',
@@ -49,7 +50,7 @@ export class PersonService extends GroupedEntityService<
               groups.map(group => ({
                 name: group.name,
                 value: group._id.toString(),
-              }))
+              })),
             ),
         },
         { name: 'photoRelease', type: 'boolean' },
@@ -70,7 +71,7 @@ export class PersonService extends GroupedEntityService<
 
   getChildren(parent: GroupModel): Promise<PersonModel[]> {
     return this.restService.get<PersonModel[]>(
-      `${this.endpoint}/group/${parent._id}`
+      `${this.endpoint}/group/${parent._id}`,
     );
   }
 
@@ -78,7 +79,7 @@ export class PersonService extends GroupedEntityService<
     return this.restService.get<PersonModel[]>(this.endpoint);
   }
 
-  addOrUpdate(person: PersonModel): Promise<PersonModel> {
+  addOrUpdate(person: BasicPersonModel): Promise<PersonModel> {
     return this.restService.put<PersonModel>(this.endpoint, person);
   }
 

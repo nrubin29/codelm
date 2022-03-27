@@ -41,6 +41,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { DialogComponent } from './common/components/dialog/dialog.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { PluralizeSentencePipe } from './pipes/pluralize-sentence.pipe';
+import { FileDropComponent } from './competition/components/file-drop/file-drop.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     DialogComponent,
     PluralizePipe,
     TitlePipe,
+    PluralizeSentencePipe,
+    FileDropComponent,
   ],
   imports: [
     CommonModule,
@@ -131,6 +135,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatTooltipModule,
     MatButtonToggleModule,
     MatStepperModule,
+    PluralizeSentencePipe,
+    FileDropComponent,
   ],
 })
 export class SharedModule {}

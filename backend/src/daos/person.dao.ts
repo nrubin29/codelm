@@ -15,14 +15,14 @@ type PersonType = PersonModel & mongoose.Document;
 
 const PersonSchema = new mongoose.Schema({
   name: String,
-  email: { type: String, unique: true },
+  email: { type: String, required: false },
   username: { type: String, unique: true },
   password: String,
   salt: String,
-  year: String,
+  year: { type: String, required: false },
   experience: String,
   group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group' },
-  teacherEmail: String,
+  teacherEmail: { type: String, required: false },
   photoRelease: { type: Boolean, default: false },
   addressRelease: { type: Boolean, default: false },
   addressLine1: { type: String, required: false },
@@ -52,9 +52,9 @@ export class PersonDao {
   }
 
   static async getPeople(): Promise<PersonModel[]> {
-    return (
-      await Person.find().populate(PersonDao.populationPaths).exec()
-    ).map(person => person.toObject());
+    return (await Person.find().populate(PersonDao.populationPaths).exec()).map(
+      person => person.toObject(),
+    );
   }
 
   static async getPeopleByIds(_ids: string[]): Promise<PersonModel[]> {
@@ -79,7 +79,7 @@ export class PersonDao {
     }
 
     const person = await Person.findOne({ username }).populate(
-      PersonDao.populationPaths
+      PersonDao.populationPaths,
     );
 
     if (!person) {
@@ -167,7 +167,11 @@ export class PersonDao {
       // For some reason, the object returned by Person.create() has a null
       // _id, so I have to query it again.
       await Person.create(person);
-      return (await Person.findOne({ username: person.username })).toObject();
+      return (
+        await Person.findOne({ username: person.username })
+          .populate(PersonDao.populationPaths)
+          .exec()
+      ).toObject();
     } else {
       return (
         await Person.findByIdAndUpdate(person._id, person, { new: true })
