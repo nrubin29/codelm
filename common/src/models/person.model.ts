@@ -34,3 +34,10 @@ export interface PersonModel extends UserModel {
   state?: string;
   zipCode?: string;
 }
+
+export interface AddOrUpdatePersonRequest {
+  person: BasicPersonModel;
+  autoCreateTeams: boolean;
+  group?: string;
+  groupName?: string;
+}

@@ -6,7 +6,10 @@ import { TeamDao } from '../daos/team.dao';
 import { DivisionType } from '@codelm/common/src/models/division.model';
 import { sendEmail } from '../email';
 import { isUniquenessError } from '../daos/dao';
-import { PersonModel } from '../../../common/src/models/person.model';
+import {
+  AddOrUpdatePersonRequest,
+  PersonModel,
+} from '../../../common/src/models/person.model';
 import { GroupDao } from '../daos/group.dao';
 
 const router = Router();
@@ -20,14 +23,11 @@ router.get(
   AuthUtil.requireAdmin,
   async (req: Request, res: Response) => {
     res.json(await PersonDao.getPeopleForGroup(req.params.groupId));
-  }
+  },
 );
 
 router.put('/', async (req: Request, res: Response) => {
-  let request = req.body as Omit<PersonModel, 'group'> & {
-    group: string;
-    groupName: string;
-  };
+  let request = req.body as AddOrUpdatePersonRequest;
 
   if (request.group === '-1') {
     if (request.groupName == null) {
@@ -39,13 +39,15 @@ router.put('/', async (req: Request, res: Response) => {
       name: request.groupName,
       special: false,
     });
-    request.group = group._id.toString();
+    request.person.group = group._id.toString() as any;
+  } else if (request.group) {
+    request.person.group = request.group as any;
   }
 
   let person: PersonModel;
 
   try {
-    person = await PersonDao.addOrUpdatePerson((request as any) as PersonModel);
+    person = await PersonDao.addOrUpdatePerson(request.person as any);
   } catch (err) {
     // TODO: Standardize, type, and properly handle errors.
     if (isUniquenessError(err)) {
@@ -58,29 +60,29 @@ router.put('/', async (req: Request, res: Response) => {
     }
   }
 
-  // Create a practice team and a competition team for the new person.
-  // TODO: If the person is being updated, we don't want to create new teams
-  //  and stuff.
-  const divisions = await DivisionDao.getDivisionsByExperience(
-    person.experience
-  );
+  if (request.autoCreateTeams) {
+    // Create a practice team and a competition team for the new person.
+    const divisions = await DivisionDao.getDivisionsByExperience(
+      person.experience,
+    );
 
-  await Promise.all([
-    TeamDao.addOrUpdateTeam({
-      members: [person],
-      division: divisions.find(
-        division => division.type === DivisionType.Practice
-      ),
-    }),
-    TeamDao.addOrUpdateTeam({
-      members: [person],
-      division: divisions.find(
-        division => division.type === DivisionType.Competition
-      ),
-    }),
-  ]);
+    await Promise.all([
+      TeamDao.addOrUpdateTeam({
+        members: [person],
+        division: divisions.find(
+          division => division.type === DivisionType.Practice,
+        ),
+      }),
+      TeamDao.addOrUpdateTeam({
+        members: [person],
+        division: divisions.find(
+          division => division.type === DivisionType.Competition,
+        ),
+      }),
+    ]);
 
-  await sendEmail([person], 'registered');
+    await sendEmail([person], 'registered');
+  }
 
   res.json(sanitizePerson(person));
 });
@@ -91,7 +93,7 @@ router.delete(
   async (req: Request, res: Response) => {
     await PersonDao.deletePerson(req.params.id);
     res.json(true);
-  }
+  },
 );
 
 export default router;

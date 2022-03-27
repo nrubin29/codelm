@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
     private groupService: GroupService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -78,18 +78,22 @@ export class RegisterComponent implements OnInit {
     if (this.formGroups.some(formGroup => formGroup.invalid)) {
       DialogComponent.showError(
         this.dialog,
-        'Please finish filling out the form'
+        'Please finish filling out the form',
       );
       return;
     }
 
     const person = Object.assign(
       {},
-      ...this.formGroups.map(formGroup => formGroup.value)
+      ...this.formGroups.map(formGroup => formGroup.value),
     );
+    const group = person['group'];
+    const groupName = person['groupName'];
+    delete person['group'];
+    delete person['groupName'];
 
     this.personService
-      .addOrUpdate(person)
+      .addOrUpdate(person, true, group, groupName)
       .then(() => {
         this.stepper.steps.forEach(step => {
           step.editable = false;

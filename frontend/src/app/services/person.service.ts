@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { GroupedEntityService } from './entity.service';
 import {
+  AddOrUpdatePersonRequest,
   BasicPersonModel,
   PersonExperience,
   PersonModel,
@@ -79,8 +80,18 @@ export class PersonService extends GroupedEntityService<
     return this.restService.get<PersonModel[]>(this.endpoint);
   }
 
-  addOrUpdate(person: BasicPersonModel): Promise<PersonModel> {
-    return this.restService.put<PersonModel>(this.endpoint, person);
+  addOrUpdate(
+    person: BasicPersonModel,
+    autoCreateTeams: boolean = false,
+    group?: string,
+    groupName?: string,
+  ): Promise<PersonModel> {
+    return this.restService.put<PersonModel>(this.endpoint, {
+      person,
+      autoCreateTeams,
+      group,
+      groupName,
+    } as AddOrUpdatePersonRequest);
   }
 
   delete(person: PersonModel): Promise<void> {
