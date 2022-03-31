@@ -13,7 +13,7 @@ const TeamSchema = new mongoose.Schema(
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 const Team = mongoose.model<TeamType>('Team', TeamSchema);
@@ -30,13 +30,13 @@ export class TeamDao {
     }
 
     return await TeamDao.addScore(
-      await Team.findById(id).populate(TeamDao.populationPaths).exec()
+      await Team.findById(id).populate(TeamDao.populationPaths).exec(),
     );
   }
 
   static async getTeams(): Promise<TeamType[]> {
     return await TeamDao.addScores(
-      await Team.find().populate(TeamDao.populationPaths).exec()
+      await Team.find().populate(TeamDao.populationPaths).exec(),
     );
   }
 
@@ -45,7 +45,7 @@ export class TeamDao {
       await TeamDao.addScores(
         await Team.find({ division: { _id: divisionId } })
           .populate(TeamDao.populationPaths)
-          .exec()
+          .exec(),
       )
     ).map(team => team.toObject());
   }
@@ -55,7 +55,7 @@ export class TeamDao {
       await TeamDao.addScores(
         await Team.find({ members: personId })
           .populate(TeamDao.populationPaths)
-          .exec()
+          .exec(),
       )
     ).map(team => team.toObject());
   }
@@ -78,7 +78,7 @@ export class TeamDao {
           omitUndefined: true,
         })
           .populate(TeamDao.populationPaths)
-          .exec()
+          .exec(),
       );
     }
   }
@@ -91,7 +91,7 @@ export class TeamDao {
     if (team) {
       const score = await SubmissionDao.getScoreForTeam(team._id);
       team.set('score', score, { strict: false });
-      team.populate(TeamDao.populationPaths);
+      await team.populate(TeamDao.populationPaths);
       return team;
     } else {
       return null;
@@ -100,7 +100,7 @@ export class TeamDao {
 
   private static async addScores(teams: TeamType[]): Promise<TeamType[]> {
     return await Promise.all(
-      teams.map(async team => await TeamDao.addScore(team))
+      teams.map(async team => await TeamDao.addScore(team)),
     );
   }
 }
