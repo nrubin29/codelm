@@ -8,7 +8,7 @@ const router = Router();
 router.get(
   '/:type',
   AuthUtil.requireSuperUser,
-  async (req: Request, res: Response) => {
+  (req: Request, res: Response) => {
     const sockets: SocketConnection[] = [];
 
     if (req.params.type === 'teams') {
@@ -22,16 +22,16 @@ router.get(
     }
 
     res.json(sockets);
-  }
+  },
 );
 
 router.delete(
   '/:id',
   AuthUtil.requireSuperUser,
-  async (req: Request, res: Response) => {
+  (req: Request, res: Response) => {
     SocketManager.instance.kick(req.params.id);
-    res.status(200);
-  }
+    res.sendStatus(200);
+  },
 );
 
 export default router;
