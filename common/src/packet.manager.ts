@@ -86,7 +86,7 @@ interface WebSocketLike {
 }
 
 export abstract class SocketPacketManager<
-  T extends WebSocketLike
+  T extends WebSocketLike,
 > extends PacketManager {
   private socket: T;
 
@@ -107,7 +107,7 @@ export abstract class SocketPacketManager<
   }
 
   isConnected(): boolean {
-    return this.socket && this.socket.readyState === this.socket.OPEN;
+    return this.socket != null && this.socket?.readyState === this.socket.OPEN;
     // Should be WebSocket.OPEN, but the type of WebSocket depends on T.
   }
 

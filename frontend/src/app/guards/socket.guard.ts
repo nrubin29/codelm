@@ -3,6 +3,7 @@ import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
+  Router,
 } from '@angular/router';
 import { SocketService } from '../services/socket.service';
 
@@ -10,12 +11,17 @@ import { SocketService } from '../services/socket.service';
   providedIn: 'root',
 })
 export class SocketGuard implements CanActivate {
-  constructor(private socketService: SocketService) {}
+  constructor(private socketService: SocketService, private router: Router) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
   ): boolean {
-    return this.socketService.isConnected();
+    if (this.socketService.isConnected()) {
+      return true;
+    }
+
+    this.router.navigate(['/login']);
+    return false;
   }
 }
