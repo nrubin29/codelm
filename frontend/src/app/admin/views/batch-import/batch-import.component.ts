@@ -7,7 +7,7 @@ import {
 import { TeamService } from '../../../services/team.service';
 import { customAlphabet } from 'nanoid';
 import { PersonService } from '../../../services/person.service';
-import { bufferCount, map, of } from 'rxjs';
+import { bufferCount, filter, map, of } from 'rxjs';
 import * as Papa from 'papaparse';
 import { GroupModel } from '@codelm/common/src/models/group.model';
 import { GroupService } from '../../../services/group.service';
@@ -27,6 +27,8 @@ interface InputCsvRow {
 
 interface OutputCsvRow {
   school: string;
+  division: string;
+  index: number;
   name: string;
   username: string;
   password: string;
@@ -88,7 +90,8 @@ export class BatchImportComponent implements OnInit {
   private static parseList(str: string): Promise<string[][]> {
     const observable = of(
       ...str
-        .replace(/[^a-zA-Z' ]/g, '')
+        .replace(/[^a-zA-Z' \n]/g, '')
+        .replace(/[\r\n]/g, ' ')
         .replace(/ +/g, ' ')
         .split(' '),
     ).pipe(
@@ -98,6 +101,8 @@ export class BatchImportComponent implements OnInit {
       map(value => value.join(' ')),
       // 3 members per team
       bufferCount(3),
+      // Ignore empty teams
+      filter(team => team.length > 1 || team[0] !== ''),
     );
 
     return new Promise<string[][]>((resolve, reject) => {
@@ -164,7 +169,8 @@ export class BatchImportComponent implements OnInit {
         div.type == DivisionType.Competition && div.experience == experience,
     );
 
-    for (const teamMembers of teams) {
+    for (let i = 0; i < teams.length; i++) {
+      const teamMembers = teams[i];
       const people = await Promise.all(
         teamMembers.map(person =>
           this.addPerson(person, group, division, experience, usernames),
@@ -181,6 +187,8 @@ export class BatchImportComponent implements OnInit {
           person =>
             ({
               school: person[0].group.name,
+              division: person[0].experience,
+              index: i,
               name: person[0].name,
               username: person[0].username,
               password: person[1],
@@ -223,7 +231,14 @@ export class BatchImportComponent implements OnInit {
   }
 
   download() {
-    const headerRow = ['School', 'Name', 'Username', 'Password'];
+    const headerRow = [
+      'School',
+      'Division',
+      'Team Index',
+      'Name',
+      'Username',
+      'Password',
+    ];
     const rows = this.successes.map(row => Object.values(row).join(','));
     const data = [headerRow, ...rows].join('\n');
     this.a.nativeElement.href =
