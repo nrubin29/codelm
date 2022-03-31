@@ -9,6 +9,14 @@
   }
 }
 
+.flex.display-side > :not(:last-child) {
+  margin-right: 0;
+}
+
+.flex.display-side > * {
+  width: 50%;
+}
+
 p {
   white-space: pre-wrap;
 }
