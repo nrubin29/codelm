@@ -17,7 +17,7 @@ export class StandingsService extends GroupedEntityService<
   constructor(
     private divisionService: DivisionService,
     private submissionService: SubmissionService,
-    private problemService: ProblemService
+    private problemService: ProblemService,
   ) {
     super({
       entityName: 'standing',
@@ -30,6 +30,7 @@ export class StandingsService extends GroupedEntityService<
             entity.team._id,
           ],
         } as Column,
+        { name: 'group' },
         { name: 'score' },
       ],
       editable: false,
@@ -62,6 +63,10 @@ export class StandingsService extends GroupedEntityService<
       return TeamUtil.getName(value.team);
     } else if (column.name === 'score') {
       return value.team.score;
+    } else if (column.name === 'group') {
+      return value.team.members.length === 0
+        ? '--'
+        : value.team.members[0].group.name;
     }
   }
 
